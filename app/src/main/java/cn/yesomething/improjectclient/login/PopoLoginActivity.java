@@ -1,113 +1,169 @@
 package cn.yesomething.improjectclient.login;
 
-import android.animation.Animator;
-import android.animation.Animator.AnimatorListener;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.PropertyValuesHolder;
-import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+
+import cn.yesomething.improjectclient.login.SignUpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.manager.UrlManager;
-import cn.yesomething.improjectclient.utils.JellyInterpolator;
 import cn.yesomething.improjectclient.utils.MyConnectionToServer;
 
 
-public class PopoLoginActivity extends AppCompatActivity implements OnClickListener {
+public class PopoLoginActivity extends Activity {
     private static final String TAG = "PopoLoginActivity";
+    private static final int REQUEST_SIGNUP = 0;
     Handler loginHandler;
-    private TextView mBtnLogin;
 
-    private EditText userNameEdit;
+    @BindView(R.id.login_username) EditText _usernameText;
+    @BindView(R.id.login_psw) EditText _pswText;
+    @BindView(R.id.btn_login)TextView _loginButton;
+    @BindView(R.id.btn_login_signup)Button _gotoSignUp_Button;
 
-    private EditText passwordEdit;
-
-    private TextView mTvSignup;
-
-    private View progress;
-
-    private View mInputLayout;
-
-    private float mWidth, mHeight;
-
-    private LinearLayout mName, mPsw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_popo_login);
-        initView();
+        setContentView(R.layout.login);
+        ButterKnife.bind(this);
+        _loginButton.setOnClickListener(v -> loginView());
+        _gotoSignUp_Button.setOnClickListener(v -> {
+            // Start the Signup activity
+            Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+            startActivityForResult(intent, REQUEST_SIGNUP);//启动singup活动，返回时需要signup的数据
+            finish();
+            //overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+        });
+//        initView();
     }
 
-    private void initView() {
-        //登录按钮
-        mBtnLogin = findViewById(R.id.main_btn_login);
-        progress = findViewById(R.id.layout_progress);
-        mInputLayout = findViewById(R.id.input_layout);
-        mName = findViewById(R.id.input_layout_name);
-        mPsw = findViewById(R.id.input_layout_psw);
-        //注册文本
-        mTvSignup = findViewById(R.id.sign_up);
-        //用户密码栏
-        userNameEdit = (EditText) findViewById(R.id.input_name);
-        passwordEdit = (EditText) findViewById(R.id.input_psw);
-        //注册监听器
-        mBtnLogin.setOnClickListener(this);
-        mTvSignup.setOnClickListener(this);
 
-    }
+    public void loginView() {
+        Log.d(TAG, "Login");
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.main_btn_login:{
-                //按钮1相应操作
-                mWidth = mBtnLogin.getMeasuredWidth();
-                mHeight = mBtnLogin.getMeasuredHeight();
-                mName.setVisibility(View.INVISIBLE);
-                mPsw.setVisibility(View.INVISIBLE);
-                String userName = userNameEdit.getText().toString();
-                String password = passwordEdit.getText().toString();
-                login(userName,password);
-                inputAnimator(mInputLayout, mWidth, mHeight);
-                break;
-            }
-
-
-            case R.id.sign_up:{
-                Toast.makeText(PopoLoginActivity.this,
-                        "Sign up!",Toast.LENGTH_LONG).show();
-                break;
-            }
-            default:
-                break;
+        if (!validate()) {
+            onLoginFailed();
+            return;
         }
 
+        _loginButton.setEnabled(false);
+        //加载圈圈动画
+        final ProgressDialog progressDialog = new ProgressDialog(PopoLoginActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("loading...");
+        progressDialog.show();
 
+        String email = _usernameText.getText().toString();
+        String password = _pswText.getText().toString();
+        Toast.makeText(getBaseContext(), email, Toast.LENGTH_LONG).show();
+        // TODO: 此处添加身份验证逻辑
+
+        //email为账户str password为密码str
+
+        //身份验证通过后，登陆成功
+        new android.os.Handler().postDelayed(
+                new Runnable() {
+                    public void run() {
+                        // On complete call either onLoginSuccess or onLoginFailed
+                        onLoginSuccess();
+                        // onLoginFailed();
+                        progressDialog.dismiss();//圈圈动画丢弃
+                    }
+                }, 3000);
     }
+
+    /**
+     * 登陆成功提示
+     */
+    public void onLoginSuccess() {
+        _loginButton.setEnabled(true);
+        Toast.makeText(getBaseContext(), "Login successfully", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    /**
+     * 登陆失败提示
+     */
+    public void onLoginFailed() {
+        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+
+        _loginButton.setEnabled(true);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_SIGNUP) {
+            if (resultCode == RESULT_OK) {
+
+                // TODO: Implement successful signup logic here
+                // By default we just finish the Activity and log them in automatically
+                Toast.makeText(getBaseContext(), "Login ！", Toast.LENGTH_LONG).show();
+                this.finish();
+            }
+        }
+    }
+
+    /**
+     * 返回上一个界面
+     */
+    @Override
+    public void onBackPressed() {
+        // Disable going back to the MainActivity
+        moveTaskToBack(true);
+    }
+
+    /**
+     * 判断输入的账号和密码的合法性
+     * 账号不含有特殊字符
+     * 密码长度
+     * @return valid
+     */
+    public boolean validate() {
+        boolean valid = true;
+
+        String email = _usernameText.getText().toString();
+        String password = _pswText.getText().toString();
+
+        //判断 是否输入email address
+//        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+//            _usernameText.setError("enter a valid email address");
+//            valid = false;
+//        } else {
+//            _usernameText.setError(null);
+//        }
+        //判断密码长度是否8-16位
+        if (password.isEmpty() || password.length() < 4 || password.length() > 16) {
+            _pswText.setError("between 8 and 16 alphanumeric characters");
+            valid = false;
+        } else {
+            _pswText.setError(null);
+        }
+
+        return valid;
+    }
+
 
     /**
      * 根据用户名密码判断能否登录
@@ -145,105 +201,4 @@ public class PopoLoginActivity extends AppCompatActivity implements OnClickListe
                 jsonObject.toString()).start();
     }
 
-
-
-
-    /**
-     * 输入框的动画效果
-     * @param view 控件
-     * @param w 宽
-     * @param h 高
-     */
-    private void inputAnimator(final View view, float w, float h) {
-
-        ValueAnimator animator = ValueAnimator.ofFloat(0, w);
-        animator.addUpdateListener(new AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (Float) animation.getAnimatedValue();
-                ViewGroup.MarginLayoutParams params = (MarginLayoutParams) view.getLayoutParams();
-                params.leftMargin = (int) value;
-                params.rightMargin = (int) value;
-                view.setLayoutParams(params);
-            }
-        });
-        AnimatorSet set = new AnimatorSet();
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 1f, 0.5f);
-        set.setDuration(1000);
-        set.setInterpolator(new AccelerateDecelerateInterpolator());
-        set.playTogether(animator, animator2);
-        set.start();
-        set.addListener(new AnimatorListener() {
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-                progress.setVisibility(View.VISIBLE);
-                progressAnimator(progress);
-                mInputLayout.setVisibility(View.INVISIBLE);
-
-                new Handler().postDelayed(new Runnable() {
-                    public void run() {
-                        recovery();
-                    }
-                }, 2000);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-
-    }
-
-    /**
-     * 出现进度动画
-     * @param view 控件
-     */
-    private void progressAnimator(final View view) {
-        PropertyValuesHolder animator = PropertyValuesHolder.ofFloat("scaleX", 0.5f, 1f);
-        PropertyValuesHolder animator2 = PropertyValuesHolder.ofFloat("scaleY", 0.5f, 1f);
-        ObjectAnimator animator3 = ObjectAnimator.ofPropertyValuesHolder(view, animator, animator2);
-        animator3.setDuration(1000);
-        animator3.setInterpolator(new JellyInterpolator());
-        animator3.start();
-
-    }
-
-
-    /**
-     * 恢复初始状态
-     */
-    private void recovery() {
-        progress.setVisibility(View.GONE);
-        mInputLayout.setVisibility(View.VISIBLE);
-        mName.setVisibility(View.VISIBLE);
-        mPsw.setVisibility(View.VISIBLE);
-
-        ViewGroup.MarginLayoutParams params = (MarginLayoutParams) mInputLayout.getLayoutParams();
-        params.leftMargin = 0;
-        params.rightMargin = 0;
-        mInputLayout.setLayoutParams(params);
-
-
-        ObjectAnimator animator2 = ObjectAnimator.ofFloat(mInputLayout, "scaleX", 0.5f,1f );
-        animator2.setDuration(500);
-        animator2.setInterpolator(new AccelerateDecelerateInterpolator());
-        animator2.start();
-    }
 }

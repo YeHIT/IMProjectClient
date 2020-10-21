@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_weight="1" />
+
+    <Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:background="@color/colorCloud"
+        android:theme="@style/AppTheme"
+        app:popupTheme="@style/AppTheme.PopupOverlay">
+
+        <TextView
+            android:id="@+id/top_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="POPO"
+            android:textColor="@color/titleText"
+            android:textSize="19dp"
+            android:layout_marginLeft="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right|bottom"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/search_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="40dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/search3"
+                android:gravity="center_vertical" />
+
+            <ImageButton
+                android:id="@+id/plus_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/plus2"
+                android:gravity="center_vertical" />
+        </LinearLayout>
+    </Toolbar>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="540dp"
+        android:layout_above="@+id/bottom"
+        android:layout_below="@+id/toolbar">
+
+    </androidx.viewpager.widget.ViewPager>
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:layout_gravity="center_vertical"
+        android:layout_below="@+id/layout_contact_list"
+        android:background="#f7f7f7"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/conversation_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="tabClick"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/conversation"
+                android:layout_width="50dp"
+                android:layout_marginTop="8.5dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/conversation_selected"
+                android:textColor="@color/colorCloud"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:button="@null"
+                android:text="@string/str_conversation" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/contact_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="tabClick"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/contact"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8.5dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:text="@string/str_contact"
+                android:button="@null"
+                app:drawableTopCompat="@drawable/contact_normal" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myself_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="tabClick"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/mine"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8.5dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableTop="@drawable/myself_normal"
+                android:drawablePadding="3dp"
+                android:textSize="12sp"
+                android:gravity="center"
+                android:button="@null"
+                android:text="@string/str_mine" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
