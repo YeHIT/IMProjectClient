@@ -29,7 +29,7 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:src="@drawable/ic_launcher" />
     </RelativeLayout>
     <View
         android:layout_width="fill_parent"

@@ -1,10 +1,11 @@
 package cn.yesomething.improjectclient.login;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -13,18 +14,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.R;
-import cn.yesomething.improjectclient.login.PopoLoginActivity;
+import cn.yesomething.improjectclient.manager.UrlManager;
+import cn.yesomething.improjectclient.utils.MyConnectionToServer;
 
 public class SignUpActivity extends AppCompatActivity {
-    private static final String TAG = "SignupActivity";
+    private static final String TAG = "SignUpActivity";
+    Handler registerHandler = null;
     @BindView(R.id.signup_username) EditText _usernameText;
     @BindView(R.id.signup_psw) EditText _pswText;
     @BindView(R.id.signup_psw_check) EditText _pswCheckText;
     @BindView(R.id.btn_create_account)TextView _create_account_Button;
-    @BindView(R.id.btn_backto_login) Button _backtoLogin_Button;
+    @BindView(R.id.btn_backto_login) Button _backToLogin_Button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,61 +41,75 @@ public class SignUpActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.signup);
         ButterKnife.bind(this);
-
+        //注册事件绑定
         _create_account_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signup();
+                signUp();
             }
         });
 
-        _backtoLogin_Button.setOnClickListener(new View.OnClickListener() {
+        _backToLogin_Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
+                // 回到登录界面
                 Intent intent = new Intent(getApplicationContext(), PopoLoginActivity.class);
                 startActivity(intent);
                 finish();
-                //overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
     }
-    public void signup() {
-        Log.d(TAG, "Signup");
-
+    public void signUp() {
+        //判断用户名密码的合法性
         if (!validate()) {
-            onSignupFailed();
+            onSignUpFailed("输入不合法");
             return;
         }
-
+        //防止重复点击
         _create_account_Button.setEnabled(false);
-
+        //加载动画
         final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Creating Account...");
         progressDialog.show();
-
+        //获取用户名及密码
         String name = _usernameText.getText().toString();
         String password = _pswText.getText().toString();
         String reEnterPassword = _pswCheckText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
+        // 注册逻辑实现
+        registerHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (String) msg.obj;
+                Log.e(TAG, "handleMessage: " + response);
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String responseCode = jsonObject.getString("responseCode");
+                    //注册成功
+                    if(responseCode.equals("200")){
+                        progressDialog.dismiss();//圈圈动画丢弃
+                        onSignUpSuccess();
                     }
-                }, 3000);
+                    else {
+                        String errorMessage = jsonObject.getString("errorMessage");
+                        progressDialog.dismiss();//圈圈动画丢弃
+                        onSignUpFailed(errorMessage);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
+        register(name,password);
     }
 
-
-    public void onSignupSuccess() {
+    /**
+     * 注册成功提示
+     */
+    public void onSignUpSuccess() {
         _create_account_Button.setEnabled(true);
         setResult(RESULT_OK, null);
         Intent intent = new Intent(getApplicationContext(),PopoLoginActivity.class);
@@ -94,10 +117,32 @@ public class SignUpActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+    /**
+     * 注册失败提示
+     */
+    public void onSignUpFailed(String failMessage) {
+        Toast.makeText(getBaseContext(), failMessage, Toast.LENGTH_LONG).show();
 
         _create_account_Button.setEnabled(true);
+    }
+
+    /**
+     * 调用后端完成用户注册
+     * @param userName 用户名
+     * @param userPassword 用户密码
+     */
+    public void register(String userName,String userPassword){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userName",userName);
+            jsonObject.put("userPassword",userPassword);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(registerHandler,
+                UrlManager.myServer+UrlManager.userRegisterUrl,
+                jsonObject.toString()).start();
     }
 
     /**

@@ -5,15 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import cn.yesomething.improjectclient.R;
+
 import androidx.recyclerview.widget.RecyclerView;
-import cn.yesomething.improjectclient.R;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.utils.Utils;
 
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private LayoutInflater mLayoutInflater;
@@ -41,7 +44,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Map<String, String> map = new HashMap<>();
 
         for (int i = 0; i < mContactNames.length; i++) {
-            String pinyin = com.example.popo_ui_v01.Utils.getPingYin(mContactNames[i]);
+            String pinyin = Utils.getPingYin(mContactNames[i]);
             map.put(pinyin, mContactNames[i]);
             mContactList.add(pinyin);
         }

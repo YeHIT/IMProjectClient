@@ -7,17 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-
-import cn.yesomething.improjectclient.login.SignUpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,14 +28,11 @@ import cn.yesomething.improjectclient.utils.MyConnectionToServer;
 
 public class PopoLoginActivity extends Activity {
     private static final String TAG = "PopoLoginActivity";
-    private static final int REQUEST_SIGNUP = 0;
     Handler loginHandler;
-
     @BindView(R.id.login_username) EditText _usernameText;
     @BindView(R.id.login_psw) EditText _pswText;
     @BindView(R.id.btn_login)TextView _loginButton;
     @BindView(R.id.btn_login_signup)Button _gotoSignUp_Button;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,26 +40,24 @@ public class PopoLoginActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
+        //登录事件绑定
         _loginButton.setOnClickListener(v -> loginView());
         _gotoSignUp_Button.setOnClickListener(v -> {
-            // Start the Signup activity
+            // 从登录界面跳转到注册界面
             Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
-            startActivityForResult(intent, REQUEST_SIGNUP);//启动singup活动，返回时需要signup的数据
+            startActivity(intent);
             finish();
-            //overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
         });
-//        initView();
     }
 
 
     public void loginView() {
-        Log.d(TAG, "Login");
-
+        //判断用户名密码的合法性
         if (!validate()) {
-            onLoginFailed();
+            onLoginFailed("输入不合法");
             return;
         }
-
+        //防止重复点击
         _loginButton.setEnabled(false);
         //加载圈圈动画
         final ProgressDialog progressDialog = new ProgressDialog(PopoLoginActivity.this,
@@ -74,24 +65,35 @@ public class PopoLoginActivity extends Activity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("loading...");
         progressDialog.show();
-
-        String email = _usernameText.getText().toString();
+        //获取用户名及密码
+        String userName = _usernameText.getText().toString();
         String password = _pswText.getText().toString();
-        Toast.makeText(getBaseContext(), email, Toast.LENGTH_LONG).show();
-        // TODO: 此处添加身份验证逻辑
-
-        //email为账户str password为密码str
-
-        //身份验证通过后，登陆成功
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
+        //登录逻辑实现
+        loginHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (String) msg.obj;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String responseCode = jsonObject.getString("responseCode");
+                    //登录成功
+                    if(responseCode.equals("200")){
+                        //todo 接入TIMSDK
                         progressDialog.dismiss();//圈圈动画丢弃
+                        onLoginSuccess();
                     }
-                }, 3000);
+                    else {
+                        String errorMessage = jsonObject.getString("errorMessage");
+                        progressDialog.dismiss();//圈圈动画丢弃
+                        onLoginFailed(errorMessage);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
+        login(userName,password);
     }
 
     /**
@@ -104,25 +106,13 @@ public class PopoLoginActivity extends Activity {
         startActivity(intent);
         finish();
     }
+
     /**
      * 登陆失败提示
      */
-    public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
+    public void onLoginFailed(String failMessage) {
+        Toast.makeText(getBaseContext(), failMessage, Toast.LENGTH_LONG).show();
         _loginButton.setEnabled(true);
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
-                Toast.makeText(getBaseContext(), "Login ！", Toast.LENGTH_LONG).show();
-                this.finish();
-            }
-        }
     }
 
     /**
@@ -179,23 +169,6 @@ public class PopoLoginActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.e(TAG, "onClick: " + jsonObject.toString() );
-
-        loginHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
-            @Override
-            public boolean handleMessage(@NonNull Message msg) {
-                if( Integer.parseInt(msg.obj.toString())== 0){
-                    Toast.makeText(PopoLoginActivity.this,
-                            "Fail",Toast.LENGTH_LONG).show();
-                }
-                else {
-                    Toast.makeText(PopoLoginActivity.this,
-                            "Success",Toast.LENGTH_LONG).show();
-                }
-                return false;
-            }
-        });
-
         MyConnectionToServer.getConnectionThread(loginHandler,
                 UrlManager.myServer+UrlManager.userLoginUrl,
                 jsonObject.toString()).start();
