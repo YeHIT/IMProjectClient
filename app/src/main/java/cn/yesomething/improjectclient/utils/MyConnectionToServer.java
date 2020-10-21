@@ -15,12 +15,10 @@ public class MyConnectionToServer {
     public static Thread getConnectionThread(final Handler handler, final String url, final String param){
         return new Thread(){
             public void run() {
-                System.out.println(url+param);
                 String response = sendPost(url,param);
                 Message message = handler.obtainMessage();
                 message.obj = response;
                 handler.sendMessage(message);
-                System.out.println(response);
             }
         };
     }
