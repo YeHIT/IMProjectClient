@@ -75,7 +75,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    //从数据库中获取数据
+    //todo 从数据库中获取数据
     private  void initData(){
         UserBean bean = null;
         //bean  = DBUtils.getInstance(this).getUserInfo(spUserName);
@@ -87,8 +87,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             //默认为男
             bean.sex = "男";
             //bean.signature = "这个是你的签名";
-            //保存用户信息到数据库
-            //DBUtils.getInstance(this).saveUserInfo(bean);
         }
         setValue(bean);
     }
@@ -177,16 +175,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     //更新界面上的性别数据
     private void setSex(String sex) {
         tv_sex.setText(sex);
-
-        //更新数据库中的性别数据
-        //DBUtils.getInstance(this).updateUserInfo("sex",sex,spUserName);
     }
 
     private void enterActivityForResult(Class<?> to,int requestCode,Bundle b){
         Intent i = new Intent(this,to);  //to标识需要跳转到的界面
         i.putExtras(b);  //b表示跳转时传递的参数
         startActivityForResult(i,requestCode);  //requestCode表示一个请求码
-
     }
 
 

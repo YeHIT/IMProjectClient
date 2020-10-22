@@ -1,5 +1,7 @@
 package cn.yesomething.improjectclient;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
@@ -15,7 +17,7 @@ public class MessageUnitTest {
     @Test
     public void testSelectMessageByTime() throws ParseException {
         JSONObject jsonObject = new JSONObject();
-        long start = 1603205024738L;
+        long start = 1603350183001L;
         long endTime =new Date().getTime();
         String formatStartTime = new SimpleDateFormat().format(start);
         String formatEndTime = new SimpleDateFormat().format(endTime);
@@ -30,17 +32,31 @@ public class MessageUnitTest {
         }
         String responseJson = MyConnectionToServer.sendPost(UrlManager.myServer+UrlManager.messageSelectUrl,
                 jsonObject.toString());
-        System.out.println(responseJson);
+        //解析返回的json
+        try {
+            JSONObject readJsonObject = new JSONObject(responseJson);
+            JSONArray readJsonArray = readJsonObject.getJSONArray("messageList");
+            String readContent = (String) readJsonArray.getJSONObject(0).get("messageContent");
+            System.out.println(readJsonObject.toString());
+            String umReadContent = StringEscapeUtils.unescapeJava(readContent);
+            System.out.println(readContent);
+            System.out.println(umReadContent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     public void testInsertMessage(){
         String date = Long.toString( new Date().getTime());
         JSONObject jsonObject = new JSONObject();
+        String content = "你好啊\uD83D\uDE31androidHello";
+        //加密
+        String mContent = StringEscapeUtils.escapeJava(content);
         try {
             jsonObject.put("fromId","11");
             jsonObject.put("toId","22");
-            jsonObject.put("messageContent","androidHello");
+            jsonObject.put("messageContent",mContent);
             jsonObject.put("messageTime",date);
         } catch (JSONException e) {
             e.printStackTrace();
