@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.yesomething.improjectclient">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,26 +13,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login.PopoLoginActivity">
-        </activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".chat.ChatActivity">
-
+        <activity android:name=".TestInitActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".login.PopoLoginActivity">
 
         </activity>
-        <activity android:name=".login.SignUpActivity">
-
-        </activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".chat.ChatActivity"></activity>
+        <activity android:name=".login.SignUpActivity"></activity>
         <activity android:name=".PageMine.ChangeUserInfoActivity" />
-        <activity android:name=".PageMine.UserInfoActivity">
-        </activity>
+        <activity android:name=".PageMine.UserInfoActivity"></activity>
     </application>
 
 </manifest>

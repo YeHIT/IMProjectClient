@@ -2,21 +2,34 @@ package cn.yesomething.improjectclient.chat;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMTextElem;
+
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.IMManager;
+import cn.yesomething.improjectclient.manager.MessageManager;
+import cn.yesomething.improjectclient.manager.MyServerManager;
 import io.github.rockerhieu.emojicon.EmojiconEditText;
 import io.github.rockerhieu.emojicon.EmojiconGridFragment;
 import io.github.rockerhieu.emojicon.EmojiconsFragment;
@@ -24,18 +37,19 @@ import io.github.rockerhieu.emojicon.emoji.Emojicon;
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener, EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
     private static final String TAG = "ChatActivity";
+    private Handler sendMessageHandler;
     private RecyclerView msgRecyclerView;
     private List<Msg> msgList = new ArrayList<>();
     private EmojiconEditText mEditEmojicon;//类似于TextView 的，只是它能在上面展示表情
     private boolean hasClick;
     private MsgAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_main);
-
+        //配置聊天监听器
+        initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
         initMsg();
 
@@ -53,14 +67,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         msgRecyclerView.setLayoutManager(layoutManager);
         adapter = new MsgAdapter(msgList);
         msgRecyclerView.setAdapter(adapter);
+
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            // 表情按钮
-            case R.id.imageView: {// 表情按钮
+            // 表情按钮的点击事件
+            case R.id.imageView: {
                 if (hasClick) {
                     findViewById(R.id.emojicons).setVisibility(View.GONE);
                 } else {
@@ -72,16 +87,39 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             // todo 发送信息
-            case R.id.send_chat: {//点击发送，将 mEditEmojicon文本框内的text发出
-                String content = "你好"+mEditEmojicon.getText().toString() + "你好";
-
+            //点击发送，将 mEditEmojicon文本框内的text发出
+            case R.id.send_chat: {
+                //获取消息以及对应的加密消息
+                String content = mEditEmojicon.getText().toString();
+                //加密
                 String mContent = StringEscapeUtils.escapeJava(content);
-                String umContent = StringEscapeUtils.unescapeJava(mContent);
-                Log.e(TAG, "onClick: " + content);
-                Log.e(TAG, "onClick: " + mContent);
-                Log.e(TAG, "onClick: " + umContent);
                 if (!"".equals(content)) {//当输入content不为空的时候
-                    sendMsg(content, Msg.TYPE_SENT);//封装起来，只要输入string就好了
+                    sendMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+                        @Override
+                        public boolean handleMessage(@NonNull Message msg) {
+                            String response = (String) msg.obj;
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                String responseCode = jsonObject.getString("responseCode");
+                                //登录成功
+                                if(responseCode.equals("200")){
+                                    MessageManager.sendTextMessage(mContent,"denwade");
+                                    showMsg(mContent,Msg.TYPE_SENT);
+                                }
+                                else {
+                                    String errorMessage = jsonObject.getString("errorMessage");
+                                    Toast.makeText(ChatActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            return false;
+                        }
+                    });
+                    String userId = IMManager.getLoginUser();
+                    String toId = "denwade";
+                    Date messageDate = new Date();
+                    MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
                 } else {//否则toast提示输入为空
                     Toast.makeText(this, "Empty!", Toast.LENGTH_SHORT).show();
                 }
@@ -95,7 +133,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
             // 测试按钮，点击会接收一条消息
             case R.id.bt_test: {
-                sendMsg("你好!", Msg.TYPE_RECEIVED);
+                showMsg("你好!", Msg.TYPE_RECEIVED);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                 break;
@@ -112,8 +150,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /*用于聊天的界面的初始化，比如用于显示最近的几条聊天记录，
-    因为目前还没有聊天记录，所以这里先不加*/
+    /**
+     * 用于聊天的界面的初始化，比如用于显示最近的几条聊天记录,
+     * 因为目前还没有聊天记录，所以这里先不加。
+     */
     private void initMsg(){
         /*Msg msg1 = new Msg("Hello.",Msg.TYPE_RECEIVED);
         msgList.add(msg1);
@@ -125,12 +165,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     /***
-     *
+     * 发送消息
      * @param content  消息的String
      * @param type_Msg 消息类型 (int) TYPE_SENT（发送）  TYPE_RECEIVED（接收）
      */
-    public void sendMsg(String content,int type_Msg){
-        Msg msg = new Msg(content,type_Msg);
+    public void showMsg(String content,int type_Msg){
+        //解密消息
+        String umContent = StringEscapeUtils.unescapeJava(content);
+        Msg msg = new Msg(umContent,type_Msg);
         msgList.add(msg);
         if(msgList.size()>0){
             adapter.notifyItemChanged(msgList.size()-1);
@@ -166,5 +208,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 .beginTransaction()
                 .replace(R.id.emojicons, EmojiconsFragment.newInstance(useSystemDefault))
                 .commit();
+    }
+
+    /**
+     * 配置聊天监听器
+     */
+    private void initChatListener(){
+        MessageManager.addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
+            @Override
+            public void onRecvNewMessage(V2TIMMessage msg) {
+                V2TIMTextElem textElem = MessageManager.getMessage(msg);
+                showMsg(textElem.getText(),Msg.TYPE_RECEIVED);
+                super.onRecvNewMessage(msg);
+            }
+        });
     }
 }

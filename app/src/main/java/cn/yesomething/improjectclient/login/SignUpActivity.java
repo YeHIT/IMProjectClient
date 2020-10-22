@@ -23,8 +23,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.R;
-import cn.yesomething.improjectclient.manager.UrlManager;
-import cn.yesomething.improjectclient.utils.MyConnectionToServer;
+import cn.yesomething.improjectclient.manager.MyServerManager;
 
 public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
@@ -76,7 +75,6 @@ public class SignUpActivity extends AppCompatActivity {
         //获取用户名及密码
         String name = _usernameText.getText().toString();
         String password = _pswText.getText().toString();
-        String reEnterPassword = _pswCheckText.getText().toString();
 
         // 注册逻辑实现
         registerHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
@@ -103,7 +101,7 @@ public class SignUpActivity extends AppCompatActivity {
                 return false;
             }
         });
-        register(name,password);
+        MyServerManager.register(registerHandler,name,password);
     }
 
     /**
@@ -124,25 +122,6 @@ public class SignUpActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), failMessage, Toast.LENGTH_LONG).show();
 
         _create_account_Button.setEnabled(true);
-    }
-
-    /**
-     * 调用后端完成用户注册
-     * @param userName 用户名
-     * @param userPassword 用户密码
-     */
-    public void register(String userName,String userPassword){
-        //拼接json
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("userName",userName);
-            jsonObject.put("userPassword",userPassword);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        MyConnectionToServer.getConnectionThread(registerHandler,
-                UrlManager.myServer+UrlManager.userRegisterUrl,
-                jsonObject.toString()).start();
     }
 
     /**
