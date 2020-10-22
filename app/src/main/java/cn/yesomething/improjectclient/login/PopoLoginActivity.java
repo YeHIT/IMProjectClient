@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,8 +24,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
-import cn.yesomething.improjectclient.manager.UrlManager;
-import cn.yesomething.improjectclient.utils.MyConnectionToServer;
+import cn.yesomething.improjectclient.TestInitActivity;
+import cn.yesomething.improjectclient.manager.IMManager;
+import cn.yesomething.improjectclient.manager.MyServerManager;
 
 
 public class PopoLoginActivity extends Activity {
@@ -50,7 +53,9 @@ public class PopoLoginActivity extends Activity {
         });
     }
 
-
+    /**
+     * 登录功能实现
+     */
     public void loginView() {
         //判断用户名密码的合法性
         if (!validate()) {
@@ -79,8 +84,22 @@ public class PopoLoginActivity extends Activity {
                     //登录成功
                     if(responseCode.equals("200")){
                         //todo 接入TIMSDK
-                        progressDialog.dismiss();//圈圈动画丢弃
-                        onLoginSuccess();
+                        IMManager.login(PopoLoginActivity.this, userName, new V2TIMCallback() {
+                            @Override
+                            public void onError(int i, String s) {
+                                Toast.makeText(getBaseContext(), "登录异常,请稍后再试", Toast.LENGTH_LONG).show();
+                            }
+                            @Override
+                            public void onSuccess() {
+                                progressDialog.dismiss();//圈圈动画丢弃
+                                Toast.makeText(getBaseContext(), "登录成功！", Toast.LENGTH_LONG).show();
+                                //todo 测试用的跳转
+                                Intent intent = new Intent(getApplicationContext(), TestInitActivity.class);
+                                startActivity(intent);
+                                finish();
+//                                onLoginSuccess();
+                            }
+                        });
                     }
                     else {
                         String errorMessage = jsonObject.getString("errorMessage");
@@ -93,7 +112,7 @@ public class PopoLoginActivity extends Activity {
                 return false;
             }
         });
-        login(userName,password);
+        MyServerManager.login(loginHandler,userName,password);
     }
 
     /**
@@ -155,23 +174,6 @@ public class PopoLoginActivity extends Activity {
     }
 
 
-    /**
-     * 根据用户名密码判断能否登录
-     * @param userName 用户名
-     * @param userPassword 用户密码
-     */
-    private void login(String userName,String userPassword){
-        //拼接json
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("userName",userName);
-            jsonObject.put("userPassword",userPassword);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        MyConnectionToServer.getConnectionThread(loginHandler,
-                UrlManager.myServer+UrlManager.userLoginUrl,
-                jsonObject.toString()).start();
-    }
+
 
 }

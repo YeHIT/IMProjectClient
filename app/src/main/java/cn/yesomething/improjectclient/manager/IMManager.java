@@ -1,20 +1,30 @@
 package cn.yesomething.improjectclient.manager;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMSDKConfig;
 import com.tencent.imsdk.v2.V2TIMSDKListener;
 
-import java.util.Date;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import cn.yesomething.improjectclient.utils.GenerateTestUserSig;
+import java.util.Date;
 
 //管理配置及用户相关
 public class IMManager {
     private static final String TAG = "IMManager";
+    //处理userSig的handler
+    private static Handler userSigHandler;
+    //项目的appId
     private static int SDKAppID = 1400433315;
     public static final int TIMSDK_LOG_NONE = 0;
     public static final int TIMSDK_LOG_DEBUG = 3;
@@ -39,6 +49,7 @@ public class IMManager {
     public static String getLoginUser(){
        return V2TIMManager.getInstance().getLoginUser();
     }
+
     /**
      * 初始化IMSDK配置,默认打印日志等级为打印info以上,支持自行传入参数修改等级
      * @param context 传入context,一般为this
@@ -91,34 +102,43 @@ public class IMManager {
 
     /**
      * 用户登录
+     * @param context 需要展示错误信息的界面,一般传入this
      * @param userName 用户名
      * @param callback 回调函数
      */
-    public synchronized static void login(String userName, V2TIMCallback callback){
-        //若此时已处于登录状态则直接调用回调函数的onsucess
+    public synchronized static void login(Context context,String userName, V2TIMCallback callback){
+        //若此时已处于登录状态则直接调用回调函数的onSuccess
         if(isLoginIMService()){
             callback.onSuccess();
         }
         //未登录则调用登录函数
         else{
-            String userSig = IMManager.genTestUserSig(userName);
-            Log.e(TAG, "login: "+userSig);
-            V2TIMManager.getInstance().login(userName,userSig, callback);
+            userSigHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+                @Override
+                public boolean handleMessage(@NonNull Message msg) {
+                    String response = (String) msg.obj;
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //登录成功
+                        if(responseCode.equals("200")){
+                            //SDK登录
+                            String userSig = jsonObject.getString("userSig");
+                            V2TIMManager.getInstance().login(userName,userSig, callback);
+                        }
+                        else {
+                            String errorMessage = jsonObject.getString("errorMessage");
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    return false;
+                }
+            });
+            //请求userSig线程启动
+            MyServerManager.genTestUserSig(userSigHandler,userName);
         }
-    }
-
-    public static boolean register(String userName,String password){
-        return true;
-    }
-
-
-    /**
-     * 计算 UserSig签名,过两天修改成向服务器请求
-     * @param userId 传入需要生成签名的UserSig
-     * @return UserSig签名
-     */
-    public static String genTestUserSig(String userId){
-        return GenerateTestUserSig.genTestUserSig(userId);
     }
 
     /**
@@ -127,6 +147,7 @@ public class IMManager {
     public static void logout(){
         logout(null);
     }
+
     /**
      * 用户登出
      * @param callback 登出的回调函数
