@@ -3,11 +3,11 @@ package cn.yesomething.improjectclient.manager;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMSimpleMsgListener;
-import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 
-//管理消息相关
+//管理SDK消息相关
 public class MessageManager {
     private static final String TAG = "MessageManager";
     /**
@@ -25,8 +25,10 @@ public class MessageManager {
      * @param userId 发给的用户
      * @param callback 回调函数
      */
-    public static void sendTextMessage(String text, String userId, V2TIMValueCallback<V2TIMMessage> callback){
-        V2TIMManager.getInstance().sendC2CTextMessage(text,userId,callback);
+    public static void sendTextMessage(String text, String userId, V2TIMSendCallback<V2TIMMessage> callback){
+        V2TIMMessage message = V2TIMManager.getMessageManager().createTextMessage(text);
+        V2TIMManager.getMessageManager().sendMessage(message,userId,null,
+                V2TIMMessage.V2TIM_PRIORITY_DEFAULT,false,null,callback);
     }
 
 

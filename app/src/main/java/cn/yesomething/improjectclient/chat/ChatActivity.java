@@ -43,6 +43,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private EmojiconEditText mEditEmojicon;//类似于TextView 的，只是它能在上面展示表情
     private boolean hasClick;
     private MsgAdapter adapter;
+    //当前聊天界面的用户名
+    String userId = "denwade";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
         initMsg();
+
+        //todo 获取当前聊天界面的用户名
+        userId = "denwade";
 
         //mEditEmojicon 就是 输入框，类似于TextVIew的东西
         mEditEmojicon = (EmojiconEditText) findViewById(R.id.editEmojicon);
@@ -103,7 +108,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 String responseCode = jsonObject.getString("responseCode");
                                 //登录成功
                                 if(responseCode.equals("200")){
-                                    MessageManager.sendTextMessage(mContent,"denwade");
+                                    MessageManager.sendTextMessage(mContent,userId);
                                     showMsg(mContent,Msg.TYPE_SENT);
                                 }
                                 else {
