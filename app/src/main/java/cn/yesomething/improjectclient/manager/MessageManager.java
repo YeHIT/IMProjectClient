@@ -1,6 +1,7 @@
 package cn.yesomething.improjectclient.manager;
 
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
@@ -79,6 +80,11 @@ public class MessageManager {
                 default:return null;
             }
         }
+    }
+
+    //设置会话监听器
+    public static void setConversationListener(V2TIMConversationListener listener){
+        V2TIMManager.getConversationManager().setConversationListener(listener);
     }
 }
 
