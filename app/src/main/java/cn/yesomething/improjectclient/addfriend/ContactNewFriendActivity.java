@@ -76,7 +76,7 @@ public class ContactNewFriendActivity extends AppCompatActivity implements View.
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_friend_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        FriendAdatper friendadatper = new FriendAdatper(friendList);
+        FriendAdatper friendadatper = new FriendAdatper(this,friendList);
         recyclerView.setAdapter(friendadatper);
     }
 
