@@ -15,7 +15,6 @@ import com.tencent.imsdk.v2.V2TIMValueCallback;
 import java.util.Date;
 import java.util.List;
 
-import cn.yesomething.improjectclient.chat.ChatActivity;
 import cn.yesomething.improjectclient.login.PopoLoginActivity;
 import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.UserManager;
@@ -36,7 +35,7 @@ public class TestInitActivity extends Activity {
             initConversationListener();
             Log.e(TAG, "onCreate: 配置会话监听器成功！" );
             // 跳转到聊天界面
-            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
         else {
