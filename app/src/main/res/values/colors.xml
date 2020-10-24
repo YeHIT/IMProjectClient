@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#3f6ecc</color>
     <color name="colorAccent">#45bef5</color>
 
+    <color name="title_bar">#3f6ecc</color>
     <color name="test_blue">#338BFF</color>
     <color name="colorCloud">#006EFF</color>
     <color name="white">#FFFFFF</color>

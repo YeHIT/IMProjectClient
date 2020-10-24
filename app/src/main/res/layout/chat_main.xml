@@ -37,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dip"
             android:gravity="center_vertical"
-            android:background="@drawable/chat_button_shape"
+            android:background="@drawable/title_bar_shape"
             android:padding="10dip" >
 
             <ImageView
@@ -89,8 +89,8 @@
             android:layout_weight="5"
             android:layout_width="210dp"
             android:layout_height="40dp"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
+
+            android:layout_gravity="center"
             android:hint="Let’s POPO！"
             android:background="@drawable/edit_background"
             android:lineSpacingExtra="9dp"
@@ -101,6 +101,7 @@
             android:id="@+id/send_chat"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/emotion"
+            android:layout_gravity="center"
             android:text="发送"
             android:textSize="13sp"
             android:textColor="@color/white"

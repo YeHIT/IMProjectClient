@@ -3,7 +3,7 @@
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-android:background="#3f6ecc"
+android:background="@color/title_bar"
 tools:context=".login.SignUpActivity">
 <!--title bar-->
     <RelativeLayout
