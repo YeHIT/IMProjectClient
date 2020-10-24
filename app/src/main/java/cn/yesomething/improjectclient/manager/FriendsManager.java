@@ -119,7 +119,6 @@ public class FriendsManager {
         V2TIMManager.getFriendshipManager().getFriendApplicationList(callback);
     }
 
-
     /**
      * 获取当前用户的好友列表
      * @param callback 回调函数
