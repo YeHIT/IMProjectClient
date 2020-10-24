@@ -11,6 +11,7 @@ import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //管理SDK好友相关
@@ -127,10 +128,11 @@ public class FriendsManager {
         V2TIMManager.getFriendshipManager().getFriendList(callback);
     }
 
+    /**
+     * 删除当前用户的全部好友
+     */
     public static void deleteAllFriends(){
         V2TIMManager.getFriendshipManager().getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>(){
-
-
             @Override
             public void onError(int i, String s) {
 
@@ -138,8 +140,12 @@ public class FriendsManager {
 
             @Override
             public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                ArrayList<String> friendList = new ArrayList<>();
                 for (V2TIMFriendInfo friendInfo: v2TIMFriendInfos){
-                    Log.e(TAG, "onSuccess: "+friendInfo.getUserID() );
+                    friendList.add(friendInfo.getUserID());
+                    Log.e(TAG, "onSuccess: " + friendInfo.getUserID() );
+                    V2TIMManager.getFriendshipManager().deleteFromFriendList(friendList,
+                            V2TIMFriendInfo.V2TIM_FRIEND_TYPE_BOTH,null);
                 }
             }
         });

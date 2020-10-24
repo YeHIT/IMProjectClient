@@ -114,4 +114,87 @@ public class MyServerManager {
                 jsonObject.toString()).start();
     }
 
+    /**
+     * 查询同某个好友的聊天记录
+     * @param getMessageListHandler 用于在操作完成后处理返回结果的handler
+     * @param friendName 好友名
+     */
+    public static void selectMessageList(Handler getMessageListHandler,String friendName){
+        selectMessageList(getMessageListHandler,IMManager.getLoginUser(),friendName,
+                null,null);
+    }
+
+
+    /**
+     * 根据双方名字以及所给的时间段获取双方聊天记录
+     * @param getMessageListHandler 用于在操作完成后处理返回结果的handler
+     * @param userName 当前登录的用户名
+     * @param friendName 好友名
+     * @param messageStartTime 消息起始时间
+     * @param messageEndTime 消息结束时间
+     */
+    public static void selectMessageList(Handler getMessageListHandler,String userName,
+                                         String friendName, Date messageStartTime,Date messageEndTime){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("fromId",userName);
+            jsonObject.put("toId",friendName);
+            if(messageStartTime != null){
+                jsonObject.put("messageStartTime",messageStartTime);
+            }
+            if(messageEndTime != null){
+                jsonObject.put("messageEndTime",messageEndTime);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(getMessageListHandler,
+                UrlManager.myServer+UrlManager.messageSelectUrl,
+                jsonObject.toString()).start();
+    }
+
+    /**
+     * 根据好友名添加好友
+     * @param addFriendHandler 用于在操作完成后处理返回结果的handler
+     * @param friendName 好友名
+     */
+    public static void addFriend(Handler addFriendHandler,String friendName){
+        addFriend(addFriendHandler,friendName,
+                null,null,null);
+    }
+
+    /**
+     * 设置好友的具体信息
+     * @param addFriendHandler 用于在操作完成后处理返回结果的handler
+     * @param friendName 好友名
+     * @param friendNickName 好友昵称
+     * @param friendType 好友类型
+     * @param friendGroupType 好友所在分组
+     */
+    public static void addFriend(Handler addFriendHandler,String friendName,
+                                 String friendNickName,String friendType,String friendGroupType){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("friendId",friendName);
+            jsonObject.put("userId",IMManager.getLoginUser());
+            if(friendNickName == null){
+                jsonObject.put("friendName",IMManager.getLoginUser());
+            }
+            else{
+                jsonObject.put("friendName",friendNickName);
+            }
+            if( friendType != null){
+                jsonObject.put("friendType",friendType);
+            }
+            if( friendGroupType != null){
+                jsonObject.put("friendGroupType",friendGroupType);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(addFriendHandler,
+                UrlManager.myServer+UrlManager.friendsAddUrl,
+                jsonObject.toString()).start();
+
+    }
 }

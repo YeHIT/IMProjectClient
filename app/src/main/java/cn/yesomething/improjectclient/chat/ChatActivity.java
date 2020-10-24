@@ -22,6 +22,7 @@ import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMTextElem;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,7 @@ import io.github.rockerhieu.emojicon.emoji.Emojicon;
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener, EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener {
     private static final String TAG = "ChatActivity";
     private Handler sendMessageHandler;
+    private Handler getMessageListHandler;
     private RecyclerView msgRecyclerView;
     private List<Msg> msgList = new ArrayList<>();
     private EmojiconEditText mEditEmojicon;//类似于TextView 的，只是它能在上面展示表情
@@ -57,8 +59,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         //配置聊天监听器
         initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
-        initMsg();
-
+        initMsg(10);
 
         //mEditEmojicon 就是 输入框，类似于TextVIew的东西
         mEditEmojicon = (EmojiconEditText) findViewById(R.id.editEmojicon);
@@ -161,16 +162,46 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     /**
      * 用于聊天的界面的初始化，比如用于显示最近的几条聊天记录,
-     * 因为目前还没有聊天记录，所以这里先不加。
      */
-    private void initMsg(){
-        /*Msg msg1 = new Msg("Hello.",Msg.TYPE_RECEIVED);
-        msgList.add(msg1);
-        Msg msg3 = new Msg("哈哈哈哈哈哈",Msg.TYPE_RECEIVED);
-        msgList.add(msg3);*/
-        /*sendMsg("Hello.",Msg.TYPE_RECEIVED);
-        sendMsg("哈哈哈哈哈哈",Msg.TYPE_RECEIVED);*/
-
+    private void initMsg(int maxMessageNum){
+        getMessageListHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (String) msg.obj;
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    String responseCode = jsonObject.getString("responseCode");
+                    //登录成功
+                    if(responseCode.equals("200")){
+                        JSONArray jsonArray = jsonObject.getJSONArray("messageList");
+                        int maxLength = jsonArray.length();
+                        //若总数组长度大于所需长度则起始位置i取 maxLength+1-maxMessageNum
+                        //示例总长度为12 maxLength为11 最大所需信息为10 此时起始位置应为11-10+1即2
+                        int i = (maxLength > maxMessageNum) ? maxLength + 1 - maxMessageNum: 0;
+                        for(; i < maxLength ; i++){
+                            JSONObject tempObj = jsonArray.getJSONObject(i);
+                            String fromId = tempObj.getString("fromId");
+                            String messageContent = tempObj.getString("messageContent");
+                            //消息是朋友发来的则自己为接收者
+                            if(fromId.equals(friendName)){
+                                showMsg(messageContent,Msg.TYPE_RECEIVED);
+                            }
+                            else {
+                                showMsg(messageContent,Msg.TYPE_SENT);
+                            }
+                        }
+                    }
+                    else {
+                        String errorMessage = jsonObject.getString("errorMessage");
+                        Toast.makeText(ChatActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
+        MyServerManager.selectMessageList(getMessageListHandler,friendName);
     }
 
     /***
@@ -181,7 +212,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void showMsg(String content,int type_Msg){
         //解密消息
         String umContent = StringEscapeUtils.unescapeJava(content);
-        Toast.makeText(this, umContent, Toast.LENGTH_SHORT).show();
+        umContent = StringEscapeUtils.unescapeJava(umContent);
         Msg msg = new Msg(umContent,type_Msg);
         msgList.add(msg);
         if(msgList.size()>0){

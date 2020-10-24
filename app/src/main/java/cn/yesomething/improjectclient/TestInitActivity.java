@@ -37,8 +37,6 @@ public class TestInitActivity extends Activity {
             showLoginUser();
             //初始化监听器
             initListener();
-            //查看当前好友列表
-            FriendsManager.deleteAllFriends();
             // 跳转到聊天界面
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
