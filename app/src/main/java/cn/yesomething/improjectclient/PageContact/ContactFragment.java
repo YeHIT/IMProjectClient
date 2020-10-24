@@ -89,7 +89,7 @@ public class ContactFragment extends Fragment {
     }
     public void init(View view){
 
-        contactNames = new String[] {"POPO助手", "李道一", "邓广博", "黄建晔","赵敏", "123",};
+        contactNames = new String[] {"POPO助手", "李道一", "邓广博", "黄建晔1","黄建晔2","黄建晔3","赵敏", "123",};
         contactList = (RecyclerView) view.findViewById(R.id.contact_list_main);
         LetterList = (LetterListView) view.findViewById(R.id.letter_view_main);
         layoutManager = new LinearLayoutManager(mContext);

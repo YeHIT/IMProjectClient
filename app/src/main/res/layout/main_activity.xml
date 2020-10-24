@@ -56,14 +56,15 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="610dp"
+        android:layout_height="560dp"
+        android:layout_weight="1"
         >
 
     </androidx.viewpager.widget.ViewPager>
     <LinearLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="60dp"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/layout_contact_list"
         android:background="#f7f7f7"
