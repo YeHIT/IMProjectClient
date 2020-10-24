@@ -18,7 +18,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.contact_add_activity);
+        setContentView(R.layout.new_friend_add_activity);
 
         addUserId = (TextView) findViewById(R.id.add_user_id);
         //findViewById(R.id.add_user_id).setOnClickListener(this);

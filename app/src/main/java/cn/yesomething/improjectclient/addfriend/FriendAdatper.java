@@ -47,7 +47,7 @@ public class FriendAdatper extends RecyclerView.Adapter<FriendAdatper.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.contact_new_friend_item,parent,false);
+                .inflate(R.layout.new_friend_item,parent,false);
         final ViewHolder holder = new ViewHolder(view);
         //点击通过按钮
         holder.friednAgreeAdd.setOnClickListener(new View.OnClickListener() {
