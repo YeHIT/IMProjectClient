@@ -5,75 +5,107 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#d8e0e8">
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/bt_back"
-            android:layout_width="80sp"
-            android:layout_height="wrap_content"
-            android:background="#0000"
-            android:text="返回"
-            android:textSize="20dp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="联系人"
-            android:textSize="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="8dp"/>
-        <Button
-            android:id="@+id/bt_test"
-            android:layout_width="80sp"
-            android:layout_height="wrap_content"
-            android:background="#0000"
-            android:text="测试"
-            android:textSize="20dp"
-            android:layout_alignParentRight="true"/>
-    </RelativeLayout>
+<!--    <RelativeLayout-->
+<!--        xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content">-->
+<!--        <Button-->
+<!--            android:id="@+id/bt_back"-->
+<!--            android:layout_width="80sp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="#0000"-->
+<!--            android:text="返回"-->
+<!--            android:textSize="20dp"/>-->
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="联系人"-->
+<!--            android:textSize="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginTop="8dp"/>-->
+<!--        <Button-->
+<!--            android:id="@+id/bt_test"-->
+<!--            android:layout_width="80sp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="#0000"-->
+<!--            android:text="测试"-->
+<!--            android:textSize="20dp"-->
+<!--            android:layout_alignParentRight="true"/>-->
+<!--    </RelativeLayout>-->
+
+        <RelativeLayout
+            android:id="@+id/chat_top"
+            android:layout_width="match_parent"
+            android:layout_height="60dip"
+            android:gravity="center_vertical"
+            android:background="@drawable/chat_button_shape"
+            android:padding="10dip" >
+
+            <ImageView
+                android:id="@+id/bt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageButton
+                    android:id="@+id/bt_test"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/more" />
+            </RelativeLayout>
+        </RelativeLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/msg_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="590dp"
+        android:background="@color/chatBackgroundColor"
         android:layout_weight="1">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/chatbottom_background">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
+            android:layout_width="36dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:src="@drawable/icon_sr_bg" />
+            android:layout_weight="1"
+            android:src="@drawable/icon_motion" />
 
-        <!--<EditText
-        android:id="@+id/input_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="7"
-        android:hint="Type something here"
-        android:maxLines="2" />-->
+
         <io.github.rockerhieu.emojicon.EmojiconEditText
             android:id="@+id/editEmojicon"
-            android:layout_width="298dp"
-            android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:layout_weight="5"
-            android:hint="Type something here"
+            android:layout_width="210dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:hint="Let’s POPO！"
+            android:background="@drawable/edit_background"
             android:lineSpacingExtra="9dp"
             android:paddingLeft="7dp"
             emojicon:emojiconSize="28sp" />
 
         <Button
             android:id="@+id/send_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send" />
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/emotion"
+            android:text="发送"
+            android:textSize="13sp"
+            android:textColor="@color/white"
+            android:background="@drawable/chat_button_shape"
+            android:layout_width="60dp"
+            android:layout_height="32dp" />
 
 
     </LinearLayout>

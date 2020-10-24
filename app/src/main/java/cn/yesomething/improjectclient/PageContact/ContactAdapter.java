@@ -1,10 +1,13 @@
 package cn.yesomething.improjectclient.PageContact;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,12 +22,14 @@ import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.utils.Utils;
 
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "ContactAdapter";
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private String[] mContactNames; // 联系人名称字符串数组
     private List<String> mContactList; // 联系人名称List（转换成拼音）
     private List<Contact> resultList; // 最终结果（包含分组的字母）
     private List<String> characterList; // 字母List
+
 
     public enum ITEM_TYPE {//ITEM_TYPE_CHARACTER表示字母，ITEM_TYPE_CONTACT表示具体的联系人
         ITEM_TYPE_CHARACTER,
@@ -88,6 +93,16 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         } else if (holder instanceof ContactHolder) {
             ((ContactHolder) holder).mTextView.setText(resultList.get(position).getmName());
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {//实现clicklistener接口回调
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+//                    onItemClickListener.onClick(position);
+                    onItemClickListener.onClick(resultList.get(position).getmName());
+                }
+            }
+        });
     }
 
     @Override
@@ -105,8 +120,8 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         CharacterHolder(View view) {
             super(view);
-
-            mTextView = (TextView) view.findViewById(R.id.character);
+            Log.e(TAG, "CharacterHolder: " );
+            mTextView = view.findViewById(R.id.character);
         }
     }
 
@@ -115,8 +130,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         ContactHolder(View view) {
             super(view);
-
+            Log.e(TAG, "ContactHolder: " );
             mTextView = (TextView) view.findViewById(R.id.contact_name);
+
         }
     }
 
@@ -131,4 +147,19 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         return -1; // -1不会滑动
     }
+
+    /**
+     * 定义RecyclerView选项单击事件的回调接口
+     */
+    public interface OnItemClickListener{//也可以不在这个activity或者是fragment中来声明接口，可以在项目中单独创建一个interface，就改成static就OK
+        //参数（父组件，当前单击的View,单击的View的位置，数据）
+        void onClick(String friendname);
+
+    }
+    private OnItemClickListener onItemClickListener;//声明一下接口
+    //提供setter方法
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        this.onItemClickListener = onItemClickListener;
+    }
+
 }

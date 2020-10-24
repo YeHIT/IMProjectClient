@@ -28,14 +28,10 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
-    private RecyclerView contactList;
-    private String[] contactNames;
-    private LinearLayoutManager layoutManager;
-    private LetterListView LetterList;
-    private ContactAdapter adapter;
+
 
     private ViewPager viewPager;
-    private NewFragmentPagerAdapter FragmentPagerAdapter;
+    private mainFragmentPagerAdapter FragmentPagerAdapter;
     private List<Fragment> fragmentList; //保存界面的view
 
 
@@ -52,33 +48,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//防止出现两个toolbar
         setContentView(R.layout.main_activity);
+
         ButterKnife.bind(this);
         //IMManager.initSDKConfig(this);
         //设置监听器
-        _btnConversationPage.setOnClickListener(v -> SelectConversationPage());
-        _btnContactPage.setOnClickListener(v -> SelectContactPage());
-        _btnMinePage.setOnClickListener(v -> SelectMinePage());
-        contactNames = new String[] {"POPO助手", "李道一", "邓广博", "黄建晔","赵敏", "123",};
-        contactList = (RecyclerView) findViewById(R.id.contact_list_main);
-        LetterList = (LetterListView) findViewById(R.id.letter_view_main);
-        layoutManager = new LinearLayoutManager(this);
-        adapter = new ContactAdapter(this, contactNames);
+//        _btnConversationPage.setOnClickListener(v -> SelectConversationPage());
+//        _btnContactPage.setOnClickListener(v -> SelectContactPage());
+//        _btnMinePage.setOnClickListener(v -> SelectMinePage());
 
-        contactList.setLayoutManager(layoutManager);
-        contactList.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST));
-        contactList.setAdapter(adapter);
-        //定义点击导航栏箭头、字母或#时的回调
-        LetterList.setCharacterListener(new LetterListView.CharacterClickListener() {
-            @Override
-            public void clickCharacter(String character) {
-                layoutManager.scrollToPositionWithOffset(adapter.getScrollPosition(character), 0);
-            }
-
-            @Override
-            public void clickArrow() {
-                layoutManager.scrollToPositionWithOffset(0, 0);
-            }
-        });
         initViewPager();
     }
 
@@ -99,11 +76,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         fragmentList.add(new ContactFragment());
+        fragmentList.add(new ContactFragment());
         //fragmentList.add(new MineFragment());
-        FragmentPagerAdapter = new NewFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
+        FragmentPagerAdapter = new mainFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(FragmentPagerAdapter);
         //viewPager.addOnPageChangeListener(this);
-        viewPager.setCurrentItem(0);
+        //viewPager.setCurrentItem(1);
     }
 }
 

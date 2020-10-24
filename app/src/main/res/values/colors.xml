@@ -9,4 +9,7 @@
     <color name="white">#FFFFFF</color>
     <color name="iron">#CCCCCC</color>
     <color name="titleText">#338BFF</color>
+    <color name="chatBackgroundColor">#EDEDED</color>
+    <color name="chatbottom_background">#F7F7F7</color>
+
 </resources>
