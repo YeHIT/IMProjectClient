@@ -53,7 +53,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        if (getSupportActionBar() != null){getSupportActionBar().hide(); }//隐藏原生actionbar
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
         //配置聊天监听器

@@ -5,6 +5,12 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!--拍照-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--读写-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.PERMISSIONS_STORAGE"/>
+
 
     <application
         android:allowBackup="true"
@@ -30,7 +36,9 @@
         <activity android:name=".chat.ChatActivity"></activity>
         <activity android:name=".login.SignUpActivity"></activity>
         <activity android:name=".PageMine.ChangeUserInfoActivity" />
-        <activity android:name=".PageMine.UserInfoActivity"></activity>
+        <activity android:name=".PageMine.UserInfoActivity">
+
+        </activity>
         <activity android:name=".addfriend.ContactNewFriendActivity">
         </activity>
         <activity android:name=".addfriend.AddFriendActivity">

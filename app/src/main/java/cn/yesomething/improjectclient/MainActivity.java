@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,15 @@ import androidx.viewpager.widget.ViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.yesomething.improjectclient.PageContact.ContactAdapter;
+import cn.yesomething.improjectclient.PageContact.ContactFragment;
+import cn.yesomething.improjectclient.PageContact.DividerItemDecoration;
+import cn.yesomething.improjectclient.login.SignUpActivity;
+import cn.yesomething.improjectclient.manager.IMManager;
+import cn.yesomething.improjectclient.PageContact.LetterListView;
+
+import cn.yesomething.improjectclient.PageMine.UserInfoActivity;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.PageContact.ContactFragment;
@@ -26,8 +36,6 @@ import cn.yesomething.improjectclient.addfriend.ContactNewFriendActivity;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-
-
 
     private ViewPager viewPager;
     private mainFragmentPagerAdapter FragmentPagerAdapter;
@@ -61,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         //IMManager.initSDKConfig(this);
         //设置监听器
-//        _btnConversationPage.setOnClickListener(v -> SelectConversationPage());
-//        _btnContactPage.setOnClickListener(v -> SelectContactPage());
-//        _btnMinePage.setOnClickListener(v -> SelectMinePage());
+        _btnConversationPage.setOnClickListener(v -> SelectConversationPage());
+        _btnContactPage.setOnClickListener(v -> SelectContactPage());
+        _btnMinePage.setOnClickListener(v -> SelectMinePage());
         _btnAddFriend.setOnClickListener(v->AddFriend());
         initViewPager();
         IntentFilter filter = new IntentFilter(TestInitActivity.action);
@@ -72,20 +80,24 @@ public class MainActivity extends AppCompatActivity {
 
     //viewpager选中对话列表界面
     private void SelectConversationPage(){
-
+        Toast.makeText(this,"click ConversationPage",Toast.LENGTH_SHORT).show();
     }
     //viewpager选中通讯录列表界面
     private void SelectContactPage(){
-
+        Toast.makeText(this,"click ContactPage",Toast.LENGTH_SHORT).show();
     }
     //viewpager选中用户信息设置界面
     private void SelectMinePage(){
-
+        Toast.makeText(this,"click MinePage",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplicationContext(),UserInfoActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
     private void AddFriend(){
         Intent friendIntent = new Intent(this, ContactNewFriendActivity.class);
         startActivity(friendIntent);
     }
+
 
 
     //加载viewpager
