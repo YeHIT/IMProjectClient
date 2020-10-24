@@ -4,21 +4,25 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import cn.yesomething.improjectclient.R;
-import cn.yesomething.improjectclient.chat.ChatActivity;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Toast;
 
-import java.util.Map;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.tencent.imsdk.v2.V2TIMFriendInfo;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.chat.ChatActivity;
+import cn.yesomething.improjectclient.manager.FriendsManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,18 +30,18 @@ import java.util.Map;
  * create an instance of this fragment.
  */
 public class ContactFragment extends Fragment {
-
+    private static final String TAG = "ContactFragment";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     private RecyclerView contactList;
-    private String[] contactNames;
+    private ArrayList<String> contactNames;
     private LinearLayoutManager layoutManager;
     private LetterListView LetterList;
     private ContactAdapter adapter;
-
+    View mView;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -66,6 +70,14 @@ public class ContactFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        if(contactNames!= null ){
+            getFriendList();
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -82,19 +94,17 @@ public class ContactFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.contact_fragment, container, false);
-        init(view);
+        mView = inflater.inflate(R.layout.contact_fragment, container, false);
+        getFriendList();
         Log.e("HEHE", "Hello");
-        return view;
+        return mView;
     }
     public void init(View view){
 
-        contactNames = new String[] {"POPO助手", "李道一", "邓广博", "黄建晔","赵敏", "123",};
         contactList = (RecyclerView) view.findViewById(R.id.contact_list_main);
         LetterList = (LetterListView) view.findViewById(R.id.letter_view_main);
         layoutManager = new LinearLayoutManager(mContext);
         adapter = new ContactAdapter(mContext, contactNames);
-
         contactList.setLayoutManager(layoutManager);
         contactList.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
         contactList.setAdapter(adapter);
@@ -112,13 +122,38 @@ public class ContactFragment extends Fragment {
         });
         adapter.setOnItemClickListener(new ContactAdapter.OnItemClickListener() {
             @Override
-            public void onClick(String friendname) {
-                Toast.makeText(mContext, "click " + friendname, Toast.LENGTH_SHORT).show();
+            public void onClick(String friendName) {
+                Toast.makeText(mContext, "click " + friendName, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
                 intent.setClass(getActivity(), ChatActivity.class);
+                intent.putExtra("friendName",friendName);
                 startActivity(intent);
             }
         });
     }
 
+    /**
+     * 获取好友列表
+     */
+    public void getFriendList(){
+        FriendsManager.getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>(){
+
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+                contactNames = new ArrayList<>();
+                for (V2TIMFriendInfo friendInfo: v2TIMFriendInfos){
+                    contactNames.add(friendInfo.getUserID());
+                    Log.e(TAG, "onSuccess: "+friendInfo.getUserID() );
+                }
+                init(mView);
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
 }

@@ -12,5 +12,6 @@
     <color name="titleText">#338BFF</color>
     <color name="chatBackgroundColor">#EDEDED</color>
     <color name="chatbottom_background">#F7F7F7</color>
+    <color name="red">#ec1c24</color>
 
 </resources>
