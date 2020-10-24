@@ -1,5 +1,6 @@
 package cn.yesomething.improjectclient.addfriend;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,28 +14,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.FriendsManager;
 
 public class FriendAdatper extends RecyclerView.Adapter<FriendAdatper.ViewHolder> {
-
+    private static final String TAG = "FriendAdatper";
     private List<Friend> mFriendList;
 
     static class ViewHolder extends RecyclerView.ViewHolder{
-        View friendview;
+        View friendView;
         ImageView friendImage;
         TextView friendID;
         TextView friendDes;
-        Button friednAgreeAdd;
-        Button friendRefuseAdd;
+        Button friendAgreeBtn;
+        Button friendRefuseBtn;
         TextView friendAgreeOrNot;
 
         public ViewHolder(View view){
             super(view);
-            friendview = view;
+            friendView = view;
             friendImage = (ImageView) view.findViewById(R.id.add_friend_image);
             friendID = (TextView) view.findViewById(R.id.add_friend_name);
             friendDes = (TextView) view.findViewById(R.id.add_friend_description);
-            friednAgreeAdd = (Button) view.findViewById(R.id.add_friend_agree);
-            friendRefuseAdd = (Button) view.findViewById(R.id.add_friend_refuse);
+            friendAgreeBtn = (Button) view.findViewById(R.id.add_friend_agree);
+            friendRefuseBtn = (Button) view.findViewById(R.id.add_friend_refuse);
             friendAgreeOrNot = (TextView) view.findViewById(R.id.add_pass_or_not);
         }
     }
@@ -50,28 +52,32 @@ public class FriendAdatper extends RecyclerView.Adapter<FriendAdatper.ViewHolder
                 .inflate(R.layout.new_friend_item,parent,false);
         final ViewHolder holder = new ViewHolder(view);
         //点击通过按钮
-        holder.friednAgreeAdd.setOnClickListener(new View.OnClickListener() {
+        holder.friendAgreeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int positon = holder.getAdapterPosition();
                 Friend friend = mFriendList.get(positon);
+                Log.e(TAG, "同意了 "+friend.getAddUserID()+"的好友申请" );
+                FriendsManager.acceptFriendApplication(friend.getAddUserID(),friend.getAddUserDes());
                 //通过和拒绝按钮消失
-                holder.friendRefuseAdd.setVisibility(View.GONE);
-                holder.friednAgreeAdd.setVisibility(View.GONE);
+                holder.friendAgreeBtn.setVisibility(View.GONE);
+                holder.friendRefuseBtn.setVisibility(View.GONE);
                 //文本显示
                 holder.friendAgreeOrNot.setVisibility(View.VISIBLE);
                 holder.friendAgreeOrNot.setText("已通过");
             }
         });
         //点击不通过按钮
-        holder.friendRefuseAdd.setOnClickListener(new View.OnClickListener() {
+        holder.friendRefuseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int positon = holder.getAdapterPosition();
                 Friend friend = mFriendList.get(positon);
+                Log.e(TAG, "拒绝了 "+friend.getAddUserID()+"的好友申请" );
+                FriendsManager.refuseFriendApplication(friend.getAddUserID(),friend.getAddUserDes());
                 //通过和拒绝按钮消失
-                holder.friendRefuseAdd.setVisibility(View.GONE);
-                holder.friednAgreeAdd.setVisibility(View.GONE);
+                holder.friendAgreeBtn.setVisibility(View.GONE);
+                holder.friendRefuseBtn.setVisibility(View.GONE);
                 //文本显示
                 holder.friendAgreeOrNot.setVisibility(View.VISIBLE);
                 holder.friendAgreeOrNot.setText("已拒绝");

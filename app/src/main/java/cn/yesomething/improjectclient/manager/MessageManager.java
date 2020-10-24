@@ -2,10 +2,12 @@ package cn.yesomething.improjectclient.manager;
 
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
+import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMSendCallback;
 import com.tencent.imsdk.v2.V2TIMSimpleMsgListener;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 
 //管理SDK消息相关
@@ -86,6 +88,15 @@ public class MessageManager {
     public static void setConversationListener(V2TIMConversationListener listener){
         V2TIMManager.getConversationManager().setConversationListener(listener);
     }
-}
 
+    /**
+     * 获取会话列表
+     * @param nextSeq	分页拉取的游标，第一次默认取传 0，后续分页拉传上一次分页拉取成功回调里的 nextSeq
+     * @param count	分页拉取的个数，一次
+     * @param callback 回调函数
+     */
+    public static void getConversationList(long nextSeq, int count, V2TIMValueCallback<V2TIMConversationResult> callback){
+        V2TIMManager.getConversationManager().getConversationList(nextSeq,count,callback);
+    }
+}
 

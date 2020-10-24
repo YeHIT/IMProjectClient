@@ -1,10 +1,12 @@
 package cn.yesomething.improjectclient.chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
@@ -44,20 +47,23 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private EmojiconEditText mEditEmojicon;//类似于TextView 的，只是它能在上面展示表情
     private boolean hasClick;
     private MsgAdapter adapter;
-
+    private String friendName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.chat_main);
+        friendName = getIntent().getStringExtra("friendName");
         //配置聊天监听器
         initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
         initMsg();
 
+
         //mEditEmojicon 就是 输入框，类似于TextVIew的东西
         mEditEmojicon = (EmojiconEditText) findViewById(R.id.editEmojicon);
         mEditEmojicon.setOnClickListener(this);
+        findViewById(R.id.bt_back).setOnClickListener(this);
         findViewById(R.id.send_chat).setOnClickListener(this);
         findViewById(R.id.bt_test).setOnClickListener(this);
         findViewById(R.id.imageView).setOnClickListener(this);
@@ -105,7 +111,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 String responseCode = jsonObject.getString("responseCode");
                                 //登录成功
                                 if(responseCode.equals("200")){
-                                    MessageManager.sendTextMessage(mContent,"denwade");
+                                    MessageManager.sendTextMessage(mContent,friendName);
                                     showMsg(mContent,Msg.TYPE_SENT);
                                 }
                                 else {
@@ -119,7 +125,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                     String userId = IMManager.getLoginUser();
-                    String toId = "denwade";
+                    String toId = friendName;
                     Date messageDate = new Date();
                     MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
                 } else {//否则toast提示输入为空
@@ -142,8 +148,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
             // 返回按钮
             case R.id.bt_back:{
-                //Intent intent = new Intent(ChatActivity.this, TestActivity.class);
-                //startActivity(intent);
+                showMsg("你好!", Msg.TYPE_RECEIVED);
+                Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+                startActivity(intent);
                 break;
             }
             default: {
@@ -174,6 +181,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void showMsg(String content,int type_Msg){
         //解密消息
         String umContent = StringEscapeUtils.unescapeJava(content);
+        Toast.makeText(this, umContent, Toast.LENGTH_SHORT).show();
         Msg msg = new Msg(umContent,type_Msg);
         msgList.add(msg);
         if(msgList.size()>0){
@@ -220,6 +228,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {
                 V2TIMTextElem textElem = MessageManager.getMessage(msg);
+                Log.e(TAG, "onRecvNewMessage: " + textElem.getText());
                 showMsg(textElem.getText(),Msg.TYPE_RECEIVED);
                 super.onRecvNewMessage(msg);
             }

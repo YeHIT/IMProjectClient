@@ -2,55 +2,82 @@ package cn.yesomething.improjectclient.addfriend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.imsdk.v2.V2TIMFriendApplication;
+import com.tencent.imsdk.v2.V2TIMFriendApplicationResult;
+import com.tencent.imsdk.v2.V2TIMValueCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.FriendsManager;
 
 public class ContactNewFriendActivity extends AppCompatActivity implements View.OnClickListener{
-
+    private static final String TAG = "ContactNewFriendActivit";
     private List<Friend> friendList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_friend_activity);
-
+        //添加好友按钮
         findViewById(R.id.contact_new_add_friend).setOnClickListener(this);
         findViewById(R.id.contact_new_back).setOnClickListener(this);
         //初始化添加好友消息
         initFriend();
-
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_friend_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        FriendAdatper friendadatper = new FriendAdatper(friendList);
-        recyclerView.setAdapter(friendadatper);
-
     }
 
+    /**
+     * 初始化当前界面的好友申请消息列表
+     */
     private void initFriend(){
-        addnewfriendMsg("denwade","Hello! make a friend!");
-        addnewfriendMsg("dgb","Hello! ");
-        addnewfriendMsg("hjy","嗦开嗦开!");
-        addnewfriendMsg("ldy","不会真有人不加我吧？不会吧不会吧不会吧不会吧不会吧不会吧不会吧不会吧");
+        //获取好友申请消息列表并展示
+        FriendsManager.getFriendApplicationList(new V2TIMValueCallback<V2TIMFriendApplicationResult>(){
+            @Override
+            public void onError(int i, String s) {
+                Log.e(TAG, "onError: " + s );
+            }
+
+            @Override
+            public void onSuccess(V2TIMFriendApplicationResult v2TIMFriendApplicationResult) {
+                int applicationNum = v2TIMFriendApplicationResult.getUnreadCount();
+                Log.e(TAG, "onSuccess: 获取好友申请列表成功" );
+                //展示好友申请列表
+                List<V2TIMFriendApplication> applicationList = v2TIMFriendApplicationResult.getFriendApplicationList();
+                for (V2TIMFriendApplication application : applicationList){
+                    addNewFriendMsg(application.getUserID(),application.getAddWording());
+                }
+            }
+        });
     }
 
 
-    public void addnewfriendMsg(String addUserID,String addUserDes){
+    /**
+     * 根据好友名与好友申请信息展示
+     * @param addUserID 好友名
+     * @param addUserDes 好友申请信息
+     */
+    public void addNewFriendMsg(String addUserID,String addUserDes){
         //验证信息压缩，只显示前20个字符
         if(addUserDes.length()>20){
             addUserDes = addUserDes.substring(0,20)+"......";
         }
         Friend friend = new Friend(addUserID, addUserDes);
         //从头部加item，也就是新的消息优先放在顶部
-        friendList.add(0,friend);//
+        friendList.add(0,friend);
+        //刷新布局
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.contact_friend_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        FriendAdatper friendadatper = new FriendAdatper(friendList);
+        recyclerView.setAdapter(friendadatper);
     }
 
     @Override

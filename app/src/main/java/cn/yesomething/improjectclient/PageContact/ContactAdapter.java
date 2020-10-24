@@ -5,9 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +23,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private static final String TAG = "ContactAdapter";
     private LayoutInflater mLayoutInflater;
     private Context mContext;
-    private String[] mContactNames; // 联系人名称字符串数组
+    private ArrayList<String> mContactNames; // 联系人名称字符串数组
     private List<String> mContactList; // 联系人名称List（转换成拼音）
     private List<Contact> resultList; // 最终结果（包含分组的字母）
     private List<String> characterList; // 字母List
@@ -36,7 +34,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         ITEM_TYPE_CONTACT
     }
 
-    public ContactAdapter(Context context, String[] contactNames) {
+    public ContactAdapter(Context context, ArrayList<String> contactNames) {
         mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
         mContactNames = contactNames;
@@ -48,9 +46,9 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         mContactList = new ArrayList<>();
         Map<String, String> map = new HashMap<>();
 
-        for (int i = 0; i < mContactNames.length; i++) {
-            String pinyin = Utils.getPingYin(mContactNames[i]);
-            map.put(pinyin, mContactNames[i]);
+        for (int i = 0; i < mContactNames.size(); i++) {
+            String pinyin = Utils.getPingYin(mContactNames.get(i));
+            map.put(pinyin, mContactNames.get(i));
             mContactList.add(pinyin);
         }
         Collections.sort(mContactList, new ContactComparator());

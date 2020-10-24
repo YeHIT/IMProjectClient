@@ -32,7 +32,15 @@
             android:layout_height="match_parent"
             android:gravity="right|bottom"
             android:orientation="horizontal">
-
+            <TextView
+                android:id="@+id/new_friend_coming"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:text="!"
+                android:textColor="@color/red"
+                android:textSize="30dp"
+                android:visibility="invisible"
+                />
             <ImageButton
                 android:id="@+id/search_icon"
                 android:layout_width="30dp"
@@ -43,11 +51,11 @@
                 android:gravity="center_vertical" />
 
             <ImageButton
-                android:id="@+id/plus_icon"
+                android:id="@+id/add_friend_btn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginRight="20dp"
                 android:background="@drawable/plus2"
                 android:gravity="center_vertical" />
         </LinearLayout>

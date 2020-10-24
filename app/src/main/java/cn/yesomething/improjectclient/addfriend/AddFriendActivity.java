@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.FriendsManager;
 
 
 public class AddFriendActivity extends AppCompatActivity implements View.OnClickListener{
@@ -45,6 +46,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
                 String contentDes = addUserDes.getText().toString();
                 if(!"".equals(contentID)){
                     Toast.makeText(this,contentID,Toast.LENGTH_SHORT).show();
+                    FriendsManager.addFriend(contentID,contentDes);
                 }
                 else{
                     Toast.makeText(this,"Empty!",Toast.LENGTH_SHORT).show();
