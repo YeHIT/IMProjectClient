@@ -4,9 +4,7 @@
     android:layout_height="match_parent"
     android:background="@android:color/white">
 
-    <include
-        layout="@layout/info_bar_title"
-         />
+    <include layout="@layout/mine_title_bar" />
 
     <RelativeLayout
         android:id="@+id/rl_info_head"

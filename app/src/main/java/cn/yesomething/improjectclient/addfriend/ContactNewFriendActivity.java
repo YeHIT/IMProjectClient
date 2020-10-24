@@ -20,7 +20,7 @@ public class ContactNewFriendActivity extends AppCompatActivity implements View.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.contact_new_friend_activity);
+        setContentView(R.layout.new_friend_activity);
 
         findViewById(R.id.contact_new_add_friend).setOnClickListener(this);
         findViewById(R.id.contact_new_back).setOnClickListener(this);
