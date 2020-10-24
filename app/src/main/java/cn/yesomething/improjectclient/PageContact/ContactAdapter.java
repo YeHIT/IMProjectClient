@@ -127,12 +127,10 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class ContactHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
-
         ContactHolder(View view) {
             super(view);
             Log.e(TAG, "ContactHolder: " );
             mTextView = (TextView) view.findViewById(R.id.contact_name);
-
         }
     }
 
@@ -144,7 +142,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         }
-
         return -1; // -1不会滑动
     }
 

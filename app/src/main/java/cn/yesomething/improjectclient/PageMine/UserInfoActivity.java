@@ -1,12 +1,22 @@
 package cn.yesomething.improjectclient.PageMine;
 
+import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,12 +24,19 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.FileNotFoundException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.login.SignUpActivity;
 
 
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tv_user_name;
+    private ImageView iv_head_icon;
     //private TextView tv_signature;
     //private RelativeLayout rl_signature;
     private TextView tv_sex;
@@ -31,26 +48,37 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     //private TextView tv_main_title;
     //private RelativeLayout rl_title_bar;
     private String spUserName;
-    private static  final int  CHANGE_NICKNAME = 1;//修改昵称的自定义常量
-    private static  final int  CHANGE_SIGNATURE = 2;//修改签名的自定义常量
 
+    private Uri imageUri;
+
+    public static final int TAKE_PHOTO = 1;
+    private static  final int  CHOOSE_PHOTO = 2;
+    @BindView(R.id.contact_mine)
+    RadioButton _btnContactPagemine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//防止出现两个toolbar
-        setContentView(R.layout.mine_fragemnt);
+        setContentView(R.layout.mine_fragment);
         //设置界面为竖屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //spUserName = AnalysisUtils.readLoginUserName(this);
         spUserName="denwade";
-
+        ButterKnife.bind(this);
+        _btnContactPagemine.setOnClickListener(v -> SelectContactPage());
         init();
 
-        //从数据库中获取数据
-        initData();
+
 
         setListener();
+    }
+
+    private void SelectContactPage() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 
     //初始化控件
@@ -73,39 +101,19 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         //tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_user_name = (TextView) findViewById(R.id.tv_info_user_name);
 
-
+        iv_head_icon = (ImageView)findViewById(R.id.iv_info_head_icon);
 
     }
 
-    //todo 从数据库中获取数据
-    private  void initData(){
-        UserBean bean = null;
-        //bean  = DBUtils.getInstance(this).getUserInfo(spUserName);
-        //首先判断一下数据库中是否有数据
-        if(bean ==null){
-            bean = new UserBean();
-            bean.userName = spUserName; //用户名不可以修改
-            bean.nickName = "这个是你的昵称";
-            //默认为男
-            bean.sex = "男";
-            //bean.signature = "这个是你的签名";
-        }
-        setValue(bean);
-    }
 
-    //为界面控件设置值
-    public void setValue(UserBean bean) {
-        tv_nickName.setText(bean.nickName);
-        tv_sex.setText(bean.sex);
-        //tv_signature.setText(bean.signature);
-        tv_user_name.setText(bean.userName);
-    }
+
 
     //设置界面的点击监听事件
     private void setListener() {
         tv_info_back.setOnClickListener(this);
         rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
+        iv_head_icon.setOnClickListener(this);
         //rl_signature.setOnClickListener(this);
     }
 
@@ -117,25 +125,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             case R.id.tv_info_backward:
                 this.finish();
                 break;
-
-            //昵称的点击事件
-            case R.id.rl_info_nickName:
-                String name = tv_nickName.getText().toString();//获取昵称控件上的数据
-                Bundle bdName = new Bundle();
-                bdName.putString("content",name);  //传递界面上的昵称数据
-                bdName.putString("title","昵称");  //传递界面的标题
-                bdName.putInt("flag",1);  //flag 传递1表示是昵称
-                //跳转到个人资料修改界面
-                enterActivityForResult(ChangeUserInfoActivity.class,CHANGE_NICKNAME,bdName);
-
-                break;
-
             //性别的点击事件
             case R.id.rl_info_sex:
                 String sex = tv_sex.getText().toString();
                 sexDialog(sex);
                 break;
-
             /*//签名的点击事件
             case R.id.rl_signature:
                 String signature = tv_signature.getText().toString();//获取签名控件上的数据
@@ -145,8 +139,17 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 bdSignature.putInt("flag",2);//flag 传递2表示是签名
                 //跳转到个人资料修改界面
                 enterActivityForResult(ChangeUserInfoActivity.class,CHANGE_SIGNATURE,bdSignature);
-
                 break;*/
+            case R.id.iv_info_head_icon:
+                Intent intent = new Intent();
+                if (Build.VERSION.SDK_INT < 19) {
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    intent.setType("image/*");
+                } else {
+                    intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+                }
+                this.startActivityForResult(intent,1);
             default:
                 break;
         }
@@ -179,47 +182,101 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         tv_sex.setText(sex);
     }
 
-    private void enterActivityForResult(Class<?> to,int requestCode,Bundle b){
-        Intent i = new Intent(this,to);  //to标识需要跳转到的界面
-        i.putExtras(b);  //b表示跳转时传递的参数
-        startActivityForResult(i,requestCode);  //requestCode表示一个请求码
-    }
-
 
     //资料修改以后回传数据到界面
     private String new_info;  //最新数据
     @Override
     protected  void  onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
-        switch (requestCode){
-            case CHANGE_NICKNAME:
-                if(data!=null){
-                    new_info = data.getStringExtra("nickName");//从个人资料界面回传过来的数据
-                    if(TextUtils.isEmpty(new_info)||new_info==null){
-                        return;
+        switch (requestCode) {
+            case TAKE_PHOTO:
+                if(resultCode == RESULT_OK) {
+                    try {
+                        imageUri= data.getData();
+                        //将拍摄的照片显示出来
+                        Toast.makeText(this,imageUri.toString(),Toast.LENGTH_SHORT).show();
+                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().
+                                openInputStream(imageUri));
+                        iv_head_icon.setImageBitmap(bitmap);
+                    } catch(FileNotFoundException e ) {
+                        e.printStackTrace();
                     }
-                    tv_nickName.setText(new_info);
-                    //更新数据库中的呢称字段
-                    //DBUtils.getInstance(UserInfoActivity.this).updateUserInfo("nickName", new_info,spUserName);
                 }
-
                 break;
-            /*case CHANGE_SIGNATURE:
-
-                if(data!=null){
-                    new_info = data.getStringExtra("signature");//从个人资料界面回传过来的数据
-                    if(TextUtils.isEmpty(new_info)||new_info==null){
-                        return;
+            case CHOOSE_PHOTO:
+                if (resultCode == RESULT_OK) {
+                    //判断手机的系统版本号
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        //4.4系统的及以上用此方法处理照片
+                        handleImageOnKitkat(data);
+                    } else {
+                        // 4.4一下的使用这个方法处理照片
+                        handleImageBeforeKitkat(data);
                     }
-                    tv_signature.setText(new_info);
-                    //更新数据库中的签名字段
-                    //DBUtils.getInstance(UserInfoActivity.this).updateUserInfo("signature", new_info,spUserName);
                 }
-
-                break;*/
+                break;
             default:
                 break;
         }
+    }
+    @TargetApi(19)
+    private void handleImageOnKitkat(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        if (DocumentsContract.isDocumentUri(this, uri)) {
+            //如果是document类型的uri，则通过document id 处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                //解析出数字格式的id
+                String id  = docId.split(":")[1];
+                String selection = MediaStore.Images.Media._ID+ "=" +id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection );
+            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse
+                        ("content://downloads/public_downloads"),Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            //如果是content类型的uri，则用普通方式处理
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            //如果是file类型的uri,直接获取图片路径
+            imagePath = uri.getPath();
+        }
+        displayImage(imagePath);
+    }
 
+    private void handleImageBeforeKitkat(Intent data) {
+        Uri uri = data.getData();
+        String imagePath = getImagePath(uri, null);
+        displayImage(imagePath);
+    }
+
+
+    private String getImagePath(Uri uri,String selection) {
+        String path = null;
+        //通过uri 和 selection 获取真实的图片路径
+        Cursor cursor = getContentResolver().query(uri,null,selection,null,null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images
+                        .Media.DATA));
+
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    /**
+     * 根据图片的路径显示图片
+     */
+    private  void displayImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            iv_head_icon.setImageBitmap(bitmap);
+        } else {
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
+        }
     }
 }
