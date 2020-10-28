@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -57,9 +58,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
         //配置聊天监听器
-        initChatListener();
+        //initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
-        initMsg(10);
+        //initMsg(10);
 
         //mEditEmojicon 就是 输入框，类似于TextVIew的东西
         mEditEmojicon = (EmojiconEditText) findViewById(R.id.editEmojicon);
@@ -103,7 +104,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 //加密
                 String mContent = StringEscapeUtils.escapeJava(content);
                 if (!"".equals(content)) {//当输入content不为空的时候
-                    sendMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+                    /*sendMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
                         @Override
                         public boolean handleMessage(@NonNull Message msg) {
                             String response = (String) msg.obj;
@@ -124,11 +125,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             return false;
                         }
-                    });
+                    });*/
+                    //把上面的最重要的提取出来，就是 showMsg()
+                    showMsg(mContent,Msg.TYPE_SENT);
+                    //adapter刷新item，修改recyclerview里面的变化的item
+                    adapter.notifyItemRangeChanged(0,msgList.size(),"send");
+
                     String userId = IMManager.getLoginUser();
                     String toId = friendName;
                     Date messageDate = new Date();
-                    MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
+                    //MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
+
                 } else {//否则toast提示输入为空
                     Toast.makeText(this, "Empty!", Toast.LENGTH_SHORT).show();
                 }
@@ -143,6 +150,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             // 测试按钮，点击会接收一条消息
             case R.id.bt_test: {
                 showMsg("你好!", Msg.TYPE_RECEIVED);
+
+                //adapter刷新item，修改recyclerview里面的变化的item
+                adapter.notifyItemRangeChanged(0,msgList.size(),"recieve");
+
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                 break;
@@ -213,8 +224,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         //解密消息
         String umContent = StringEscapeUtils.unescapeJava(content);
         umContent = StringEscapeUtils.unescapeJava(umContent);
-        Msg msg = new Msg(umContent,type_Msg);
+        //Msg msg = new Msg(umContent,type_Msg);
+        //这里是因为把 Msg类 重新构造了，加多了两个属性
+        Msg msg = new Msg(umContent,type_Msg,Msg.TYPE_NOT_READ,getRecentTime());
         msgList.add(msg);
+        //修改 msglist列表里的消息的 已读未读属性，根据是发送的还是接收的来修改不用的消息
+        ChangeMsgReadType(type_Msg);
         if(msgList.size()>0){
             adapter.notifyItemChanged(msgList.size()-1);
             msgRecyclerView.scrollToPosition(msgList.size()-1);
@@ -264,5 +279,35 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 super.onRecvNewMessage(msg);
             }
         });
+    }
+
+    //改变消息状态
+    //这里设置只是为了体现 未读->已读 功能
+    //实际上是进入聊天对话栏 就要不对方发送过来的未读消息设置为已读
+    //这里我只是 通过showMsg()发送消息 去触发 未读->已读 功能
+    private void ChangeMsgReadType(int type_Msg){
+        //你现在接收到消息，意味着你之前发送的消息已读，将所有对方发送的 消息的属性 设置为 已读
+        if(type_Msg == Msg.TYPE_RECEIVED){
+            for(Msg msg:msgList){
+                if(msg.getType()==Msg.TYPE_SENT){
+                    msg.ChangeMsgReadType(Msg.TYPE_READ);
+                }
+            }
+        }
+        else {
+            for(Msg msg:msgList){
+                if(msg.getType()==Msg.TYPE_RECEIVED){
+                    msg.ChangeMsgReadType(Msg.TYPE_READ);
+                }
+            }
+        }
+    }
+
+    //就是获得当前系统的时间
+    public String getRecentTime(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");// HH:mm:ss
+        //获取当前时间
+        Date date = new Date(System.currentTimeMillis());
+        return  simpleDateFormat.format(date);
     }
 }

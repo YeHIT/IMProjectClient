@@ -9,26 +9,50 @@
         android:layout_gravity="left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/conversation_friend_pic"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/user_pic"
-            android:contentDescription="TODO" />
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:background="@drawable/message_text_receive">
-            <TextView
-                android:id="@+id/left_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/conversation_friend_pic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/user_pic"
+                android:contentDescription="TODO" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-            />
+                android:layout_gravity="left"
+                android:orientation="vertical"
+                android:background="@drawable/message_text_receive">
+
+                <TextView
+                    android:id="@+id/left_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp" />
+
+                <TextView
+                    android:id="@+id/left_msg_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textSize="10dp"
+                    android:gravity="left"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/received_read_or_not"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="未读"
+                android:textSize="10dp" />
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -36,25 +60,53 @@
         android:id="@+id/right_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
+
+
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:background="@drawable/message_text_send">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
             <TextView
-                android:id="@+id/right_msg"
+                android:id="@+id/send_read_or_not"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="10dp"
-            />
+                android:text="未读"
+                android:textSize="10dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/message_text_send"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/right_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp" />
+                <TextView
+                    android:id="@+id/right_msg_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TextView"
+                    android:textSize="10dp"
+                    android:gravity="right"/>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/conversation_my_pic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/user_pic_b2"
+                android:contentDescription="TODO" />
+
+
         </LinearLayout>
-        <ImageView
-            android:id="@+id/conversation_my_pic"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/user_pic_b2"
-            android:contentDescription="TODO" />
+
     </LinearLayout>
 </LinearLayout>
