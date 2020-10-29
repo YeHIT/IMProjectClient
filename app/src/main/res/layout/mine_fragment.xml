@@ -209,7 +209,7 @@
         android:background="#E4E4E4"/>
     <View
         android:layout_width="fill_parent"
-        android:layout_height="70dp"
+        android:layout_height="200dp"
         android:alpha="0"
         android:background="#E4E4E4"/>
     <LinearLayout

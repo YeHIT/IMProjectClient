@@ -8,7 +8,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -58,9 +57,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
         //配置聊天监听器
-        //initChatListener();
+//        initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
-        //initMsg(10);
+//        initMsg(10);
 
         //mEditEmojicon 就是 输入框，类似于TextVIew的东西
         mEditEmojicon = (EmojiconEditText) findViewById(R.id.editEmojicon);
@@ -115,6 +114,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 if(responseCode.equals("200")){
                                     MessageManager.sendTextMessage(mContent,friendName);
                                     showMsg(mContent,Msg.TYPE_SENT);
+                                    adapter.notifyItemRangeChanged(0,msgList.size(),"send");
                                 }
                                 else {
                                     String errorMessage = jsonObject.getString("errorMessage");
@@ -193,6 +193,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             JSONObject tempObj = jsonArray.getJSONObject(i);
                             String fromId = tempObj.getString("fromId");
                             String messageContent = tempObj.getString("messageContent");
+                            String messageTime = tempObj.getString("messageTime");
                             //消息是朋友发来的则自己为接收者
                             if(fromId.equals(friendName)){
                                 showMsg(messageContent,Msg.TYPE_RECEIVED);

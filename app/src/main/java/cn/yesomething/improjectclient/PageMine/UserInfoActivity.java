@@ -30,13 +30,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
-import cn.yesomething.improjectclient.login.SignUpActivity;
 
 
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView tv_user_name;
     private ImageView iv_head_icon;
+    private ImageView iv_user_pic_show;
     //private TextView tv_signature;
     //private RelativeLayout rl_signature;
     private TextView tv_sex;
@@ -100,7 +100,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         //rl_signature = (RelativeLayout) findViewById(R.id.rl_signature);
         //tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_user_name = (TextView) findViewById(R.id.tv_info_user_name);
-
+        iv_user_pic_show = (ImageView)findViewById(R.id.iv_user_pic_show);
         iv_head_icon = (ImageView)findViewById(R.id.iv_info_head_icon);
 
     }
@@ -198,6 +198,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().
                                 openInputStream(imageUri));
                         iv_head_icon.setImageBitmap(bitmap);
+                        iv_user_pic_show.setImageBitmap(bitmap);
                     } catch(FileNotFoundException e ) {
                         e.printStackTrace();
                     }

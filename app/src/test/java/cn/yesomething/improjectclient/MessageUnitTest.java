@@ -37,10 +37,11 @@ public class MessageUnitTest {
             JSONObject readJsonObject = new JSONObject(responseJson);
             JSONArray readJsonArray = readJsonObject.getJSONArray("messageList");
             String readContent = (String) readJsonArray.getJSONObject(0).get("messageContent");
-            System.out.println(readJsonObject.toString());
+            String readTime = new SimpleDateFormat().format(new Date( (long)readJsonArray.getJSONObject(0).get("messageTime")));
             String umReadContent = StringEscapeUtils.unescapeJava(readContent);
-            System.out.println(readContent);
+            umReadContent = StringEscapeUtils.unescapeJava(umReadContent);
             System.out.println(umReadContent);
+            System.out.println(readTime);
         } catch (JSONException e) {
             e.printStackTrace();
         }
