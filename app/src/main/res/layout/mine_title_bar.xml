@@ -3,19 +3,17 @@
     android:id="@+id/layout_titlebar"
     android:layout_width="match_parent"
     android:layout_height="52dp"
-    android:background="@android:color/white">
+    android:background="@color/title_bar">
 
     <TextView
         android:id="@+id/tv_info_backward"
         android:layout_width="60dp"
         android:layout_height="match_parent"
-        android:text="Back"
-        android:textColor="@android:color/black"
         android:ellipsize="none"
         android:layout_gravity="center"
+        android:drawableBottom="@drawable/back"
         android:gravity="center_horizontal|center"
         android:singleLine="true"
-        android:textSize="20dp"
         />
 
     <TextView
@@ -27,20 +25,21 @@
         android:gravity="center_horizontal|center"
         android:singleLine="true"
         android:text="个人设置"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:textSize="20dp" />
 
     <TextView
         android:id="@+id/tv_info_forward"
-        android:layout_width="60dp"
-        android:layout_height="match_parent"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:ellipsize="end"
         android:gravity="center"
         android:paddingRight="5dp"
         android:singleLine="true"
         android:text="完成"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
+        android:background="@drawable/text_bg"
         android:textSize="18dp"/>
 
 </LinearLayout>
