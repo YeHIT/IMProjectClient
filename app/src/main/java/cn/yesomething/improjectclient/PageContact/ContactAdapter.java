@@ -75,7 +75,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
 
-            resultList.add(new Contact(map.get(name), ITEM_TYPE.ITEM_TYPE_CONTACT.ordinal()));// Contact(String name, int type)
+            resultList.add(new Contact(map.get(name), ITEM_TYPE.ITEM_TYPE_CONTACT.ordinal()));
         }
     }
 
@@ -141,6 +141,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class CharacterHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
+
         CharacterHolder(View view) {
             super(view);
             Log.e(TAG, "CharacterHolder: " );
@@ -167,6 +168,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         }
+
         return -1; // -1不会滑动
     }
 

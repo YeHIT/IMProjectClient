@@ -13,6 +13,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +34,13 @@ import java.io.FileNotFoundException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
+import java.io.FileNotFoundException;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.login.SignUpActivity;
 import cn.yesomething.improjectclient.login.SignUpActivity;
 
 import static android.util.Base64.URL_SAFE;

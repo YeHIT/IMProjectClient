@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentPagerAdapter = new mainFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(FragmentPagerAdapter);
         //viewPager.addOnPageChangeListener(this);
-        viewPager.setCurrentItem(0);
+        //viewPager.setCurrentItem(1);
     }
 }
 

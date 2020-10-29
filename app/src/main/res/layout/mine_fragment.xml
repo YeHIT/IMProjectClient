@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:id="@+id/iv_user_pic_show"
             android:layout_marginLeft="25dp"
             android:background="@drawable/user_pic_b2"
             android:layout_width="70dp"
@@ -74,7 +75,7 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/iv_head_icon"
+            android:id="@+id/iv_info_head_icon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
@@ -206,4 +207,91 @@
         android:layout_height="1dp"
         android:alpha="0.5"
         android:background="#E4E4E4"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:alpha="0"
+        android:background="#E4E4E4"/>
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+
+
+        android:background="#f7f7f7"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/conversation_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="tabClick"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/conversation"
+                android:layout_width="50dp"
+                android:layout_marginTop="8.5dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableTop="@drawable/conversation_normal"
+
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:button="@null"
+                android:text="@string/str_conversation" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/contact_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:onClick="tabClick"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/contact_mine"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8.5dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawablePadding="3dp"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:text="@string/str_contact"
+                android:button="@null"
+                android:drawableTop="@drawable/contact_normal" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/myself_btn_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:onClick="tabClick"
+            android:layout_weight="1">
+
+            <RadioButton
+                android:id="@+id/mine"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8.5dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableTop="@drawable/myself_selected"
+                android:drawablePadding="3dp"
+                android:textSize="12sp"
+                android:textColor="@color/colorCloud"
+                android:gravity="center"
+                android:button="@null"
+                android:text="@string/str_mine" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>
