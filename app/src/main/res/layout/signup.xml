@@ -114,13 +114,48 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="2dp"
                 android:layout_marginBottom="5dip"
                 android:layout_marginTop="5dip"
                 android:background="#eeeeee" />
 
             <LinearLayout
-                android:id="@+id/input_layout_psw"
+            android:id="@+id/input_layout_psw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/paw_left" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText
+                    android:id="@+id/signup_psw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:hint="设置密码"
+                    android:inputType="textPassword"
+                    android:padding="5dip"
+                    android:textSize="12sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginBottom="5dip"
+                android:layout_marginTop="5dip"
+                android:background="#eeeeee" />
+            <LinearLayout
+                android:id="@+id/input_signup_psw_check"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -137,45 +172,18 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp">
                     <EditText
-                        android:id="@+id/signup_psw"
+                        android:id="@+id/signup_psw_check"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dip"
-                        android:hint="设置密码"
+                        android:hint="再次输入密码"
                         android:inputType="textPassword"
                         android:padding="5dip"
                         android:textSize="12sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginBottom="5dip"
-                android:layout_marginTop="5dip"
-                android:background="#eeeeee" />
-            <LinearLayout
-                android:id="@+id/input_signup_psw_check"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/paw_left" />
-
-                <EditText
-                    android:id="@+id/signup_psw_check"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:hint="请再次确认密码"
-                    android:inputType="textPassword"
-                    android:padding="5dip"
-                    android:textSize="12sp" />
-            </LinearLayout>
 
         </LinearLayout>
 

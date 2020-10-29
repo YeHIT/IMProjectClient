@@ -57,6 +57,8 @@ public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
     public Object instantiateItem(ViewGroup vg, int position) {
         return super.instantiateItem(vg, position);
     }
+
+
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         System.out.println("position Destory" + position);

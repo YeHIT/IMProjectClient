@@ -8,22 +8,22 @@
     android:orientation="vertical">
 
 
-
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="60dip"
         android:gravity="center_vertical"
         android:background="@drawable/title_bar_shape"
+
         android:padding="10dip" >>
 
         <TextView
             android:id="@+id/top_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="POPO"
+            android:layout_marginTop="5dp"
             android:textColor="@color/white"
+            android:drawableLeft="@drawable/logomini"
             android:textSize="19dp"
             android:layout_marginLeft="16dp" />
 
@@ -52,6 +52,21 @@
                 android:gravity="center_vertical" />
         </LinearLayout>
     </Toolbar>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="28dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:alpha="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:drawablePadding="9dp"
+        android:text="搜索一下🔍"
+        android:textSize="18dp"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:background="@drawable/search_bar_shape"/>
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
@@ -69,6 +84,7 @@
         android:layout_below="@+id/layout_contact_list"
         android:background="#f7f7f7"
         android:baselineAligned="false"
+        android:alpha="0.8"
         android:orientation="horizontal">
 
         <RelativeLayout

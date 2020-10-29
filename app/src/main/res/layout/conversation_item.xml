@@ -10,11 +10,12 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:baselineAlignBottom="true"
+        android:background="@drawable/user_pic"
         android:paddingLeft="8dp" />
 
-    <!-- 定义一个竖直方向的LinearLayout,把QQ呢称与说说的文本框设置出来 -->
+    <!-- 定义一个竖直方向的LinearLayout,把联系人呢称与最新消息文本框设置出来 -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -22,18 +23,33 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingLeft="10dp"
             android:textColor="#1D1D1C"
+            android:text="联系人"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/says"
+            android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8px"
+            android:paddingTop="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:textColor="#B4B4B9"
+            android:text="最新消息"
             android:textSize="14sp" />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="5dp"
+        android:paddingEnd="1dp"
+        android:paddingTop="10dp"
+        android:text="10:00"
+        android:textColor="#B4B4B9"
+        android:textSize="14sp" />
 </LinearLayout>

@@ -6,9 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.DrawableRes;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -73,7 +75,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
 
-            resultList.add(new Contact(map.get(name), ITEM_TYPE.ITEM_TYPE_CONTACT.ordinal()));
+            resultList.add(new Contact(map.get(name), ITEM_TYPE.ITEM_TYPE_CONTACT.ordinal()));// Contact(String name, int type)
         }
     }
 
@@ -92,6 +94,28 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             ((CharacterHolder) holder).mTextView.setText(resultList.get(position).getmName());
         } else if (holder instanceof ContactHolder) {
             ((ContactHolder) holder).mTextView.setText(resultList.get(position).getmName());
+            switch(resultList.get(position).getmName()){
+                case "黄大晔":
+                    ((ContactHolder) holder).mImageView.setBackground(mContext.getDrawable(R.drawable.user_pic));
+                    break;
+                case "黄建晔":
+                    ((ContactHolder) holder).mImageView.setBackground(mContext.getDrawable(R.drawable.user_pic_b2));
+                    break;
+                case"邓广博":
+                    ((ContactHolder) holder).mImageView.setBackground(mContext.getDrawable(R.drawable.user_pic));
+                    break;
+                case "POPO助手":
+                    ((ContactHolder) holder).mImageView.setBackground(mContext.getDrawable(R.drawable.popo));
+                    break;
+                case "蔡敏敏":
+                    ((ContactHolder) holder).mImageView.setBackground(mContext.getDrawable(R.drawable.user_pic_g1));
+                    break;
+                default:
+                    ((ContactHolder) holder).mImageView.setBackground(mContext.getDrawable(R.drawable.user_pic_g2));
+
+            }
+
+
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {//实现clicklistener接口回调
@@ -117,7 +141,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class CharacterHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
-
         CharacterHolder(View view) {
             super(view);
             Log.e(TAG, "CharacterHolder: " );
@@ -127,12 +150,12 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class ContactHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
-
+        ImageView mImageView;
         ContactHolder(View view) {
             super(view);
             Log.e(TAG, "ContactHolder: " );
             mTextView = (TextView) view.findViewById(R.id.contact_name);
-
+            mImageView= view.findViewById(R.id.contact_pic);
         }
     }
 
@@ -144,7 +167,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         }
-
         return -1; // -1不会滑动
     }
 
