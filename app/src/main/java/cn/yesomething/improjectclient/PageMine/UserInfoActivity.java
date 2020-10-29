@@ -52,16 +52,14 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private TextView tv_user_name;
     private ImageView iv_head_icon;
     private ImageView iv_head_icon_show;
-    //private TextView tv_signature;
-    //private RelativeLayout rl_signature;
+
     private TextView tv_sex;
     private RelativeLayout rl_sex;
     private TextView tv_nickName;
     private RelativeLayout rl_nickName;
     private TextView tv_info_back;
     private TextView tv_save;
-    //private TextView tv_main_title;
-    //private RelativeLayout rl_title_bar;
+
     private String spUserName;
 
     private Uri imageUri;
@@ -107,14 +105,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         //tv_main_title = (TextView) findViewById(R.id.tv_title);
         //tv_main_title.setText("个人");
 
-        //rl_title_bar = (RelativeLayout) findViewById(R.id.);
-        //rl_title_bar.setBackgroundColor(Color.parseColor("##FF9900"));
+
         rl_nickName = (RelativeLayout) findViewById(R.id.rl_info_nickName);
         tv_nickName = (TextView) findViewById(R.id.tv_info_nickName);
         rl_sex = (RelativeLayout) findViewById(R.id.rl_info_sex);
         tv_sex = (TextView) findViewById(R.id.tv_info_sex);
-        //rl_signature = (RelativeLayout) findViewById(R.id.rl_signature);
-        //tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_user_name = (TextView) findViewById(R.id.tv_info_user_name);
 
         iv_head_icon = (ImageView)findViewById(R.id.iv_info_head_icon);
@@ -133,7 +128,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
         iv_head_icon.setOnClickListener(this);
-        //rl_signature.setOnClickListener(this);
     }
 
     //控件的点击事件
@@ -149,16 +143,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 String sex = tv_sex.getText().toString();
                 sexDialog(sex);
                 break;
-            /*//签名的点击事件
-            case R.id.rl_signature:
-                String signature = tv_signature.getText().toString();//获取签名控件上的数据
-                Bundle bdSignature = new Bundle();
-                bdSignature.putString("content",signature);//传递界面上的签名数据
-                bdSignature.putString("title","签名"); //传递界面的标题
-                bdSignature.putInt("flag",2);//flag 传递2表示是签名
-                //跳转到个人资料修改界面
-                enterActivityForResult(ChangeUserInfoActivity.class,CHANGE_SIGNATURE,bdSignature);
-                break;*/
+            //头像点击事件：打开系统相册
             case R.id.iv_info_head_icon:
                 Intent intent = new Intent();
                 if (Build.VERSION.SDK_INT < 19) {
@@ -306,6 +291,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     /**
      * bitmap转base64 str
+     * 压缩格式：jpeg 目前没有压缩 所以quality=100
      */
     public static String BitmapToString(Bitmap bitmap){
         String string = null;
@@ -315,6 +301,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         string = Base64.encodeToString(bytes, URL_SAFE);
         return string;
     }
+
+    /**
+     * base64 str 转 bitmap
+     */
     public static Bitmap Base64ToBitmap(String base64String){
         byte[] decode = Base64.decode(base64String.toString().trim(), URL_SAFE);
         Bitmap bitmap = BitmapFactory.decodeByteArray(decode,0,decode.length);

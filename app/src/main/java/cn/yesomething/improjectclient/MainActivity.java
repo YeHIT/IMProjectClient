@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private mainFragmentPagerAdapter FragmentPagerAdapter;
     private List<Fragment> fragmentList; //保存界面的view
 
-
     @BindView(R.id.conversation)
     RadioButton _btnConversationPage;
     @BindView(R.id.contact)
@@ -83,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
     public void initViewPager(){
         fragmentList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        //添加Fragment
         fragmentList.add(new ContactFragment());
         //fragmentList.add(new ConversationFragment());
         fragmentList.add(new ContactFragment());

@@ -67,7 +67,7 @@ public class ContactFragment extends Fragment {
         return view;
     }
     public void init(View view){
-        contactNames = new String[] {"POPO助手", "李道一", "邓广博", "黄建晔1","黄建晔2","黄建晔3","赵敏", "123",};
+        contactNames = new String[] {"POPO助手", "李道一", "邓广博", "黄建晔","黄小晔","黄大晔","蔡敏敏", "123",};
         contactList = (RecyclerView) view.findViewById(R.id.contact_list_main);
         LetterList = (LetterListView) view.findViewById(R.id.letter_view_main);
         layoutManager = new LinearLayoutManager(mContext);
@@ -82,7 +82,6 @@ public class ContactFragment extends Fragment {
             public void clickCharacter(String character) {
                 layoutManager.scrollToPositionWithOffset(adapter.getScrollPosition(character), 0);
             }
-
             @Override
             public void clickArrow() {
                 layoutManager.scrollToPositionWithOffset(0, 0);
