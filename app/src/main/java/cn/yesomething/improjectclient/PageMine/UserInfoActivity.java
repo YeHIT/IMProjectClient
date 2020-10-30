@@ -143,12 +143,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         tv_info_back.setVisibility(View.GONE);
         tv_save = (TextView) findViewById(R.id.tv_info_forward);
         tv_save.setVisibility(View.GONE);
-        //tv_main_title  可以通过settext修改文字
-        //tv_main_title = (TextView) findViewById(R.id.tv_title);
-        //tv_main_title.setText("个人");
-
-        //rl_title_bar = (RelativeLayout) findViewById(R.id.);
-        //rl_title_bar.setBackgroundColor(Color.parseColor("##FF9900"));
         rl_nickName = (RelativeLayout) findViewById(R.id.rl_info_nickName);
         tv_nickName = (TextView) findViewById(R.id.tv_info_nickName);
         rl_sex = (RelativeLayout) findViewById(R.id.rl_info_sex);
