@@ -1,39 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="64dp"
+    android:layout_marginHorizontal="10dp"
+    android:layout_marginVertical="8dp"
     android:orientation="horizontal">
 
     <!-- 定义一个用于显示头像的ImageView -->
     <ImageView
-        android:id="@+id/imgtou"
+        android:id="@+id/img_icon"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:baselineAlignBottom="true"
-        android:paddingLeft="8dp" />
+        android:background="@drawable/user_pic"
+        android:paddingHorizontal="8dp" />
 
-    <!-- 定义一个竖直方向的LinearLayout,把QQ呢称与说说的文本框设置出来 -->
+    <!-- 定义一个竖直方向的LinearLayout,把联系人呢称与最新消息文本框设置出来 -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true"
+            android:paddingStart="10dp"
             android:textColor="#1D1D1C"
+            android:text="联系人"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/says"
+            android:id="@+id/message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="8px"
+            android:paddingTop="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
             android:textColor="#B4B4B9"
+            android:text="最新消息"
+            android:singleLine="true"
             android:textSize="14sp" />
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingStart="5dp"
+        android:paddingEnd="1dp"
+        android:paddingBottom="3dp"
+        android:singleLine="true"
+        android:text="10:00"
+        android:textAlignment="center"
+        android:textColor="#B4B4B9"
+        android:textSize="14sp" />
 </LinearLayout>

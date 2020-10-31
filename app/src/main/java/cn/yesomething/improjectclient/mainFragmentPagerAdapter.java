@@ -10,21 +10,22 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.List;
 
 import cn.yesomething.improjectclient.PageContact.ContactFragment;
+import cn.yesomething.improjectclient.PageConversation.ConversationFragment;
 
 public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
     private ContactFragment Contact_FGM=null;//联系人界面
-    private ContactFragment Conversation_FGM=null;//会话列表人界面
+    private ConversationFragment Conversation_FGM=null;//会话列表界面
 
     //界面编号
-    private final int Pager_Count =3;//一共3个一级子界面
-    private static final int ContactPAGE=0;
-    private static final int ConversationPAGE=1;
+    private final int Pager_Count =2;//一共2个一级子界面
+    private static final int ContactPAGE=1;
+    private static final int ConversationPAGE=0;
     private static final int MinePAGE=2;
 
     public mainFragmentPagerAdapter(FragmentManager fm, List<Fragment> fragList) {
         super(fm);
         Contact_FGM = new ContactFragment();
-        Conversation_FGM = new ContactFragment();
+        Conversation_FGM = new ConversationFragment();
     }
     @Override
     public Fragment getItem(int position)
@@ -38,7 +39,7 @@ public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
                 fragment = Contact_FGM;
                 break;
 //            case MinePAGE:
-//                fragment = Mine_FGM;
+//                fragment = Conversation_FGM;
 //                break;
 
             default:

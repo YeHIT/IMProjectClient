@@ -104,9 +104,7 @@ public class MainActivity extends AppCompatActivity {
     public void initViewPager(){
         fragmentList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-        fragmentList.add(new ContactFragment());
-        fragmentList.add(new ContactFragment());
-        //fragmentList.add(new MineFragment());
+
         FragmentPagerAdapter = new mainFragmentPagerAdapter(getSupportFragmentManager(), fragmentList);
         viewPager.setAdapter(FragmentPagerAdapter);
         //viewPager.addOnPageChangeListener(this);
