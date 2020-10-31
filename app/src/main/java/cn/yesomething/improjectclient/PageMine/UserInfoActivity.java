@@ -54,12 +54,18 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private RelativeLayout rl_nickName;
     private TextView tv_info_back;
     private TextView tv_save;
-    //private TextView tv_main_title;
+    private ImageView iv_account_action;
     //private RelativeLayout rl_title_bar;
     private String spUserName;
 
     @BindView(R.id.contact_mine)
     RadioButton _btnContactPagemine;
+    @BindView(R.id.btn_account_action)
+    ImageView _btnAccoutnAction;
+    @BindView(R.id.tv_backward)
+    TextView _btnBack;
+    @BindView(R.id.tv_wordcloud)
+    TextView _btnWordcloud;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +78,26 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         spUserName="denwade";
         ButterKnife.bind(this);
         _btnContactPagemine.setOnClickListener(v -> SelectContactPage());
+        _btnAccoutnAction.setOnClickListener(v -> AccountAction());
+        _btnWordcloud.setOnClickListener(v -> WordCloud());
+        _btnBack.setOnClickListener(v -> this.finish());
         init();
         initUserInfo();
         setListener();
+    }
+
+    private void WordCloud() {//词云界面
+        Intent intent = new Intent(getApplicationContext(), WordCloudActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        finish();
+    }
+
+    private void AccountAction() {//退出账号 切换账号等
+        Intent intent = new Intent(getApplicationContext(), AccountActionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
     }
 
     private void SelectContactPage() {
@@ -117,7 +140,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     //初始化控件
     private void init() {
-        tv_info_back = (TextView) findViewById(R.id.tv_info_backward);
+        tv_info_back = (TextView) findViewById(R.id.tv_backward);
         tv_info_back.setVisibility(View.GONE);
         tv_save = (TextView) findViewById(R.id.tv_info_forward);
         tv_save.setVisibility(View.GONE);
@@ -149,10 +172,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            //返回键的点击事件
-            case R.id.tv_info_backward:
-                this.finish();
-                break;
             //性别的点击事件
             case R.id.rl_info_sex:
                 String sex = tv_sex.getText().toString();

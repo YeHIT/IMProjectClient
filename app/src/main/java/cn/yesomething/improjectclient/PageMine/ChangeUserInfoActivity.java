@@ -48,7 +48,7 @@ public class ChangeUserInfoActivity extends AppCompatActivity {
 
         //rl_title_bar = (RelativeLayout) findViewById(R.id.title_bar);
         //rl_title_bar.setBackgroundColor(Color.parseColor("#FF9900"));
-        tv_info_back = (TextView) findViewById(R.id.tv_info_backward);
+        tv_info_back = (TextView) findViewById(R.id.tv_backward);
         tv_save = (TextView) findViewById(R.id.tv_info_forward);
         tv_save.setVisibility(View.VISIBLE);
         et_content = (EditText) findViewById(R.id.et_info_content);

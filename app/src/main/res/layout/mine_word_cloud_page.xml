@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PageMine.WordCloudActivity"
+    android:background="@drawable/pic1">
+    <include layout="@layout/mine_title_bar" />
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+        android:id="@+id/iv_user_pic_show"
+        android:layout_marginLeft="25dp"
+        android:background="@drawable/user_pic_b2"
+        android:layout_width="70dp"
+        android:layout_height="70dp" />
+        <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+            <TextView
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:id="@+id/login_name"
+            android:layout_marginLeft="20dp"
+            android:textSize="28sp"
+            android:text="邓广博"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+            <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="20dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+                <TextView
+                android:textColor="@color/colorAccent"
+                android:textSize="14sp"
+                android:text="个人标签:"
+                android:layout_marginEnd="10dp"
+                android:textColorHint="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <include layout="@layout/mine_usertag_item"></include>
+                    <include layout="@layout/mine_usertag_item"></include>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <ImageView
+        android:layout_marginTop="15dp"
+        android:background="@color/iron"
+        android:layout_width="match_parent"
+        android:alpha="0.3"
+        android:layout_height="10dp" />
+    <ImageView
+        android:id="@+id/iv_wordcloud"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/wordcloud2">
+    </ImageView>
+</LinearLayout>

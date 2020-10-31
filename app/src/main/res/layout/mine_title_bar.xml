@@ -6,7 +6,7 @@
     android:background="@color/title_bar">
 
     <TextView
-        android:id="@+id/tv_info_backward"
+        android:id="@+id/tv_backward"
         android:layout_width="60dp"
         android:layout_height="match_parent"
         android:ellipsize="none"

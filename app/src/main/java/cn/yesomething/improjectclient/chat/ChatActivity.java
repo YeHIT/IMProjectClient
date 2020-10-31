@@ -13,6 +13,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.PageMine.UserInfoActivity;
 import cn.yesomething.improjectclient.R;
@@ -64,13 +68,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private boolean hasClick;
     private MsgAdapter adapter;
     private String friendName;
-
+    @BindView(R.id.bt_back)
+    ImageView _btnBack;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null){getSupportActionBar().hide(); }//隐藏原生actionbar
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
+
+
+        ButterKnife.bind(this);
+        _btnBack.setOnClickListener(v -> this.finish());
         //配置聊天监听器
 //        initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
