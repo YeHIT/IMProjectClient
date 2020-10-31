@@ -33,11 +33,7 @@ import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,10 +58,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     //private RelativeLayout rl_title_bar;
     private String spUserName;
 
-    private Uri imageUri;
-
-    public static final int TAKE_PHOTO = 1;
-    private static  final int  CHOOSE_PHOTO = 2;
     @BindView(R.id.contact_mine)
     RadioButton _btnContactPagemine;
 
@@ -92,32 +84,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         finish();
     }
 
-    public Bitmap getImageBitmap(String url) {
-        URL imgUrl = null;
-        Bitmap bitmap = null;
-        try {
-            imgUrl = new URL(url);
-            HttpURLConnection conn = (HttpURLConnection) imgUrl
-                    .openConnection();
-            conn.setDoInput(true);
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            bitmap = BitmapFactory.decodeStream(is);
-            is.close();
-        } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bitmap;
-    }
 
     //初始化个人信息
     private void initUserInfo(){
         //初始化头像  举例
         //1: 确定网址
-        String url =  "http://msn-img-nos.yiyouliao.com/inforec-20201030-d03c72163b181e10000e912d0482a604.jpg?time=1604026310&signature=E80BBC3A927EC074D025A1A0BF0E3F00";;
+        String url =  "http://msn-img-nos.yiyouliao.com/inforec-20201030-d03c72163b181e10000e912d0482a604.jpg?time=1604026310&signature=E80BBC3A927EC074D025A1A0BF0E3F00";
         Picasso.with(this)
                 .load(url)
                 .resize(70,70)
@@ -127,6 +99,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 .resize(70,70)
                 .into(iv_head_icon);
         Log.e("Pis","--------------------><----------------------");
+        String str=null;
+        if(str!=null){
+            iv_head_icon.setImageBitmap(stringToBitmap(str));
+        }
+
+
         //初始化用户名
 
 
@@ -226,7 +204,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
 
     //资料修改以后回传数据到界面
-    private String new_info;  //最新数据
     @Override
     protected  void  onActivityResult(int requestCode,int resultCode,Intent data){
         super.onActivityResult(requestCode,resultCode,data);
@@ -252,13 +229,12 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 //bitmap转化为Base64 String
                 String bitmap2string = bitmapToString(bm);
                 //把String传送到服务器
+                Log.e("bitmap",bitmap2string);
 
-                //实际开发中将图片上传到服务器成功后需要删除全部缓存图片（即裁剪后的无用图片）
-                FileUtils.deleteAllCacheImage(this);
+
             }
         }
     }
-
     /**
      * Base64字符串转换成图片
      *
@@ -289,7 +265,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         return Base64.encodeToString(imgBytes, Base64.DEFAULT);
     }
 
-    public void selectPicture(View view) {
+    private void selectPicture(View view) {
         PictureSelector
                 .create(UserInfoActivity.this, PictureSelector.SELECT_REQUEST_CODE)
                 .selectPicture(false);

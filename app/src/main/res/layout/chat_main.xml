@@ -76,12 +76,18 @@
         android:background="@color/chatbottom_background">
 
         <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="36dp"
+            android:id="@+id/send_icon"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/icon_motion" />
+            android:src="@drawable/send_icon" />
 
+        <ImageView
+            android:id="@+id/send_picture"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/send_picture" />
 
         <io.github.rockerhieu.emojicon.EmojiconEditText
             android:id="@+id/editEmojicon"
@@ -97,7 +103,7 @@
             android:paddingLeft="7dp"
             emojicon:emojiconSize="28sp" />
 
-        <Button
+        <!--<Button
             android:id="@+id/send_chat"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@+id/emotion"
@@ -107,7 +113,13 @@
             android:textColor="@color/white"
             android:background="@drawable/chat_button_shape"
             android:layout_width="60dp"
-            android:layout_height="32dp" />
+            android:layout_height="32dp" />-->
+        <ImageView
+            android:id="@+id/send_chat"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/send_message" />
 
 
     </LinearLayout>
