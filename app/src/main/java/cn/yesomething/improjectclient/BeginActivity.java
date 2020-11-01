@@ -22,31 +22,28 @@ import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
 import cn.yesomething.improjectclient.manager.UserManager;
 
-public class TestInitActivity extends Activity {
+public class BeginActivity extends Activity {
     private static final String TAG = "TestInitActivity";
     public static final String action = "jason.broadcast.action";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_init);
-        //todo 暂放
+        setContentView(R.layout.activity_begin);
+        //初始化总配置
         IMManager.initSDKConfig(this);
-
-        Log.e(TAG, "onCreate: "+IMManager.isLoginIMService());
+        //若已登录则跳转到主界面
         if(IMManager.isLoginIMService()){
-            showLoginUser();
             //初始化监听器
             initListener();
-            // 跳转到聊天界面
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
         }
+        //未登录则到登录界面
         else {
-           // 从登录界面跳转到注册界面
             Intent intent = new Intent(getApplicationContext(), PopoLoginActivity.class);
             startActivity(intent);
-            finish();
         }
+        finish();
     }
 
     /**
@@ -109,26 +106,4 @@ public class TestInitActivity extends Activity {
         });
         Log.e(TAG, "initConversationListener: 初始化好友监听器成功" );
     }
-
-    /**
-     * 展示当前登录的用户信息
-     */
-    private void showLoginUser(){
-        //查看已登录用户的信息
-        UserManager.getUserInfo(IMManager.getLoginUser(),new V2TIMValueCallback<List<V2TIMUserFullInfo>>(){
-
-            @Override
-            public void onError(int i, String s) {
-
-            }
-
-            @Override
-            public void onSuccess(List<V2TIMUserFullInfo> v2TIMUserFullInfos) {
-                V2TIMUserFullInfo v2TIMUserFullInfo = v2TIMUserFullInfos.get(0);
-                Log.e(TAG, "onSuccess: "+v2TIMUserFullInfo.toString() );
-            }
-        });
-    }
-
-
 }
