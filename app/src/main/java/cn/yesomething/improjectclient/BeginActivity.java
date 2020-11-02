@@ -10,7 +10,6 @@ import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMFriendApplication;
 import com.tencent.imsdk.v2.V2TIMFriendshipListener;
-import com.tencent.imsdk.v2.V2TIMUserFullInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
 
 import java.util.Date;
@@ -20,7 +19,6 @@ import cn.yesomething.improjectclient.login.PopoLoginActivity;
 import cn.yesomething.improjectclient.manager.FriendsManager;
 import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
-import cn.yesomething.improjectclient.manager.UserManager;
 
 public class BeginActivity extends Activity {
     private static final String TAG = "TestInitActivity";
@@ -69,7 +67,6 @@ public class BeginActivity extends Activity {
                 Log.e(TAG, new Date()+"onConversationChanged: 会话改变了");
             }
         });
-        Log.e(TAG, "initConversationListener: 初始化会话监听器成功" );
         MessageManager.getConversationList(0, 50,
                 new V2TIMValueCallback<V2TIMConversationResult>() {
                     @Override

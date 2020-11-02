@@ -30,6 +30,8 @@
         <activity android:name=".PageMine.UserInfoActivity"></activity>
         <activity android:name=".addfriend.ContactNewFriendActivity" />
         <activity android:name=".addfriend.AddFriendActivity" />
+        <activity android:name=".PageMine.WordCloudActivity"></activity>
+        <activity android:name=".PageMine.AccountActionActivity"></activity>
     </application>
 
 </manifest>
