@@ -88,7 +88,7 @@
 
             <RadioButton
                 android:id="@+id/conversation"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_marginTop="8.5dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -113,7 +113,7 @@
 
             <RadioButton
                 android:id="@+id/contact"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="8.5dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
@@ -121,7 +121,6 @@
                 android:gravity="center"
                 android:textSize="12sp"
                 android:text="@string/str_contact"
-                android:textColor="@color/colorCloud"
                 android:button="@null"
                 app:drawableTopCompat="@drawable/contact_selected" />
 
@@ -136,7 +135,7 @@
 
             <RadioButton
                 android:id="@+id/mine"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_marginTop="8.5dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"

@@ -275,7 +275,7 @@
             android:layout_weight="1">
 
             <RadioButton
-                android:id="@+id/conversation"
+                android:id="@+id/conversation_mine"
                 android:layout_width="50dp"
                 android:layout_marginTop="8.5dp"
                 android:layout_height="wrap_content"
@@ -322,7 +322,7 @@
             android:layout_weight="1">
 
             <RadioButton
-                android:id="@+id/mine"
+                android:id="@+id/mine_mine"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="8.5dp"
                 android:layout_height="wrap_content"

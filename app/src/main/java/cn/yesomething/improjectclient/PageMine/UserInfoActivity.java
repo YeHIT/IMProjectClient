@@ -1,18 +1,11 @@
 package cn.yesomething.improjectclient.PageMine;
 
-import android.annotation.TargetApi;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -26,14 +19,11 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-
 import com.squareup.picasso.Picasso;
-import com.wildma.pictureselector.FileUtils;
 import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
 import java.io.ByteArrayOutputStream;
-
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +50,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     @BindView(R.id.contact_mine)
     RadioButton _btnContactPagemine;
+    @BindView(R.id.conversation_mine)
+    RadioButton _btnConversationPagemine;
+    @BindView(R.id.mine_mine)
+    RadioButton _btnMinePagemine;
     @BindView(R.id.btn_account_action)
     ImageView _btnAccoutnAction;
     @BindView(R.id.tv_backward)
@@ -78,6 +72,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         spUserName="denwade";
         ButterKnife.bind(this);
         _btnContactPagemine.setOnClickListener(v -> SelectContactPage());
+        _btnConversationPagemine.setOnClickListener(v -> SelectConversationPage());
         _btnAccoutnAction.setOnClickListener(v -> AccountAction());
         _btnWordcloud.setOnClickListener(v -> WordCloud());
         _btnBack.setOnClickListener(v -> this.finish());
@@ -101,6 +96,13 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void SelectContactPage() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+    }
+
+    private void SelectConversationPage() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
@@ -153,6 +155,10 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         tv_user_name = (TextView) findViewById(R.id.tv_info_user_name);
         iv_user_pic_show = (ImageView)findViewById(R.id.iv_user_pic_show);
         iv_head_icon = (ImageView)findViewById(R.id.iv_info_head_icon);
+
+        _btnContactPagemine.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_normal,0,0);
+        _btnConversationPagemine.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_normal,0,0);
+        _btnMinePagemine.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_selected,0,0);
 
     }
 
