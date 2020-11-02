@@ -1,8 +1,9 @@
 package cn.yesomething.improjectclient;
 
+import android.content.Context;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -15,15 +16,16 @@ import cn.yesomething.improjectclient.PageConversation.ConversationFragment;
 public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
     private ContactFragment Contact_FGM=null;//联系人界面
     private ConversationFragment Conversation_FGM=null;//会话列表界面
-
+    private Context mContext;
     //界面编号
     private final int Pager_Count =2;//一共2个一级子界面
     private static final int ContactPAGE=1;
     private static final int ConversationPAGE=0;
     private static final int MinePAGE=2;
 
-    public mainFragmentPagerAdapter(FragmentManager fm, List<Fragment> fragList) {
+    public mainFragmentPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragList) {
         super(fm);
+        mContext = context;
         Contact_FGM = new ContactFragment();
         Conversation_FGM = new ConversationFragment();
     }
@@ -33,10 +35,12 @@ public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch(position){
             case ContactPAGE:
-                fragment = Conversation_FGM;
+                fragment = Contact_FGM;
+                Toast.makeText(mContext, "in page contact", Toast.LENGTH_SHORT).show();
                 break;
             case ConversationPAGE:
-                fragment = Contact_FGM;
+                fragment = Conversation_FGM;
+                Toast.makeText(mContext, "in page conversation", Toast.LENGTH_SHORT).show();
                 break;
 //            case MinePAGE:
 //                fragment = Conversation_FGM;
