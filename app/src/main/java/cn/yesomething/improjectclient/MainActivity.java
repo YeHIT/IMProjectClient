@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         _btnMinePage.setOnClickListener(v -> SelectMinePage());
         _btnAddFriend.setOnClickListener(v->AddFriend());
         initViewPager();
-        IntentFilter filter = new IntentFilter(TestInitActivity.action);
+        IntentFilter filter = new IntentFilter(BeginActivity.action);
         registerReceiver(newFriendReceiver,filter);
     }
 

@@ -22,9 +22,9 @@ import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.yesomething.improjectclient.BeginActivity;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
-import cn.yesomething.improjectclient.TestInitActivity;
 import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.MyServerManager;
 
@@ -94,7 +94,7 @@ public class PopoLoginActivity extends Activity {
                                 progressDialog.dismiss();//圈圈动画丢弃
                                 Toast.makeText(getBaseContext(), "登录成功！", Toast.LENGTH_LONG).show();
                                 //todo 测试用的跳转
-                                Intent intent = new Intent(getApplicationContext(), TestInitActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), BeginActivity.class);
                                 startActivity(intent);
                                 finish();
 //                                onLoginSuccess();

@@ -13,21 +13,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TestInitActivity" />
-        <activity android:name=".login.PopoLoginActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".chat.ChatActivity">
+        <activity android:name=".BeginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>>
+        <activity android:name=".login.PopoLoginActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".chat.ChatActivity">
+
         </activity>
         <activity android:name=".login.SignUpActivity" />
         <activity android:name=".PageMine.ChangeUserInfoActivity" />
         <activity android:name=".PageMine.UserInfoActivity"></activity>
         <activity android:name=".addfriend.ContactNewFriendActivity" />
         <activity android:name=".addfriend.AddFriendActivity" />
+        <activity android:name=".PageMine.WordCloudActivity"></activity>
+        <activity android:name=".PageMine.AccountActionActivity"></activity>
     </application>
 
 </manifest>
