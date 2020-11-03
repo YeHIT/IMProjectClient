@@ -74,6 +74,24 @@ public class MyServerManager {
     }
 
     /**
+     * 获取当前登录者的好友列表
+     * @param getFriendListHandler 用于在操作完成后处理返回结果的handler
+     */
+    public static void selectFriendsList(Handler getFriendListHandler){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId",IMManager.getLoginUser());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(getFriendListHandler,
+                UrlManager.myServer+UrlManager.friendsListSelectUrl,
+                jsonObject.toString())
+                .start();
+    }
+
+    /**
      * 向服务器发送当前发出的消息
      * @param sendMessageHandler 用于在操作完成后处理返回结果的handler
      * @param fromId 消息发出者

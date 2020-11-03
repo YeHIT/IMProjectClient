@@ -12,8 +12,8 @@ public class FriendsUnitTest {
     public void testAddFriends(){
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("friendId","xy");
-            jsonObject.put("userId","xyz");
+            jsonObject.put("friendId","smallYe");
+            jsonObject.put("userId","denwade");
             jsonObject.put("friendName","heihei");
             jsonObject.put("friendType","");
             jsonObject.put("friendGroupType","");
@@ -60,7 +60,7 @@ public class FriendsUnitTest {
     public void testSelectFriendsList(){
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("userId","111");
+            jsonObject.put("userId","denwade");
         } catch (JSONException e) {
             e.printStackTrace();
         }
