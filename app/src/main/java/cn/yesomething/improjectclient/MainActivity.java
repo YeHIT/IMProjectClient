@@ -1,17 +1,12 @@
 package cn.yesomething.improjectclient;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -30,7 +25,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.yesomething.improjectclient.PageMine.UserInfoActivity;
 import cn.yesomething.improjectclient.addfriend.ContactNewFriendActivity;
 import cn.yesomething.improjectclient.manager.FriendsManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
@@ -39,14 +33,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private static final String TAG = "MainActivity";
 
     private ViewPager viewPager;
-    private mainFragmentPagerAdapter FragmentPagerAdapter;
+    private mainFragmentPagerAdapter fragmentPagerAdapter;
     private List<Fragment> fragmentList; //保存界面的view
-    public static final String action = "jason.broadcast.action";
 
     //几个代表页面的常量
-    public static final int PAGE_ONE = 0;
-    public static final int PAGE_TWO = 1;
-    public static final int PAGE_THREE = 2;
+    public static final int CONVERSATION_PAGE = 0;
+    public static final int CONTACT_PAGE = 1;
+    public static final int MINE_PAGE = 2;
 
     @BindView(R.id.conversation)
     RadioButton _btnConversationPage;
@@ -59,13 +52,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @BindView(R.id.new_friend_coming)
     TextView _txtFriendComing;
 
-    BroadcastReceiver newFriendReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            _txtFriendComing.setVisibility(View.VISIBLE);
-            Log.e(TAG, "onReceive: "+context );
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,82 +60,69 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //初始化监听器
         initListener();
         ButterKnife.bind(this);
-        //IMManager.initSDKConfig(this);
         //设置监听器
         _btnConversationPage.setOnClickListener(v -> SelectConversationPage());
         _btnContactPage.setOnClickListener(v -> SelectContactPage());
         _btnMinePage.setOnClickListener(v -> SelectMinePage());
         _btnAddFriend.setOnClickListener(v->AddFriend());
+        //设置界面切换
         initViewPager();
-//        IntentFilter filter = new IntentFilter(BeginActivity.action);
-//        registerReceiver(newFriendReceiver,filter);
     }
 
     //viewpager选中对话列表界面
     private void SelectConversationPage(){
-        viewPager.setCurrentItem(PAGE_ONE);
-        Toast.makeText(this,"click ConversationPage",Toast.LENGTH_SHORT).show();
+        viewPager.setCurrentItem(CONVERSATION_PAGE);
     }
+
     //viewpager选中通讯录列表界面
     private void SelectContactPage(){
-        viewPager.setCurrentItem(PAGE_TWO);
-        Toast.makeText(this,"click ContactPage",Toast.LENGTH_SHORT).show();
+        viewPager.setCurrentItem(CONTACT_PAGE);
     }
+
     //viewpager选中用户信息设置界面
     private void SelectMinePage(){
-        Toast.makeText(this,"click MinePage",Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getApplicationContext(),UserInfoActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        viewPager.setCurrentItem(MINE_PAGE);
     }
+
+    //切换到添加好友界面
     private void AddFriend(){
         Intent friendIntent = new Intent(this, ContactNewFriendActivity.class);
         startActivity(friendIntent);
     }
 
-
-
     //加载viewpager
     public void initViewPager(){
         fragmentList = new ArrayList<>();
         viewPager = (ViewPager) findViewById(R.id.viewPager);
-
-        FragmentPagerAdapter = new mainFragmentPagerAdapter(this,getSupportFragmentManager(), fragmentList);
-        viewPager.setAdapter(FragmentPagerAdapter);
+        fragmentPagerAdapter = new mainFragmentPagerAdapter(this,getSupportFragmentManager(), fragmentList);
+        viewPager.setAdapter(fragmentPagerAdapter);
         viewPager.addOnPageChangeListener(this);
-        viewPager.setCurrentItem(1);
+        //选择会话界面
+        onPageSelected(CONVERSATION_PAGE);
     }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
     public void onPageSelected(int position) {
         switch (viewPager.getCurrentItem()) {
-            case PAGE_ONE:
-                Log.e(TAG, "onPageSelected: "+"1" );
+            case CONVERSATION_PAGE:
                 _btnContactPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_normal,0,0);
                 _btnConversationPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_selected,0,0);
                 _btnMinePage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_normal,0,0);
-
                 break;
-            case PAGE_TWO:
-                Log.e(TAG, "onPageSelected: "+"2" );
+            case CONTACT_PAGE:
                 _btnContactPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_selected,0,0);
                 _btnConversationPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_normal,0,0);
                 _btnMinePage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_normal,0,0);
-
                 _btnConversationPage.setChecked(true);
                 break;
-            case PAGE_THREE:
-                Log.e(TAG, "onPageSelected: "+"3" );
+            case MINE_PAGE:
                 _btnContactPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_normal,0,0);
                 _btnConversationPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_normal,0,0);
                 _btnMinePage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_selected,0,0);
-
-
                 break;
         }
     }
@@ -159,16 +132,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //state的状态有三个，0表示什么都没做，1正在滑动，2滑动完毕
         if (state == 2) {
             switch (viewPager.getCurrentItem()) {
-                case PAGE_ONE:
-                    Log.e(TAG, "onPageScrollStateChanged: "+"1" );
+                case CONVERSATION_PAGE:
                     _btnContactPage.setChecked(true);
                     break;
-                case PAGE_TWO:
-                    Log.e(TAG, "onPageScrollStateChanged: "+"2" );
-
+                case CONTACT_PAGE:
                     _btnConversationPage.setChecked(true);
                     break;
-                case PAGE_THREE:
+                case MINE_PAGE:
                     _btnMinePage.setChecked(true);
                     break;
             }
@@ -221,10 +191,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             //好友申请新增通知,自己申请/别人申请
             @Override
             public void onFriendApplicationListAdded(List<V2TIMFriendApplication> applicationList) {
-                Intent intent = new Intent(action);
-                intent.putExtra("content","hello");
-                sendBroadcast(intent);
-
                 Log.e(TAG, "onFriendApplicationListAdded: 新好友申请" );
             }
             //好友申请被拒绝
