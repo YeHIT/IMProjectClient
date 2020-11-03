@@ -3,10 +3,12 @@ package cn.yesomething.improjectclient;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     ImageButton _btnAddFriend;
     @BindView(R.id.new_friend_coming)
     TextView _txtFriendComing;
+    @BindView(R.id.toolbar)
+    Toolbar _toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,17 +116,20 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 _btnContactPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_normal,0,0);
                 _btnConversationPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_selected,0,0);
                 _btnMinePage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_normal,0,0);
+                _toolbar.setVisibility(View.VISIBLE);
                 break;
             case CONTACT_PAGE:
                 _btnContactPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_selected,0,0);
                 _btnConversationPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_normal,0,0);
                 _btnMinePage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_normal,0,0);
                 _btnConversationPage.setChecked(true);
+                _toolbar.setVisibility(View.VISIBLE);
                 break;
             case MINE_PAGE:
                 _btnContactPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_normal,0,0);
                 _btnConversationPage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_normal,0,0);
                 _btnMinePage.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_selected,0,0);
+                _toolbar.setVisibility(View.GONE);
                 break;
         }
     }
