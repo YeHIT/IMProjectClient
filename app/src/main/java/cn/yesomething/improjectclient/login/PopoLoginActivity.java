@@ -30,7 +30,6 @@ import cn.yesomething.improjectclient.manager.MyServerManager;
 
 
 public class PopoLoginActivity extends Activity {
-    private static final String TAG = "PopoLoginActivity";
     Handler loginHandler;
     @BindView(R.id.login_username) EditText _usernameText;
     @BindView(R.id.login_psw) EditText _pswText;
@@ -77,37 +76,39 @@ public class PopoLoginActivity extends Activity {
         loginHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
             @Override
             public boolean handleMessage(@NonNull Message msg) {
-                String response = (String) msg.obj;
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    String responseCode = jsonObject.getString("responseCode");
-                    //登录成功
-                    if(responseCode.equals("200")){
-                        //todo 接入TIMSDK
-                        IMManager.login(PopoLoginActivity.this, userName, new V2TIMCallback() {
-                            @Override
-                            public void onError(int i, String s) {
-                                Toast.makeText(getBaseContext(), "登录异常,请稍后再试", Toast.LENGTH_LONG).show();
-                            }
-                            @Override
-                            public void onSuccess() {
-                                progressDialog.dismiss();//圈圈动画丢弃
-                                Toast.makeText(getBaseContext(), "登录成功！", Toast.LENGTH_LONG).show();
-                                //todo 测试用的跳转
-                                Intent intent = new Intent(getApplicationContext(), BeginActivity.class);
-                                startActivity(intent);
-                                finish();
-//                                onLoginSuccess();
-                            }
-                        });
+                String response = (msg != null) ? (String) msg.obj : null;
+                if(response != null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //登录成功
+                        if(responseCode.equals("200")){
+                            //使用TIMSDK登录
+                            IMManager.login(PopoLoginActivity.this, userName, new V2TIMCallback() {
+                                @Override
+                                public void onError(int i, String s) {
+                                    progressDialog.dismiss();//圈圈动画丢弃
+                                    onLoginFailed("登录异常,请稍后再试");
+                                }
+                                @Override
+                                public void onSuccess() {
+                                    progressDialog.dismiss();//圈圈动画丢弃
+                                    onLoginSuccess();
+                                }
+                            });
+                        }
+                        else {
+                            String errorMessage = jsonObject.getString("errorMessage");
+                            progressDialog.dismiss();//圈圈动画丢弃
+                            onLoginFailed(errorMessage);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    else {
-                        String errorMessage = jsonObject.getString("errorMessage");
-                        progressDialog.dismiss();//圈圈动画丢弃
-                        onLoginFailed(errorMessage);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                }
+                else {
+                    progressDialog.dismiss();//圈圈动画丢弃
+                    onLoginFailed("异常错误请稍后再试");
                 }
                 return false;
             }
@@ -120,7 +121,7 @@ public class PopoLoginActivity extends Activity {
      */
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        Toast.makeText(getBaseContext(), "Login successfully", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "登录成功！", Toast.LENGTH_LONG).show();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();
@@ -169,11 +170,6 @@ public class PopoLoginActivity extends Activity {
         } else {
             _pswText.setError(null);
         }
-
         return valid;
     }
-
-
-
-
 }

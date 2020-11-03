@@ -116,22 +116,27 @@ public class IMManager {
             userSigHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
                 @Override
                 public boolean handleMessage(@NonNull Message msg) {
-                    String response = (String) msg.obj;
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        String responseCode = jsonObject.getString("responseCode");
-                        //登录成功
-                        if(responseCode.equals("200")){
-                            //SDK登录
-                            String userSig = jsonObject.getString("userSig");
-                            V2TIMManager.getInstance().login(userName,userSig, callback);
+                    String response = (msg != null) ? (String) msg.obj : null;
+                    if(response != null){
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String responseCode = jsonObject.getString("responseCode");
+                            //登录成功
+                            if(responseCode.equals("200")){
+                                //SDK登录
+                                String userSig = jsonObject.getString("userSig");
+                                V2TIMManager.getInstance().login(userName,userSig, callback);
+                            }
+                            else {
+                                String errorMessage = jsonObject.getString("errorMessage");
+                                Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                        else {
-                            String errorMessage = jsonObject.getString("errorMessage");
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    }
+                    else {
+                        Toast.makeText(context, "异常错误请稍后再试", Toast.LENGTH_LONG).show();
                     }
                     return false;
                 }
