@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -36,6 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.UrlManager;
 import cn.yesomething.improjectclient.utils.MyConnectionToServer;
 
@@ -56,7 +55,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private TextView tv_info_back;
     private TextView tv_save;
     private ImageView iv_account_action;
-    //private RelativeLayout rl_title_bar;
     private String spUserName;
 
     @BindView(R.id.contact_mine)
@@ -92,33 +90,40 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.mine_fragment, container, false);
-        spUserName="denwade";
+        mineActivity = getActivity();
+        //获取当前用户名
+        spUserName= IMManager.getLoginUser();
         ButterKnife.bind(this,view);
-        _btnContactPagemine.setOnClickListener(v -> SelectContactPage());
-        _btnConversationPagemine.setOnClickListener(v -> SelectConversationPage());
-        _btnAccoutnAction.setOnClickListener(v -> AccountAction());
-        _btnWordcloud.setOnClickListener(v -> WordCloud());
-        _btnBack.setOnClickListener(v -> mineActivity.finish());
+        //初始化控件
         init(view);
-        initUserInfo();
+        //绑定监听
         setListener();
+        //初始化用户信息
+        initUserInfo();
         return view;
     }
 
-    private void WordCloud() {//词云界面
-        Intent intent = new Intent(getActivity(), WordCloudActivity.class);
+    /**
+     * 跳转到词云界面
+     */
+    private void WordCloud() {
+        Intent intent = new Intent(mineActivity, WordCloudActivity.class);
         startActivity(intent);
-        getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-        getActivity().finish();
+        mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
-    private void AccountAction() {//退出账号 切换账号等
+    /**
+     * 跳转到账号切换/退出界面
+     */
+    private void AccountAction() {
         Intent intent = new Intent(mineActivity, AccountActionActivity.class);
         startActivity(intent);
-        mineActivity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        mineActivity.finish();
+        mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
+    /**
+     * 切换到联系人界面
+     */
     private void SelectContactPage() {
         Intent intent = new Intent(mineActivity, MainActivity.class);
         startActivity(intent);
@@ -126,13 +131,15 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         mineActivity.finish();
     }
 
+    /**
+     * 切换到会话界面
+     */
     private void SelectConversationPage() {
         Intent intent = new Intent(mineActivity, MainActivity.class);
         startActivity(intent);
         mineActivity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         mineActivity.finish();
     }
-
 
     //初始化个人信息
     private void initUserInfo(){
@@ -164,7 +171,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         //初始化签名
     }
 
-    //初始化控件
+    /**
+     * 初始化控件
+     */
     private void init(View view) {
         tv_info_back = (TextView) view.findViewById(R.id.tv_backward);
         tv_info_back.setVisibility(View.GONE);
@@ -174,28 +183,29 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         tv_nickName = (TextView) view.findViewById(R.id.tv_info_nickName);
         rl_sex = (RelativeLayout) view.findViewById(R.id.rl_info_sex);
         tv_sex = (TextView) view.findViewById(R.id.tv_info_sex);
-        //rl_signature = (RelativeLayout) findViewById(R.id.rl_signature);
-        //tv_signature = (TextView) findViewById(R.id.tv_signature);
         tv_user_name = (TextView) view.findViewById(R.id.tv_info_user_name);
         iv_user_pic_show = (ImageView)view.findViewById(R.id.iv_user_pic_show);
         iv_head_icon = (ImageView)view.findViewById(R.id.iv_info_head_icon);
-
         _btnContactPagemine.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.contact_normal,0,0);
         _btnConversationPagemine.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.conversation_normal,0,0);
         _btnMinePagemine.setCompoundDrawablesWithIntrinsicBounds(0,R.drawable.myself_selected,0,0);
-
     }
 
-
-
-
-    //设置界面的点击监听事件
+    /**
+     * 设置界面的点击监听事件
+     */
     private void setListener() {
+        //绑定按钮监听
+        _btnContactPagemine.setOnClickListener(v -> SelectContactPage());
+        _btnConversationPagemine.setOnClickListener(v -> SelectConversationPage());
+        _btnAccoutnAction.setOnClickListener(v -> AccountAction());
+        _btnWordcloud.setOnClickListener(v -> WordCloud());
+        _btnBack.setOnClickListener(v -> mineActivity.finish());
+        //绑定标签监听
         tv_info_back.setOnClickListener(this);
         rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
         iv_head_icon.setOnClickListener(this);
-        //rl_signature.setOnClickListener(this);
     }
 
     //控件的点击事件
@@ -207,16 +217,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 String sex = tv_sex.getText().toString();
                 sexDialog(sex);
                 break;
-            /*//签名的点击事件
-            case R.id.rl_signature:
-                String signature = tv_signature.getText().toString();//获取签名控件上的数据
-                Bundle bdSignature = new Bundle();
-                bdSignature.putString("content",signature);//传递界面上的签名数据
-                bdSignature.putString("title","签名"); //传递界面的标题
-                bdSignature.putInt("flag",2);//flag 传递2表示是签名
-                //跳转到个人资料修改界面
-                enterActivityForResult(ChangeUserInfoActivity.class,CHANGE_SIGNATURE,bdSignature);
-                break;*/
             case R.id.iv_info_head_icon:
                 selectPicture(v);
             default:
@@ -279,19 +279,20 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 String bitmap2string = bitmapToString(bm);
                 //把String传送到服务器
                 Log.e("bitmap",bitmap2string);
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("userName","denwade");
-                    jsonObject.put("base64String",bitmap2string);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                MyConnectionToServer.getConnectionThread(null, UrlManager.myServer + UrlManager.userPictureUpdateUrl,
-                        jsonObject.toString()).start();
+//                JSONObject jsonObject = new JSONObject();
+//                try {
+//                    jsonObject.put("userName","denwade");
+//                    jsonObject.put("base64String",bitmap2string);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                MyConnectionToServer.getConnectionThread(null, UrlManager.myServer + UrlManager.userPictureUpdateUrl,
+//                        jsonObject.toString()).start();
 
             }
         }
     }
+
     /**
      * Base64字符串转换成图片
      * @param string
@@ -322,7 +323,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     private void selectPicture(View view) {
         PictureSelector
-                .create(getActivity(), PictureSelector.SELECT_REQUEST_CODE)
+                .create(MineFragment.this, PictureSelector.SELECT_REQUEST_CODE)
                 .selectPicture(false);
     }
 }
