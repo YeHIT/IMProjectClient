@@ -19,7 +19,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>>
+        </activity>
         <activity android:name=".login.PopoLoginActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".chat.ChatActivity">

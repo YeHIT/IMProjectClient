@@ -44,9 +44,9 @@ public class ConversationFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
     @Override
-    public void onAttach(Activity activity) {//当fragment附着在activity上时保存上下文
-        super.onAttach(activity);
-        this.mContext = activity;
+    public void onAttach(Context context) {//当fragment附着在activity上时保存上下文
+        super.onAttach(context);
+        this.mContext = context;
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {

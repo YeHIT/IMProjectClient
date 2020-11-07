@@ -1,28 +1,39 @@
 package cn.yesomething.improjectclient.PageContact;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMFriendInfo;
 import com.tencent.imsdk.v2.V2TIMValueCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.chat.ChatActivity;
+import cn.yesomething.improjectclient.login.PopoLoginActivity;
 import cn.yesomething.improjectclient.manager.FriendsManager;
+import cn.yesomething.improjectclient.manager.IMManager;
+import cn.yesomething.improjectclient.manager.MyServerManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,10 +41,7 @@ import cn.yesomething.improjectclient.manager.FriendsManager;
  * create an instance of this fragment.
  */
 public class ContactFragment extends Fragment {
-    private static final String TAG = "ContactFragment";
-
-
-
+    private Handler getFriendListHandler;
     private RecyclerView contactList;
     private ArrayList<String> contactNames;
     private LinearLayoutManager layoutManager;
@@ -46,7 +54,6 @@ public class ContactFragment extends Fragment {
     public ContactFragment() {
         // Required empty public constructor
     }
-
 
     public static ContactFragment newInstance(String param1, String param2) {
         ContactFragment fragment = new ContactFragment();
@@ -67,11 +74,13 @@ public class ContactFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
     @Override
-    public void onAttach(Activity activity) {//当fragment附着在activity上时保存上下文
-        super.onAttach(activity);
-        this.mContext = activity;
+    public void onAttach(Context mContext) {//当fragment附着在activity上时保存上下文
+        super.onAttach(mContext);
+        this.mContext = mContext;
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,8 +89,9 @@ public class ContactFragment extends Fragment {
         getFriendList();
         return mView;
     }
-    public void init(View view){
 
+    //初始化界面
+    public void init(View view){
         contactList = (RecyclerView) view.findViewById(R.id.contact_list_main);
         LetterList = (LetterListView) view.findViewById(R.id.letter_view_main);
         layoutManager = new LinearLayoutManager(mContext);
@@ -104,7 +114,6 @@ public class ContactFragment extends Fragment {
         adapter.setOnItemClickListener(new ContactAdapter.OnItemClickListener() {
             @Override
             public void onClick(String friendName) {
-                Toast.makeText(mContext, "click " + friendName, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
                 intent.setClass(getActivity(), ChatActivity.class);
                 intent.putExtra("friendName",friendName);
@@ -117,24 +126,41 @@ public class ContactFragment extends Fragment {
      * 获取好友列表
      */
     public void getFriendList(){
-        FriendsManager.getFriendList(new V2TIMValueCallback<List<V2TIMFriendInfo>>(){
-
-
+        getFriendListHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
             @Override
-            public void onError(int i, String s) {
-
-            }
-
-            @Override
-            public void onSuccess(List<V2TIMFriendInfo> v2TIMFriendInfos) {
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (msg != null) ? (String) msg.obj : null;
                 contactNames = new ArrayList<>();
-                for (V2TIMFriendInfo friendInfo: v2TIMFriendInfos){
-                    contactNames.add(friendInfo.getUserID());
-                    Log.e(TAG, "onSuccess: "+friendInfo.getUserID() );
+                if(response != null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //获取好友列表成功
+                        if(responseCode.equals("200")){
+                            //展示好友列表
+                            JSONArray jsonArray = jsonObject.getJSONArray("friendsList");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject tempObj = jsonArray.getJSONObject(i);
+                                String friendName = tempObj.getString("friendId");
+                                contactNames.add(friendName);
+                            }
+                            init(mView);
+                            adapter.notifyDataSetChanged();
+                        }
+                        else {
+                            String errorMessage = jsonObject.getString("errorMessage");
+                            Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
-                init(mView);
-                adapter.notifyDataSetChanged();
+                else {
+                    Toast.makeText(mContext, "异常错误请稍后再试", Toast.LENGTH_LONG).show();
+                }
+                return false;
             }
         });
+        MyServerManager.selectFriendsList(getFriendListHandler);
     }
 }

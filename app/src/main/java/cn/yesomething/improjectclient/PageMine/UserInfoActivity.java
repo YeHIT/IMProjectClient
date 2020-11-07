@@ -23,12 +23,18 @@ import com.squareup.picasso.Picasso;
 import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.MyServerManager;
+import cn.yesomething.improjectclient.manager.UrlManager;
+import cn.yesomething.improjectclient.utils.MyConnectionToServer;
 
 
 public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
@@ -255,7 +261,15 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 String bitmap2string = bitmapToString(bm);
                 //把String传送到服务器
                 Log.e("bitmap",bitmap2string);
-
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("userName","denwade");
+                    jsonObject.put("base64String",bitmap2string);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                MyConnectionToServer.getConnectionThread(null, UrlManager.myServer + UrlManager.userPictureUpdateUrl,
+                        jsonObject.toString()).start();
 
             }
         }

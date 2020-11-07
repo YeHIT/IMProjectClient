@@ -20,7 +20,6 @@ import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.utils.Utils;
 
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private static final String TAG = "ContactAdapter";
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private ArrayList<String> mContactNames; // 联系人名称字符串数组
@@ -118,7 +117,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         CharacterHolder(View view) {
             super(view);
-            Log.e(TAG, "CharacterHolder: " );
             mTextView = view.findViewById(R.id.character);
         }
     }
@@ -127,7 +125,6 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView mTextView;
         ContactHolder(View view) {
             super(view);
-            Log.e(TAG, "ContactHolder: " );
             mTextView = (TextView) view.findViewById(R.id.contact_name);
         }
     }
