@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import cn.yesomething.improjectclient.utils.MyConnectionToServer;
@@ -49,6 +50,103 @@ public class MyServerManager {
         }
         MyConnectionToServer.getConnectionThread(loginHandler,
                 UrlManager.myServer+UrlManager.userLoginUrl,
+                jsonObject.toString())
+                .start();
+    }
+
+    /**
+     * 修改用户资料
+     * @param userUpdateHandler 用于登录完成后处理返回结果的handler
+     * @param userName 用户名
+     * @param userNickname 用户昵称
+     * @param userSex 用户性别
+     */
+    public static void userUpdate(Handler userUpdateHandler, String userName, String userNickname,Integer userSex){
+        userUpdate(userUpdateHandler,userName,userNickname,userSex,null);
+    }
+
+    /**
+     * 修改用户资料
+     * @param userUpdateHandler 用于登录完成后处理返回结果的handler
+     * @param userName 用户名
+     * @param userNickname 用户昵称
+     * @param userSex 用户性别
+     * @param userTags 用户标签
+     */
+    public static void userUpdate(Handler userUpdateHandler, String userName, String userNickname, Integer userSex, ArrayList<String> userTags){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userName",userName);
+            jsonObject.put("userNickname",userNickname);
+            jsonObject.put("userSex",userSex);
+            if(userTags != null){
+                jsonObject.put("userTags",userTags);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(userUpdateHandler,
+                UrlManager.myServer+UrlManager.userUpdateUrl,
+                jsonObject.toString())
+                .start();
+    }
+
+    /**
+     * 用户头像修改
+     * @param userPictureUpdateHandler 用于登录完成后处理返回结果的handler
+     * @param userName 用户名
+     * @param base64String 头像图片的base64编码
+     */
+    public static void userPictureUpdate(Handler userPictureUpdateHandler, String userName,String base64String){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userName",userName);
+            jsonObject.put("base64String",base64String);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(userPictureUpdateHandler,
+                UrlManager.myServer+UrlManager.userPictureUpdateUrl,
+                jsonObject.toString())
+                .start();
+    }
+
+    /**
+     * 用户头像修改
+     * @param userWordCloudGenerateHandler 用于登录完成后处理返回结果的handler
+     * @param userName 用户名
+     */
+    public static void userWordCloudGenerate(Handler userWordCloudGenerateHandler, String userName){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userName",userName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(userWordCloudGenerateHandler,
+                UrlManager.myServer+UrlManager.userWordCloudGenerateUrl,
+                jsonObject.toString())
+                .start();
+    }
+
+    /**
+     * 用户资料查询
+     * @param userSelectHandler 用于登录完成后处理返回结果的handler
+     * @param userName 用户名
+     */
+    public static void userSelect(Handler userSelectHandler, String userName){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userName",userName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(userSelectHandler,
+                UrlManager.myServer+UrlManager.userSelectUrl,
                 jsonObject.toString())
                 .start();
     }
