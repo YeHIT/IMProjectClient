@@ -28,7 +28,6 @@ import java.util.List;
 
 import cn.yesomething.improjectclient.R;
 
-import static cn.yesomething.improjectclient.PageMine.UserInfoActivity.bitmapToString;
 
 public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
     private List<Msg> mMsgList;

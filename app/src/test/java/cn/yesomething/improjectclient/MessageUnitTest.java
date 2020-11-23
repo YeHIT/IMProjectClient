@@ -55,10 +55,11 @@ public class MessageUnitTest {
         //加密
         String mContent = StringEscapeUtils.escapeJava(content);
         try {
-            jsonObject.put("fromId","11");
-            jsonObject.put("toId","22");
+            jsonObject.put("fromId","denwade");
+            jsonObject.put("toId","hejing");
             jsonObject.put("messageContent",mContent);
             jsonObject.put("messageTime",date);
+            jsonObject.put("messageContentType",1);
         } catch (JSONException e) {
             e.printStackTrace();
         }

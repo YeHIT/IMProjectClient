@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -25,28 +29,30 @@ import com.squareup.picasso.Picasso;
 import com.wildma.pictureselector.PictureBean;
 import com.wildma.pictureselector.PictureSelector;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.manager.IMManager;
+import cn.yesomething.improjectclient.manager.MyServerManager;
 import cn.yesomething.improjectclient.manager.UrlManager;
 import cn.yesomething.improjectclient.utils.MyConnectionToServer;
 
 
 public class MineFragment extends Fragment implements View.OnClickListener {
-
+    private static final String TAG = "MineFragment";
     private Context mContext;
     private TextView tv_user_name;
     private ImageView iv_head_icon;
     private ImageView iv_user_pic_show;
     private Activity mineActivity;
-    //private TextView tv_signature;
     //private RelativeLayout rl_signature;
     private TextView tv_sex;
     private RelativeLayout rl_sex;
@@ -69,6 +75,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     TextView _btnBack;
     @BindView(R.id.tv_wordcloud)
     TextView _btnWordcloud;
+    @BindView(R.id.login_name)
+    TextView tv_login_name;
 
     public MineFragment() {
         // Required empty public constructor
@@ -145,7 +153,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private void initUserInfo(){
         //初始化头像  举例
         //1: 确定网址
-        String url =  "http://msn-img-nos.yiyouliao.com/inforec-20201030-d03c72163b181e10000e912d0482a604.jpg?time=1604026310&signature=E80BBC3A927EC074D025A1A0BF0E3F00";
+        String url = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3348271096,2240890581&fm=11&gp=0.jpg";
+
         Picasso.with(mContext)
                 .load(url)
                 .resize(70,70)
@@ -162,7 +171,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
 
         //初始化用户名
-
+        testUserSelect(spUserName);
 
         //初始化昵称
 
@@ -326,4 +335,75 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 .create(MineFragment.this, PictureSelector.SELECT_REQUEST_CODE)
                 .selectPicture(false);
     }
+    public void testUserSelect(String userName){
+        //一开始时记得声明handler
+        Handler userSelectHandler = null;
+        //todo 输入要查询用户的用户名
+//        String userName = "xx";
+        //用于获取最终的数据并展示
+        userSelectHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (msg != null) ? (String) msg.obj : null;
+                Log.e(TAG, "handleMessage: "+response );
+                //网络正常
+                if(response != null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //正常获取到数据
+                        if(responseCode.equals("200")){
+                            jsonObject = jsonObject.getJSONObject("user");
+                            //todo 利用数据展示
+                            String userName = jsonObject.getString("userName");
+                            String userPassword = jsonObject.getString("userPassword");
+                            Integer userSex = jsonObject.getInt("userSex");
+                            String userNickname = jsonObject.getString("userNickname");
+                            String userBirthday = jsonObject.getString("userBirthday");
+
+                            tv_nickName.setText(userNickname);
+                            tv_user_name.setText(userName);
+                            tv_login_name.setText(userName);
+
+                            if(userSex==0){tv_sex.setText("男"); }
+                            else{tv_sex.setText("女");}
+
+                            Log.e(TAG, "handleMessage: "+userName );
+
+                            //用户头像为网络地址url
+                            String userPicture = jsonObject.getString("userPicture");
+
+
+
+                            //获取用户历史头像
+                            ArrayList<String> userHistoricalPictures = new ArrayList<>();
+                            JSONArray picturesArray = jsonObject.getJSONArray("userHistoricalPictures");
+                            for (int i = 0; i < picturesArray.length(); i++) {
+                                userHistoricalPictures.add(picturesArray.getString(i));
+                            }
+                            //获取用户标签信息
+                            ArrayList<String> userTags = new ArrayList<>();
+                            JSONArray tagsArray = jsonObject.getJSONArray("userTags");
+                            for (int i = 0; i < tagsArray.length(); i++) {
+                                userTags.add(tagsArray.getString(i));
+                            }
+
+                        }
+                        else {
+                            //todo 错误信息处理
+                            String errorMessage = jsonObject.getString("errorMessage");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //todo 网络异常判断
+                else {
+                }
+                return false;
+            }
+        });
+        MyServerManager.userSelect(userSelectHandler,userName);
+    }
+
 }

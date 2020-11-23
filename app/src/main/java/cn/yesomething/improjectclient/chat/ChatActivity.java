@@ -48,7 +48,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
-import cn.yesomething.improjectclient.PageMine.UserInfoActivity;
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.MessageManager;

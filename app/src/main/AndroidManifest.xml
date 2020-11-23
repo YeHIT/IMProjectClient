@@ -21,13 +21,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.PopoLoginActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity" >
+
+        </activity>
         <activity android:name=".chat.ChatActivity">
 
         </activity>
         <activity android:name=".login.SignUpActivity" />
         <activity android:name=".PageMine.ChangeUserInfoActivity" />
-        <activity android:name=".PageMine.UserInfoActivity"></activity>
+
         <activity android:name=".addfriend.ContactNewFriendActivity" />
         <activity android:name=".addfriend.AddFriendActivity" />
         <activity android:name=".PageMine.WordCloudActivity"></activity>

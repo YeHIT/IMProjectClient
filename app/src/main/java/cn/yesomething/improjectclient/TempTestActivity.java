@@ -47,6 +47,7 @@ public class TempTestActivity extends Activity {
                         //正常获取到数据
                         if(responseCode.equals("200")){
                             //todo 利用数据展示
+                            jsonObject = jsonObject.getJSONObject("user");
                             String userName = jsonObject.getString("userName");
                             String userPassword = jsonObject.getString("userPassword");
                             Integer userSex = jsonObject.getInt("userSex");
@@ -106,6 +107,7 @@ public class TempTestActivity extends Activity {
                         //正常获取到数据
                         if(responseCode.equals("200")){
                             //todo 利用数据展示
+                            jsonObject = jsonObject.getJSONObject("user");
                             String userName = jsonObject.getString("userName");
                             //用户头像为网络地址url
                             String userPicture = jsonObject.getString("userPicture");
@@ -146,6 +148,7 @@ public class TempTestActivity extends Activity {
                         //正常获取到数据
                         if(responseCode.equals("200")){
                             //todo 利用数据展示
+                            jsonObject = jsonObject.getJSONObject("user");
                             String userName = jsonObject.getString("userName");
                             //词云图片为网络地址url
                             String wordCloudPicture = jsonObject.getString("wordCloudPicture");
@@ -174,11 +177,11 @@ public class TempTestActivity extends Activity {
     }
 
     //用户资料查询
-    public void testUserSelect(){
+    public void testUserSelect(String userName){
         //一开始时记得声明handler
         Handler userSelectHandler = null;
         //todo 输入要查询用户的用户名
-        String userName = "xx";
+//        String userName = "xx";
         //用于获取最终的数据并展示
         userSelectHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
             @Override
@@ -191,6 +194,7 @@ public class TempTestActivity extends Activity {
                         String responseCode = jsonObject.getString("responseCode");
                         //正常获取到数据
                         if(responseCode.equals("200")){
+                            jsonObject = jsonObject.getJSONObject("user");
                             //todo 利用数据展示
                             String userName = jsonObject.getString("userName");
                             String userPassword = jsonObject.getString("userPassword");
@@ -227,7 +231,7 @@ public class TempTestActivity extends Activity {
                 return false;
             }
         });
-        MyServerManager.userWordCloudGenerate(userSelectHandler,userName);
+        MyServerManager.userSelect(userSelectHandler,userName);
     }
 
 }

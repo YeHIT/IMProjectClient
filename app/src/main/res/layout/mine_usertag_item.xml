@@ -5,7 +5,7 @@
     android:layout_marginHorizontal="4dp">
     <TextView
         android:id="@+id/tv_info_forward"
-        android:layout_width="45dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:ellipsize="end"
         android:gravity="center"

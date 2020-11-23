@@ -49,8 +49,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
-                    <include layout="@layout/mine_usertag_item"></include>
-                    <include layout="@layout/mine_usertag_item"></include>
+                    <include layout="@layout/mine_usertag_item"
+                        android:id="@+id/tag0">
+                    </include>
+                    <include layout="@layout/mine_usertag_item"
+                        android:id="@+id/tag1">
+                    </include>
+                    <include layout="@layout/mine_usertag_item"
+                        android:id="@+id/tag2">
+                    </include>
                 </LinearLayout>
 
             </LinearLayout>
