@@ -91,7 +91,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.send_chat).setOnClickListener(this);
         findViewById(R.id.bt_test).setOnClickListener(this);
         findViewById(R.id.send_icon).setOnClickListener(this);
-        findViewById(R.id.send_picture).setOnClickListener(this);
         //Emoji库的设置
         setEmojiconFragment(false);
 
@@ -117,14 +116,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     findViewById(R.id.emojicons).setVisibility(View.VISIBLE);
                 }
                 hasClick = !hasClick;
-                break;
-            }
-            case R.id.send_picture:{
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
-                findViewById(R.id.emojicons).setVisibility(View.GONE);
-                selectPicture(v);
-                adapter.notifyItemRangeChanged(0,msgList.size(),"send");
                 break;
             }
             // todo 发送信息
@@ -160,9 +151,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     });*/
                     //把上面的最重要的提取出来，就是 showMsg()
                     showMsg(mContent,Msg.TYPE_SENT);
-                    //adapter刷新item，修改recyclerview里面的变化的item
-                    adapter.notifyItemRangeChanged(0,msgList.size(),"send");
-
+                    //消息列表已读未读变化
+                    MsgListTypeChange(Msg.TYPE_SENT);
                     String userId = IMManager.getLoginUser();
                     String toId = friendName;
                     Date messageDate = new Date();
@@ -182,16 +172,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             // 测试按钮，点击会接收一条消息
             case R.id.bt_test: {
                 showMsg("你好!", Msg.TYPE_RECEIVED);
-                //adapter刷新item，修改recyclerview里面的变化的item
-                adapter.notifyItemRangeChanged(0,msgList.size(),"recieve");
-
+                //消息列表已读未读变化
+                MsgListTypeChange(Msg.TYPE_RECEIVED);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                 break;
             }
             // 返回按钮
             case R.id.bt_back:{
-                showMsg("你好!", Msg.TYPE_RECEIVED);
+                //showMsg("你好!", Msg.TYPE_RECEIVED);
                 Intent intent = new Intent(ChatActivity.this, MainActivity.class);
                 startActivity(intent);
                 break;
@@ -245,6 +234,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         MyServerManager.selectMessageList(getMessageListHandler,friendName);
+    }
+
+    //adapter刷新item，修改recyclerview里面的变化的item
+    //消息列表更新
+    public void MsgListTypeChange(int Type){
+        if(Type == Msg.TYPE_SENT){
+            //将左侧接受到的消息设为已读
+            adapter.notifyItemRangeChanged(0,msgList.size(),"send");
+        }
+        else{
+            //右侧发送消息已被对方读了
+            adapter.notifyItemRangeChanged(0,msgList.size(),"recieve");
+        }
     }
 
     /***
@@ -310,22 +312,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 showMsg(textElem.getText(),Msg.TYPE_RECEIVED);
                 super.onRecvNewMessage(msg);
 
-                //接收图片
-                //假如图片链接为url
-
-                //转化为bitmap
-                /*Bitmap bm;
-                Msg imgmsg = new Msg(Msg.TYPE_RECEIVED,Msg.TYPE_NOT_READ,getRecentTime(),bm);
-                msgList.add(imgmsg);
-                //修改 msglist列表里的消息的 已读未读属性，根据是发送的还是接收的来修改不用的消息
-                ChangeMsgReadType(Msg.TYPE_RECEIVED);
-                if(msgList.size()>0){
-                    adapter.notifyItemChanged(msgList.size()-1);
-                    msgRecyclerView.scrollToPosition(msgList.size()-1);
-                }
-                //刷新recyclerview
-                adapter.notifyItemRangeChanged(0,msgList.size(),"recieve");
-                */
             }
         });
     }
@@ -360,31 +346,5 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         return  simpleDateFormat.format(date);
     }
 
-    public void selectPicture(View view) {
-        PictureSelector
-                .create(ChatActivity.this, PictureSelector.SELECT_REQUEST_CODE)
-                .selectPicture(false);
-    }
-
-    //发送图片的回调函数
-    @Override
-    protected  void  onActivityResult(int requestCode,int resultCode,Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if (requestCode == PictureSelector.SELECT_REQUEST_CODE) {
-            if (data != null) {
-                PictureBean pictureBean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
-                //将图片转化为bitmap
-                Bitmap bm = BitmapFactory.decodeFile(pictureBean.getPath());
-                Msg msg = new Msg(Msg.TYPE_SENT,Msg.TYPE_NOT_READ,getRecentTime(),bm);
-                msgList.add(msg);
-                //修改 msglist列表里的消息的 已读未读属性，根据是发送的还是接收的来修改不用的消息
-                ChangeMsgReadType(Msg.TYPE_SENT);
-                if(msgList.size()>0){
-                    adapter.notifyItemChanged(msgList.size()-1);
-                    msgRecyclerView.scrollToPosition(msgList.size()-1);
-                }
-            }
-        }
-    }
 
 }

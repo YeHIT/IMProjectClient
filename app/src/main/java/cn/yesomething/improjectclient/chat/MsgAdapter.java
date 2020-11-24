@@ -44,6 +44,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         private TextView rightMsgTime;
         private ImageView leftMsgImg;
         private ImageView rightMsgImg;
+        private ImageView leftEmotion;
+        private ImageView rightEmotion;
 
 
         public ViewHolder(View view){
@@ -58,8 +60,10 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             leftMsgTime = (TextView) view.findViewById(R.id.left_msg_time);
             rightMsgTime = (TextView) view.findViewById(R.id.right_msg_time);
 
-            leftMsgImg = (ImageView) view.findViewById(R.id.left_img);
-            rightMsgImg = (ImageView) view.findViewById(R.id.right_img);
+            leftEmotion = (ImageView) view.findViewById(R.id.received_emotion);
+            rightEmotion = (ImageView) view.findViewById(R.id.send_emotion);
+            //leftMsgImg = (ImageView) view.findViewById(R.id.left_img);
+            //rightMsgImg = (ImageView) view.findViewById(R.id.right_img);
 
 
         }
@@ -82,58 +86,27 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Msg msg = mMsgList.get(position);
-        //文本
-        if (msg.getInfoType() == Msg.TYPE_TEXT) {
-            if (msg.getType() == Msg.TYPE_RECEIVED) {
-                holder.leftLayout.setVisibility(View.VISIBLE);
-                holder.rightLayout.setVisibility(View.GONE);
-                holder.leftMsg.setText(msg.getContent());
-                if (msg.getReadType() == Msg.TYPE_NOT_READ) {
-                    holder.left_read_or_not.setText("未读");
-                } else {
-                    holder.left_read_or_not.setText("已读");
-                }
-                holder.leftMsgTime.setText(msg.getMsgtime());
+        if (msg.getType() == Msg.TYPE_RECEIVED) {
+            holder.leftLayout.setVisibility(View.VISIBLE);
+            holder.rightLayout.setVisibility(View.GONE);
+            holder.leftMsg.setText(msg.getContent());
+            if (msg.getReadType() == Msg.TYPE_NOT_READ) {
+                holder.left_read_or_not.setText("未读");
             } else {
-                holder.rightLayout.setVisibility(View.VISIBLE);
-                holder.leftLayout.setVisibility(View.GONE);
-                holder.rightMsg.setText(msg.getContent());
-                if (msg.getReadType() == Msg.TYPE_NOT_READ) {
-                    holder.right_read_or_not.setText("未读");
-                } else {
-                    holder.right_read_or_not.setText("已读");
-                }
-                holder.rightMsgTime.setText(msg.getMsgtime());
+                holder.left_read_or_not.setText("已读");
             }
-        }
-        //图片
-        else {
-            if (msg.getType() == Msg.TYPE_RECEIVED) {
-                holder.leftLayout.setVisibility(View.VISIBLE);
-                holder.rightLayout.setVisibility(View.GONE);
-                holder.leftMsg.setVisibility(View.GONE);
-                holder.leftMsgImg.setVisibility(View.VISIBLE);
-                holder.leftMsgImg.setImageBitmap(msg.getMsgbitmap());
-                if (msg.getReadType() == Msg.TYPE_NOT_READ) {
-                    holder.left_read_or_not.setText("未读");
-                } else {
-                    holder.left_read_or_not.setText("已读");
-                }
-                holder.leftMsgTime.setText(msg.getMsgtime());
-            } else {
-                holder.rightLayout.setVisibility(View.VISIBLE);
-                holder.leftLayout.setVisibility(View.GONE);
-                holder.rightMsg.setVisibility(View.GONE);
-                holder.rightMsgImg.setVisibility(View.VISIBLE);
-                holder.rightMsgImg.setImageBitmap(msg.getMsgbitmap());
-                if (msg.getReadType() == Msg.TYPE_NOT_READ) {
-                    holder.right_read_or_not.setText("未读");
-                } else {
-                    holder.right_read_or_not.setText("已读");
-                }
-                holder.rightMsgTime.setText(msg.getMsgtime());
-            }
+            holder.leftMsgTime.setText(msg.getMsgtime());
 
+        } else {
+            holder.rightLayout.setVisibility(View.VISIBLE);
+            holder.leftLayout.setVisibility(View.GONE);
+            holder.rightMsg.setText(msg.getContent());
+            if (msg.getReadType() == Msg.TYPE_NOT_READ) {
+                holder.right_read_or_not.setText("未读");
+            } else {
+                holder.right_read_or_not.setText("已读");
+            }
+            holder.rightMsgTime.setText(msg.getMsgtime());
         }
     }
 

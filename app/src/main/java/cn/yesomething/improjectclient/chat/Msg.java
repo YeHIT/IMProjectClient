@@ -11,9 +11,7 @@ public class Msg {
     //加了两个状态 消息已读 和 消息未读
     public static final int TYPE_NOT_READ = 0;
     public static final int TYPE_READ = 1;
-    //再加两个状态 文字信息 和 图片信息
-    public static final int TYPE_TEXT = 0;
-    public static final int TYPE_IMG = 1;
+
     private String content;
     //消息 发出 接收
     private int type;
@@ -21,20 +19,18 @@ public class Msg {
     private int read_type;
     //消息发送时间属性
     private String msg_time;
-    //消息类型 文字图片
-    private int info_type;
-    //图片消息的bitmap
-    private Bitmap msg_bitmap;
+    //消息情绪
+    private int msg_emotion;
+
 
 
     //默认发送生成图片信息
-    public Msg(int type ,int read_type, String msg_time ,Bitmap msg_bitmap){
+    public Msg(int type ,int read_type, String msg_time){
         this.content = null;
         this.type = type;
         this.read_type = read_type;
         this.msg_time = msg_time;
-        this.info_type = Msg.TYPE_IMG;
-        this.msg_bitmap = msg_bitmap;
+        this.msg_emotion = 0;
     }
 
     //默认生成文字信息
@@ -43,8 +39,7 @@ public class Msg {
         this.type = type;
         this.read_type = read_type;
         this.msg_time = msg_time;
-        this.info_type = Msg.TYPE_TEXT;
-        this.msg_bitmap = null;
+        this.msg_emotion = 0;
     }
 
     public Msg(String content, int type ){
@@ -52,8 +47,7 @@ public class Msg {
         this.type = type;
         this.read_type = Msg.TYPE_NOT_READ;
         this.msg_time = "what time is it?";
-        this.info_type = Msg.TYPE_TEXT;
-        this.msg_bitmap = null;
+        this.msg_emotion = 0;
     }
 
 
@@ -77,12 +71,11 @@ public class Msg {
         this.read_type = read_type;
     }
 
-    public int getInfoType(){
-        return info_type;
+    public int getMsgEmotion(){
+        return msg_emotion;
     }
 
-    public Bitmap getMsgbitmap(){
-        return msg_bitmap;
+    public void ChangeMsgEmotion(int emotion){
+        this.msg_emotion = emotion;
     }
-
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -27,8 +28,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:orientation="vertical"
-                android:background="@drawable/message_text_receive">
+                android:background="@drawable/message_text_receive"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/left_msg"
@@ -41,28 +42,43 @@
                     android:id="@+id/left_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxHeight="100dp"
-                    android:maxWidth="100dp"
-                    android:visibility="gone"
                     android:adjustViewBounds="true"
-                    />
+                    android:maxWidth="100dp"
+                    android:maxHeight="100dp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/left_msg_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="left"
                     android:text="TextView"
-                    android:textSize="10dp"
-                    android:gravity="left"/>
+                    android:textSize="10dp" />
             </LinearLayout>
-            <TextView
-                android:id="@+id/received_read_or_not"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="未读"
-                android:textSize="10dp" />
-        </LinearLayout>
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/received_read_or_not"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未读"
+                    android:textSize="10dp" />
 
+                <ImageView
+                    android:id="@+id/received_emotion"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/greenlight"
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -77,12 +93,27 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/send_read_or_not"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="未读"
-                android:textSize="10dp" />
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/send_read_or_not"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="未读"
+                    android:textSize="10dp" />
+
+                <ImageView
+                    android:id="@+id/send_emotion"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/greenlight"
+                    />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
