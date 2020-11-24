@@ -86,6 +86,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Msg msg = mMsgList.get(position);
+        double emotion = msg.getMsgEmotion();
         if (msg.getType() == Msg.TYPE_RECEIVED) {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
@@ -96,6 +97,15 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
                 holder.left_read_or_not.setText("已读");
             }
             holder.leftMsgTime.setText(msg.getMsgtime());
+            if(emotion>0.3){
+                holder.leftEmotion.setImageResource(R.drawable.greenlight);
+            }
+            else if(emotion<=0.3 && emotion >=-0.3){
+                holder.leftEmotion.setImageResource(R.drawable.yellowlight);
+            }
+            else{
+                holder.leftEmotion.setImageResource(R.drawable.redlight);
+            }
 
         } else {
             holder.rightLayout.setVisibility(View.VISIBLE);
@@ -107,6 +117,15 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
                 holder.right_read_or_not.setText("已读");
             }
             holder.rightMsgTime.setText(msg.getMsgtime());
+            if(emotion>0.3){
+                holder.rightEmotion.setImageResource(R.drawable.greenlight);
+            }
+            else if(emotion<=0.3 && emotion >=-0.3){
+                holder.rightEmotion.setImageResource(R.drawable.yellowlight);
+            }
+            else{
+                holder.rightEmotion.setImageResource(R.drawable.redlight);
+            }
         }
     }
 

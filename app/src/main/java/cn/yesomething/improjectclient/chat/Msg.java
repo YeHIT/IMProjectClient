@@ -20,7 +20,7 @@ public class Msg {
     //消息发送时间属性
     private String msg_time;
     //消息情绪
-    private int msg_emotion;
+    private double msg_emotion;
 
 
 
@@ -40,6 +40,14 @@ public class Msg {
         this.read_type = read_type;
         this.msg_time = msg_time;
         this.msg_emotion = 0;
+    }
+
+    public Msg(String content, int type ,int read_type, String msg_time , double msg_emotion){
+        this.content = content;
+        this.type = type;
+        this.read_type = read_type;
+        this.msg_time = msg_time;
+        this.msg_emotion = msg_emotion;
     }
 
     public Msg(String content, int type ){
@@ -71,7 +79,7 @@ public class Msg {
         this.read_type = read_type;
     }
 
-    public int getMsgEmotion(){
+    public double getMsgEmotion(){
         return msg_emotion;
     }
 

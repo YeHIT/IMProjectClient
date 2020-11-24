@@ -150,7 +150,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });*/
                     //把上面的最重要的提取出来，就是 showMsg()
-                    showMsg(mContent,Msg.TYPE_SENT);
+                    showMsg(mContent,Msg.TYPE_SENT,0);
                     //消息列表已读未读变化
                     MsgListTypeChange(Msg.TYPE_SENT);
                     String userId = IMManager.getLoginUser();
@@ -171,7 +171,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
             // 测试按钮，点击会接收一条消息
             case R.id.bt_test: {
-                showMsg("你好!", Msg.TYPE_RECEIVED);
+                showMsg("你好!", Msg.TYPE_RECEIVED,1);
                 //消息列表已读未读变化
                 MsgListTypeChange(Msg.TYPE_RECEIVED);
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -214,12 +214,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             String fromId = tempObj.getString("fromId");
                             String messageContent = tempObj.getString("messageContent");
                             String messageTime = tempObj.getString("messageTime");
+                            Double messageEmotionalScore = tempObj.getDouble("messageEmotionalScore");
                             //消息是朋友发来的则自己为接收者
                             if(fromId.equals(friendName)){
-                                showMsg(messageContent,Msg.TYPE_RECEIVED);
+                                showMsg(messageContent,Msg.TYPE_RECEIVED,messageEmotionalScore);
                             }
                             else {
-                                showMsg(messageContent,Msg.TYPE_SENT);
+                                showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore);
                             }
                         }
                     }
@@ -254,13 +255,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * @param content  消息的String
      * @param type_Msg 消息类型 (int) TYPE_SENT（发送）  TYPE_RECEIVED（接收）
      */
-    public void showMsg(String content,int type_Msg){
+    public void showMsg(String content,int type_Msg ,double msg_emotion){
         //解密消息
         String umContent = StringEscapeUtils.unescapeJava(content);
         umContent = StringEscapeUtils.unescapeJava(umContent);
         //Msg msg = new Msg(umContent,type_Msg);
         //这里是因为把 Msg类 重新构造了，加多了两个属性
-        Msg msg = new Msg(umContent,type_Msg,Msg.TYPE_NOT_READ,getRecentTime());
+        Msg msg = new Msg(umContent,type_Msg,Msg.TYPE_NOT_READ,getRecentTime(),msg_emotion);
         msgList.add(msg);
         //修改 msglist列表里的消息的 已读未读属性，根据是发送的还是接收的来修改不用的消息
         ChangeMsgReadType(type_Msg);
@@ -309,7 +310,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public void onRecvNewMessage(V2TIMMessage msg) {
                 V2TIMTextElem textElem = MessageManager.getMessage(msg);
                 Log.e(TAG, "onRecvNewMessage: " + textElem.getText());
-                showMsg(textElem.getText(),Msg.TYPE_RECEIVED);
+                showMsg(textElem.getText(),Msg.TYPE_RECEIVED,0);
                 super.onRecvNewMessage(msg);
 
             }
