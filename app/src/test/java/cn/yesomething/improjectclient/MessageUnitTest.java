@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import cn.yesomething.improjectclient.manager.UrlManager;
 import cn.yesomething.improjectclient.utils.MyConnectionToServer;
@@ -19,17 +20,11 @@ public class MessageUnitTest {
         JSONObject jsonObject = new JSONObject();
         long start = 1606316830948L;
         long endTime =1606316830948L;
-        String formatStartTime = new SimpleDateFormat().format(start);
-        String formatEndTime = new SimpleDateFormat().format(endTime);
-        System.out.println("format" + formatStartTime);
-        System.out.println(new SimpleDateFormat().parse(formatStartTime));;
-        new SimpleDateFormat().parse(formatEndTime);
-        System.out.println(formatStartTime + "-----" +formatEndTime);
         try {
             jsonObject.put("fromId","11");
             jsonObject.put("toId","22");
-            jsonObject.put("messageStartTime",formatStartTime);
-            jsonObject.put("messageEndTime",formatEndTime);
+            jsonObject.put("messageStartTime",start);
+            jsonObject.put("messageEndTime",endTime);
         } catch (JSONException e) {
             e.printStackTrace();
         }

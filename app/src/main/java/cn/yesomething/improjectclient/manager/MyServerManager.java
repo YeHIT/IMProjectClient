@@ -255,17 +255,16 @@ public class MyServerManager {
      * @param messageEndTime 消息结束时间
      */
     public static void selectMessageList(Handler getMessageListHandler,String userName,
-                                         String friendName, Date messageStartTime,Date messageEndTime){
+                                         String friendName, Long messageStartTime,Long messageEndTime){
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("fromId",userName);
             jsonObject.put("toId",friendName);
             if(messageStartTime != null){
-                System.out.println("messageStartTime" + new SimpleDateFormat().format(messageStartTime.getTime()));
-                jsonObject.put("messageStartTime",new SimpleDateFormat().format(messageStartTime.getTime()));
+                jsonObject.put("messageStartTime",messageStartTime);
             }
             if(messageEndTime != null){
-                jsonObject.put("messageEndTime",new SimpleDateFormat().format(messageEndTime.getTime()));
+                jsonObject.put("messageEndTime",messageEndTime);
             }
         } catch (JSONException e) {
             e.printStackTrace();

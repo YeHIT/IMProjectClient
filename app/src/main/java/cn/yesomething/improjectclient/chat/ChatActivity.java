@@ -291,7 +291,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 V2TIMTextElem v2TIMTextElem = MessageManager.getMessage(msg);
                 String content = v2TIMTextElem.getText();
                 //消息时间
-                Date messageDate = new Date(Long.parseLong(content.substring(0,13)));
+                Long messageDate = Long.parseLong(content.substring(0,13));
                 //配置handler
                 listenNewMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
                     @Override
