@@ -12,9 +12,12 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -62,6 +65,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private TextView tv_save;
     private ImageView iv_account_action;
     private String spUserName;
+    private String userIconURL;
 
     @BindView(R.id.contact_mine)
     RadioButton _btnContactPagemine;
@@ -77,6 +81,11 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     TextView _btnWordcloud;
     @BindView(R.id.login_name)
     TextView tv_login_name;
+
+    @BindView(R.id.tv_show_id)
+    TextView tv_Show_id;
+    @BindView(R.id.tv_info_nickName)
+    EditText tv_Info_nickName;
 
     public MineFragment() {
         // Required empty public constructor
@@ -125,6 +134,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      */
     private void AccountAction() {
         Intent intent = new Intent(mineActivity, AccountActionActivity.class);
+
+        intent.putExtra("username",tv_Show_id.getText().toString());
+        intent.putExtra("url",userIconURL);
+        Log.e(TAG, "SelectContactPage:username: "+tv_Show_id.getText().toString());
         startActivity(intent);
         mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
@@ -136,7 +149,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         Intent intent = new Intent(mineActivity, MainActivity.class);
         startActivity(intent);
         mineActivity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        mineActivity.finish();
+
     }
 
     /**
@@ -151,33 +164,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
 
     //初始化个人信息
     private void initUserInfo(){
-        //初始化头像  举例
-        //1: 确定网址
-        String url = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3348271096,2240890581&fm=11&gp=0.jpg";
-
-        Picasso.with(mContext)
-                .load(url)
-                .resize(70,70)
-                .into(iv_user_pic_show);
-        Picasso.with(mContext)
-                .load(url)
-                .resize(70,70)
-                .into(iv_head_icon);
-        Log.e("Pis","--------------------><----------------------");
-        String str=null;
-        if(str!=null){
-            iv_head_icon.setImageBitmap(stringToBitmap(str));
-        }
-
-
-        //初始化用户名
+        //初始化用户信息
         testUserSelect(spUserName);
-
-        //初始化昵称
-
-        //初始化性别
-
-        //初始化签名
     }
 
     /**
@@ -215,6 +203,22 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
         iv_head_icon.setOnClickListener(this);
+        tv_Info_nickName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {   // 按下完成按钮，这里和上面imeOptions对应
+                    Log.e(TAG,"onEditorAction: "+"Editing EditorInfo.IME_ACTION_DONE");
+                    Log.e(TAG, "onEditorAction: "+tv_Info_nickName.getText().toString());
+                    String nickname = tv_Info_nickName.getText().toString();
+                    //todo 上传修改后的昵称 nickname
+                    testUserUpdate(nickname,null,null);
+                    //-------
+
+                    return false;   //返回true，保留软键盘。false，隐藏软键盘
+                }
+                return true;
+            }
+        });
     }
 
     //控件的点击事件
@@ -248,11 +252,54 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Toast.makeText(mContext,items[which],Toast.LENGTH_SHORT).show();;
+                Toast.makeText(mContext,items[which],Toast.LENGTH_SHORT).show();
+
+                //todo 此处上传items[which]，其中items[] = {"男","女"}
+                testUserUpdate(null,which,null);
+
+                //------
                 setSex(items[which]);
             }
         });
         builder.show();
+    }
+
+    //用户信息更新
+    public void testUserUpdate(String userNickname,Integer userSex,ArrayList<String> userTags){
+        //todo 一开始时记得声明handler
+        Handler userUpdateHandler = null;
+        //用户名
+        String userName = IMManager.getLoginUser();
+        //todo 以下信息需要根据实际获取
+        //用于获取最终的数据并展示
+        userUpdateHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (msg != null) ? (String) msg.obj : null;
+                //网络正常
+                if(response != null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //正常获取到数据
+                        if(responseCode.equals("200")){
+                            initUserInfo();
+                        }
+                        else {
+                            //todo 错误信息处理
+                            String errorMessage = jsonObject.getString("errorMessage");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //todo 网络异常判断
+                else {
+                }
+                return false;
+            }
+        });
+        MyServerManager.userUpdate(userUpdateHandler,userName,userNickname,userSex,userTags);
     }
 
     //更新界面上的性别数据
@@ -268,38 +315,77 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         if (requestCode == PictureSelector.SELECT_REQUEST_CODE) {
             if (data != null) {
                 PictureBean pictureBean = data.getParcelableExtra(PictureSelector.PICTURE_RESULT);
-                /*Log.i(TAG, "是否裁剪: " + pictureBean.isCut());
-                Log.i(TAG, "原图地址: " + pictureBean.getPath());*/
-                Log.i("SELECTOR", "图片 Uri: " + pictureBean.getUri());
-                if (pictureBean.isCut()) {
-                    iv_head_icon.setImageBitmap(BitmapFactory.decodeFile(pictureBean.getPath()));
-                    iv_user_pic_show.setImageBitmap(BitmapFactory.decodeFile(pictureBean.getPath()));
-                    //Bitmap bm = BitmapFactory.decodeFile(pictureBean.getPath());
-                    //Log.e("bitmap",String.valueOf(BitmapFactory.decodeFile(pictureBean.getPath())));
-                } else {
-                    iv_head_icon.setImageURI(pictureBean.getUri());
-                    iv_user_pic_show.setImageURI(pictureBean.getUri());
-                    //Bitmap bm = BitmapFactory.decodeFile(pictureBean.getPath());
-                    //Log.e("bitmap",bitmapToString(bm));
-                }
                 //将图片转化为bitmap
                 Bitmap bm = BitmapFactory.decodeFile(pictureBean.getPath());
                 //bitmap转化为Base64 String
                 String bitmap2string = bitmapToString(bm);
-                //把String传送到服务器
-                Log.e("bitmap",bitmap2string);
-//                JSONObject jsonObject = new JSONObject();
-//                try {
-//                    jsonObject.put("userName","denwade");
-//                    jsonObject.put("base64String",bitmap2string);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                MyConnectionToServer.getConnectionThread(null, UrlManager.myServer + UrlManager.userPictureUpdateUrl,
-//                        jsonObject.toString()).start();
-
+                //上传头像
+                testUserPictureUpdate(pictureBean,bitmap2string);
             }
         }
+    }
+
+    /**
+     * 用户头像上传
+     */
+    public void testUserPictureUpdate(PictureBean pictureBean,String base64String){
+        //一开始时记得声明handler
+        Handler userPictureUpdateHandler = null;
+        //用户名
+        String userName = IMManager.getLoginUser();
+        //用于获取最终的数据并展示
+        userPictureUpdateHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (msg != null) ? (String) msg.obj : null;
+                //网络正常
+                if(response != null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //正常获取到数据
+                        if(responseCode.equals("200")){
+                            //todo 利用数据展示
+                            //用户头像为网络地址url
+                            String userPicture = jsonObject.getString("userPicture");
+                            userIconURL = userPicture;
+                            Log.e(TAG, "handleMessage: " + userPicture );
+                            //展示
+                            Picasso.with(mContext)
+                                    .load(userIconURL)
+                                    .resize(70,70)
+                                    .into(iv_user_pic_show);
+                            Picasso.with(mContext)
+                                    .load(userIconURL)
+                                    .resize(70,70)
+                                    .into(iv_head_icon);
+
+                        }
+                        else {
+                            //todo 错误信息处理
+                            String errorMessage = jsonObject.getString("errorMessage");
+                            //恢复上次头像
+                            Picasso.with(mContext)
+                                    .load(userIconURL)
+                                    .resize(70,70)
+                                    .into(iv_user_pic_show);
+                            Picasso.with(mContext)
+                                    .load(userIconURL)
+                                    .resize(70,70)
+                                    .into(iv_head_icon);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //todo 网络异常判断
+                else {
+                }
+                return false;
+            }
+        });
+        MyServerManager.userPictureUpdate(userPictureUpdateHandler,userName,base64String);
     }
 
     /**
@@ -335,11 +421,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                 .create(MineFragment.this, PictureSelector.SELECT_REQUEST_CODE)
                 .selectPicture(false);
     }
+
     public void testUserSelect(String userName){
         //一开始时记得声明handler
         Handler userSelectHandler = null;
-        //todo 输入要查询用户的用户名
-//        String userName = "xx";
         //用于获取最终的数据并展示
         userSelectHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
             @Override
@@ -356,25 +441,32 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                             jsonObject = jsonObject.getJSONObject("user");
                             //todo 利用数据展示
                             String userName = jsonObject.getString("userName");
-                            String userPassword = jsonObject.getString("userPassword");
                             Integer userSex = jsonObject.getInt("userSex");
                             String userNickname = jsonObject.getString("userNickname");
-                            String userBirthday = jsonObject.getString("userBirthday");
-
                             tv_nickName.setText(userNickname);
                             tv_user_name.setText(userName);
                             tv_login_name.setText(userName);
-
+                            tv_Show_id.setText("昵称："+userNickname);
                             if(userSex==0){tv_sex.setText("男"); }
                             else{tv_sex.setText("女");}
-
-                            Log.e(TAG, "handleMessage: "+userName );
-
                             //用户头像为网络地址url
                             String userPicture = jsonObject.getString("userPicture");
-
-
-
+                            userIconURL = userPicture;//保存url，以便后续传给子活动
+                            if("default.jpg".equals(userIconURL)){//默认头像
+                                iv_head_icon.setImageDrawable(getResources().getDrawable((R.drawable.user_pic)));
+                                iv_user_pic_show.setImageDrawable(getResources().getDrawable((R.drawable.user_pic)));
+                            }
+                            else{//加载用户头像
+                                Log.e(TAG, "handleMessage: " + userIconURL);
+                                Picasso.with(mContext)
+                                        .load(userIconURL)
+                                        .resize(70,70)
+                                        .into(iv_user_pic_show);
+                                Picasso.with(mContext)
+                                        .load(userIconURL)
+                                        .resize(70,70)
+                                        .into(iv_head_icon);
+                            }
                             //获取用户历史头像
                             ArrayList<String> userHistoricalPictures = new ArrayList<>();
                             JSONArray picturesArray = jsonObject.getJSONArray("userHistoricalPictures");
@@ -392,6 +484,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                         else {
                             //todo 错误信息处理
                             String errorMessage = jsonObject.getString("errorMessage");
+
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

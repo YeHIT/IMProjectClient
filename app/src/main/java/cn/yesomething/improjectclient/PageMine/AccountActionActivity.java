@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -18,6 +19,7 @@ import cn.yesomething.improjectclient.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.login.PopoLoginActivity;
+import cn.yesomething.improjectclient.manager.IMManager;
 
 public class AccountActionActivity extends AppCompatActivity {
     private static final String TAG = "AccountActionActivity";
@@ -38,9 +40,16 @@ public class AccountActionActivity extends AppCompatActivity {
         _btnChangeAccount.setOnClickListener(v -> changeAccount());
         _btnExit.setOnClickListener(v -> exit());
         _btnBack.setOnClickListener(v -> this.finish());
+
+        //Intent intent =getIntent();
+        /*取出Intent中附加的数据*/
+        String username = getIntent().getStringExtra("username");
+        String url = getIntent().getStringExtra("url");
+        Log.e(TAG, "onCreate:username: "+username+ "  url:"+url );
     }
 
     private void exit() {
+        IMManager.logout();
         Intent intent = new Intent(getApplicationContext(), PopoLoginActivity.class);
         startActivity(intent);
         //现在先不加动画

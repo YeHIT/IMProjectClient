@@ -2,23 +2,17 @@ package cn.yesomething.improjectclient.chat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,20 +20,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMTextElem;
-import com.wildma.pictureselector.PictureBean;
-import com.wildma.pictureselector.PictureSelector;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -76,13 +63,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
 
-
         ButterKnife.bind(this);
         _btnBack.setOnClickListener(v -> this.finish());
         //配置聊天监听器
-//        initChatListener();
+        initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
-//        initMsg(10);
+        initMsg(10);
 
         //mEditEmojicon 就是 输入框，类似于TextVIew的东西
         mEditEmojicon = (EmojiconEditText) findViewById(R.id.editEmojicon);
@@ -126,7 +112,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 //加密
                 String mContent = StringEscapeUtils.escapeJava(content);
                 if (!"".equals(content)) {//当输入content不为空的时候
-                    /*sendMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+                    sendMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
                         @Override
                         public boolean handleMessage(@NonNull Message msg) {
                             String response = (String) msg.obj;
@@ -135,8 +121,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 String responseCode = jsonObject.getString("responseCode");
                                 //登录成功
                                 if(responseCode.equals("200")){
-                                    MessageManager.sendTextMessage(mContent,friendName);
-                                    showMsg(mContent,Msg.TYPE_SENT);
+                                    jsonObject = jsonObject.getJSONObject("message");
+                                    Double messageEmotionalScore = jsonObject.getDouble("messageEmotionalScore");
+                                    String messageTime = jsonObject.getString("messageTime");
+                                    MessageManager.sendTextMessage(messageTime + mContent,friendName);
+                                    showMsg(mContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
                                     adapter.notifyItemRangeChanged(0,msgList.size(),"send");
                                 }
                                 else {
@@ -148,16 +137,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             }
                             return false;
                         }
-                    });*/
-                    //把上面的最重要的提取出来，就是 showMsg()
-                    showMsg(mContent,Msg.TYPE_SENT,0);
+                    });
                     //消息列表已读未读变化
-                    MsgListTypeChange(Msg.TYPE_SENT);
+//                    MsgListTypeChange(Msg.TYPE_SENT);
                     String userId = IMManager.getLoginUser();
                     String toId = friendName;
                     Date messageDate = new Date();
-                    //MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
-
+                    MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
                 } else {//否则toast提示输入为空
                     Toast.makeText(this, "Empty!", Toast.LENGTH_SHORT).show();
                 }
@@ -167,15 +153,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.editEmojicon: {
                 findViewById(R.id.emojicons).setVisibility(View.GONE);//点击输入框时表情框会消失
                 hasClick = !hasClick;
-                break;
-            }
-            // 测试按钮，点击会接收一条消息
-            case R.id.bt_test: {
-                showMsg("你好!", Msg.TYPE_RECEIVED,1);
-                //消息列表已读未读变化
-                MsgListTypeChange(Msg.TYPE_RECEIVED);
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0); //强制隐藏键盘
                 break;
             }
             // 返回按钮
@@ -217,10 +194,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             Double messageEmotionalScore = tempObj.getDouble("messageEmotionalScore");
                             //消息是朋友发来的则自己为接收者
                             if(fromId.equals(friendName)){
-                                showMsg(messageContent,Msg.TYPE_RECEIVED,messageEmotionalScore);
+                                showMsg(messageContent,Msg.TYPE_RECEIVED,messageEmotionalScore,messageTime);
                             }
                             else {
-                                showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore);
+                                showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
                             }
                         }
                     }
@@ -255,13 +232,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * @param content  消息的String
      * @param type_Msg 消息类型 (int) TYPE_SENT（发送）  TYPE_RECEIVED（接收）
      */
-    public void showMsg(String content,int type_Msg ,double msg_emotion){
+    public void showMsg(String content,int type_Msg ,Double msg_emotion,String messageTime){
+        //格式转换
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        messageTime = simpleDateFormat.format(new Date(Long.parseLong(messageTime)));
         //解密消息
         String umContent = StringEscapeUtils.unescapeJava(content);
         umContent = StringEscapeUtils.unescapeJava(umContent);
-        //Msg msg = new Msg(umContent,type_Msg);
         //这里是因为把 Msg类 重新构造了，加多了两个属性
-        Msg msg = new Msg(umContent,type_Msg,Msg.TYPE_NOT_READ,getRecentTime(),msg_emotion);
+        Msg msg = new Msg(umContent,type_Msg,Msg.TYPE_NOT_READ,messageTime,msg_emotion);
         msgList.add(msg);
         //修改 msglist列表里的消息的 已读未读属性，根据是发送的还是接收的来修改不用的消息
         ChangeMsgReadType(type_Msg);
@@ -308,11 +287,50 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         MessageManager.addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {
-                V2TIMTextElem textElem = MessageManager.getMessage(msg);
-                Log.e(TAG, "onRecvNewMessage: " + textElem.getText());
-                showMsg(textElem.getText(),Msg.TYPE_RECEIVED,0);
+                Handler listenNewMessageHandler ;
+                V2TIMTextElem v2TIMTextElem = MessageManager.getMessage(msg);
+                String content = v2TIMTextElem.getText();
+                //消息时间
+                Date messageDate = new Date(Long.parseLong(content.substring(0,13)));
+                //配置handler
+                listenNewMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+                    @Override
+                    public boolean handleMessage(@NonNull Message msg) {
+                        String response = (String) msg.obj;
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String responseCode = jsonObject.getString("responseCode");
+                            //登录成功
+                            if(responseCode.equals("200")){
+                                JSONArray jsonArray = jsonObject.getJSONArray("messageList");
+                                int maxLength = jsonArray.length();
+                                for(int i = 0; i < maxLength ; i++){
+                                    JSONObject tempObj = jsonArray.getJSONObject(i);
+                                    String fromId = tempObj.getString("fromId");
+                                    String messageContent = tempObj.getString("messageContent");
+                                    String messageTime = tempObj.getString("messageTime");
+                                    Double messageEmotionalScore = tempObj.getDouble("messageEmotionalScore");
+                                    //消息是朋友发来的则自己为接收者
+                                    if(fromId.equals(friendName)){
+                                        showMsg(messageContent,Msg.TYPE_RECEIVED,messageEmotionalScore,messageTime);
+                                    }
+                                    else {
+                                        showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
+                                    }
+                                }
+                            }
+                            else {
+                                String errorMessage = jsonObject.getString("errorMessage");
+                                Toast.makeText(ChatActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    }
+                });
+                MyServerManager.selectMessageList(listenNewMessageHandler,IMManager.getLoginUser(),friendName,messageDate,messageDate);
                 super.onRecvNewMessage(msg);
-
             }
         });
     }
@@ -338,14 +356,4 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
-    //就是获得当前系统的时间
-    public String getRecentTime(){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");// HH:mm:ss
-        //获取当前时间
-        Date date = new Date(System.currentTimeMillis());
-        return  simpleDateFormat.format(date);
-    }
-
-
 }

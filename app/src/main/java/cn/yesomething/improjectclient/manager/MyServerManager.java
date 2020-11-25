@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -78,8 +79,12 @@ public class MyServerManager {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("userName",userName);
-            jsonObject.put("userNickname",userNickname);
-            jsonObject.put("userSex",userSex);
+            if(userNickname != null){
+                jsonObject.put("userNickname",userNickname);
+            }
+            if(userSex != null){
+                jsonObject.put("userSex",userSex);
+            }
             if(userTags != null){
                 jsonObject.put("userTags",userTags);
             }
@@ -256,10 +261,11 @@ public class MyServerManager {
             jsonObject.put("fromId",userName);
             jsonObject.put("toId",friendName);
             if(messageStartTime != null){
-                jsonObject.put("messageStartTime",messageStartTime);
+                System.out.println("messageStartTime" + new SimpleDateFormat().format(messageStartTime.getTime()));
+                jsonObject.put("messageStartTime",new SimpleDateFormat().format(messageStartTime.getTime()));
             }
             if(messageEndTime != null){
-                jsonObject.put("messageEndTime",messageEndTime);
+                jsonObject.put("messageEndTime",new SimpleDateFormat().format(messageEndTime.getTime()));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -294,7 +300,7 @@ public class MyServerManager {
             jsonObject.put("friendId",friendName);
             jsonObject.put("userId",IMManager.getLoginUser());
             if(friendNickName == null){
-                jsonObject.put("friendName",IMManager.getLoginUser());
+                jsonObject.put("friendName",friendName);
             }
             else{
                 jsonObject.put("friendName",friendNickName);

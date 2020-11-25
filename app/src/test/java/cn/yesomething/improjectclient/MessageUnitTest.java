@@ -17,10 +17,13 @@ public class MessageUnitTest {
     @Test
     public void testSelectMessageByTime() throws ParseException {
         JSONObject jsonObject = new JSONObject();
-        long start = 1603350183001L;
-        long endTime =new Date().getTime();
+        long start = 1606316830948L;
+        long endTime =1606316830948L;
         String formatStartTime = new SimpleDateFormat().format(start);
         String formatEndTime = new SimpleDateFormat().format(endTime);
+        System.out.println("format" + formatStartTime);
+        System.out.println(new SimpleDateFormat().parse(formatStartTime));;
+        new SimpleDateFormat().parse(formatEndTime);
         System.out.println(formatStartTime + "-----" +formatEndTime);
         try {
             jsonObject.put("fromId","11");
@@ -32,6 +35,7 @@ public class MessageUnitTest {
         }
         String responseJson = MyConnectionToServer.sendPost(UrlManager.myServer+UrlManager.messageSelectUrl,
                 jsonObject.toString());
+        System.out.println(responseJson);
         //解析返回的json
         try {
             JSONObject readJsonObject = new JSONObject(responseJson);

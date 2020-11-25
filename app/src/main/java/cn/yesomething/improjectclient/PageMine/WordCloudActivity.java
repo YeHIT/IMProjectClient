@@ -109,12 +109,10 @@ public class WordCloudActivity extends AppCompatActivity {
                         //正常获取到数据
                         if(responseCode.equals("200")){
                             //todo 利用数据展示
-                            jsonObject = jsonObject.getJSONObject("user");
-                            String userName = jsonObject.getString("userName");
                             //词云图片为网络地址url
                             wordCloudPictureURL = jsonObject.getString("wordCloudPicture");
                             Log.e(TAG, "handleMessage: "+wordCloudPictureURL );
-                            init(wordCloudPictureURL);
+
 
                             //------------
                             //获取用户标签信息
@@ -123,6 +121,9 @@ public class WordCloudActivity extends AppCompatActivity {
                             for (int i = 0; i < tagsArray.length(); i++) {
                                 userTags.add(tagsArray.getString(i));
                             }
+
+
+                            init(wordCloudPictureURL);//更新界面
                         }
                         else {
                             //todo 错误信息处理

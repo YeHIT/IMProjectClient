@@ -107,8 +107,6 @@ public class TempTestActivity extends Activity {
                         //正常获取到数据
                         if(responseCode.equals("200")){
                             //todo 利用数据展示
-                            jsonObject = jsonObject.getJSONObject("user");
-                            String userName = jsonObject.getString("userName");
                             //用户头像为网络地址url
                             String userPicture = jsonObject.getString("userPicture");
                         }
