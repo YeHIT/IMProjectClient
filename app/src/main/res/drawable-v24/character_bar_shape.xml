@@ -8,8 +8,8 @@
         android:bottomLeftRadius="6dp"/>
     <!-- 边框粗细及颜色 -->
     <gradient
-        android:startColor="#FFFFFF"
+        android:startColor="#43CCCCCC"
         android:centerColor="@color/iron"
-        android:endColor="#FFFFFF"
+        android:endColor="#43CCCCCC"
         android:angle="90"/>
 </shape>

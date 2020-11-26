@@ -12,20 +12,21 @@
     <!--<include layout="@layout/addfriend_title_layout"/>-->
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:layout_height="52dp"
+        android:background="@drawable/title_bar_shape">
         <Button
             android:id="@+id/add_friend_back"
-            android:layout_width="80sp"
             android:textColor="#FFFFFF"
-            android:layout_height="wrap_content"
-            android:background="#0000"
-            android:text="返回"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/back"
             android:textSize="20dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
+            android:layout_centerVertical="true"
             android:text="添加好友"
             android:textSize="20dp"
             android:layout_centerHorizontal="true"
@@ -44,6 +45,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:orientation="horizontal">
@@ -102,11 +104,12 @@
         android:id="@+id/add_friend_send"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/accept_button_shape"
         android:text="添加"
+        android:textSize="20dp"
         android:onClick="add"
         android:textColor="#FFFFFf" />
 

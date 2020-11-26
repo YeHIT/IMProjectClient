@@ -29,7 +29,7 @@ public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
         a.recycle();
         setOrientation(orientation);
-        mDivider.setAlpha(100);//设置透明度
+        mDivider.setAlpha(60);//设置透明度
     }
     public void setOrientation(int orientation) {
         if (orientation != HORIZONTAL_LIST && orientation != VERTICAL_LIST) {

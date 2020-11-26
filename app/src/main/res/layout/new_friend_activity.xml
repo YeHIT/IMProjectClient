@@ -13,31 +13,33 @@
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary">
+        android:background="@drawable/title_bar_shape">
         <Button
             android:id="@+id/contact_new_back"
-            android:layout_width="80sp"
+            android:layout_width="60sp"
             android:textColor="#FFFFFF"
             android:layout_height="wrap_content"
-            android:background="#0000"
-            android:text="返回"
+            android:background="@drawable/back"
             android:textSize="20dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:textColor="#FFFFFF"
+            android:textAlignment="center"
             android:text="新的联系人"
-            android:textSize="20dp"
+            android:textSize="22dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"/>
         <Button
             android:id="@+id/contact_new_add_friend"
-            android:layout_width="100sp"
+            android:layout_width="120sp"
             android:textColor="#FFFFFF"
+            android:layout_centerVertical="true"
             android:layout_height="wrap_content"
             android:background="#0000"
-            android:text="添加好友"
-            android:textSize="20dp"
+            android:text="查找新好友"
+            android:textSize="16dp"
             android:layout_alignParentRight="true"
             />
 

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -203,6 +204,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
         iv_head_icon.setOnClickListener(this);
+        tv_Info_nickName.setOnClickListener(v->showcursor());
         tv_Info_nickName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -213,12 +215,16 @@ public class MineFragment extends Fragment implements View.OnClickListener {
                     //todo 上传修改后的昵称 nickname
                     testUserUpdate(nickname,null,null);
                     //-------
-
+                    tv_Info_nickName.setCursorVisible(false);
                     return false;   //返回true，保留软键盘。false，隐藏软键盘
                 }
                 return true;
             }
         });
+    }
+
+    private void showcursor() {
+        tv_Info_nickName.setCursorVisible(true);
     }
 
     //控件的点击事件

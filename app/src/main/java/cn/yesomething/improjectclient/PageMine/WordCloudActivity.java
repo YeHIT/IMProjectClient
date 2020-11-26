@@ -121,7 +121,7 @@ public class WordCloudActivity extends AppCompatActivity {
                             for (int i = 0; i < tagsArray.length(); i++) {
                                 userTags.add(tagsArray.getString(i));
                             }
-
+                            Log.e(TAG, "handleMessage: " + userTags );
 
                             init(wordCloudPictureURL);//更新界面
                         }

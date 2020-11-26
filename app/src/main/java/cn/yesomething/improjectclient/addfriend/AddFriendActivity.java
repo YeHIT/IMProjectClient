@@ -2,6 +2,7 @@ package cn.yesomething.improjectclient.addfriend;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//防止出现两个toolbar
         setContentView(R.layout.new_friend_add_activity);
 
         addUserId = (TextView) findViewById(R.id.add_user_id);

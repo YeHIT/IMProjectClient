@@ -1,13 +1,15 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pic1">
 
-    <include layout="@layout/mine_title_bar" />
+    <include layout="@layout/mine_title_bar" android:id="@+id/pagemine_title" />
     <LinearLayout
         android:layout_marginTop="30dp"
         android:orientation="horizontal"
+        android:id="@+id/pagemine_show"
+        android:layout_below="@+id/pagemine_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
@@ -57,11 +59,16 @@
     <ImageView
         android:layout_marginTop="35dp"
         android:background="@color/iron"
+        android:id="@+id/pagemine_bound"
+        android:layout_below="@+id/pagemine_show"
         android:layout_width="match_parent"
         android:alpha="0.3"
         android:layout_height="10dp" />
+
+
     <RelativeLayout
         android:id="@+id/rl_info_head"
+        android:layout_below="@+id/pagemine_bound"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
@@ -72,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="头像"
+            android:text="设置头像"
             android:textColor="@color/white"
             android:textSize="18sp" />
 
@@ -87,12 +94,50 @@
 
     <View
         android:layout_width="fill_parent"
+        android:id="@+id/pagemine_bound1"
+        android:layout_below="@+id/rl_info_head"
         android:layout_height="1dp"
         android:alpha="0.5"
         android:background="#E4E4E4" />
 
     <RelativeLayout
+        android:id="@+id/rl_info_nickName"
+        android:layout_below="@+id/pagemine_bound1"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="设置昵称"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+        <EditText
+            android:id="@+id/tv_info_nickName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:singleLine="true"
+            android:cursorVisible="false"
+            android:text="denwade"
+            android:textColor="@color/colorAccent"
+            android:background="@null"
+            android:textSize="14sp"/>
+    </RelativeLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:id="@+id/pagemine_bound2"
+        android:layout_below="@+id/rl_info_nickName"
+        android:alpha="0.5"
+        android:background="#E4E4E4"/>
+    <RelativeLayout
         android:id="@+id/rl_info_account"
+        android:layout_below="@+id/pagemine_bound2"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="15dp"
@@ -117,42 +162,14 @@
     </RelativeLayout>
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:alpha="0.5"
-        android:background="#E4E4E4"/>
-    <RelativeLayout
-        android:id="@+id/rl_info_nickName"
-        android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="昵称"
-            android:textColor="@color/white"
-            android:textSize="16sp"/>
-        <EditText
-            android:id="@+id/tv_info_nickName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:singleLine="true"
-            android:text="denwade"
-            android:textColor="@color/colorAccent"
-            android:background="@null"
-            android:textSize="14sp"/>
-    </RelativeLayout>
-    <View
-        android:layout_width="fill_parent"
+        android:id="@+id/pagemine_bound3"
+        android:layout_below="@+id/rl_info_account"
         android:layout_height="1dp"
         android:alpha="0.5"
         android:background="#E4E4E4"/>
     <RelativeLayout
         android:id="@+id/rl_info_sex"
+        android:layout_below="@+id/pagemine_bound3"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="15dp"
@@ -177,18 +194,23 @@
     </RelativeLayout>
     <View
         android:layout_width="fill_parent"
+        android:layout_below="@+id/rl_info_sex"
+        android:id="@+id/pagemine_bound4"
         android:layout_height="1dp"
         android:alpha="0.5"
         android:background="#E4E4E4"/>
 
     <View
         android:layout_width="fill_parent"
+        android:layout_below="@+id/rl_info_sex"
+        android:id="@+id/pagemine_bound5"
         android:layout_height="1dp"
         android:alpha="0.5"
         android:background="#E4E4E4"/>
 
     <RelativeLayout
         android:id="@+id/rl_wordcloud"
+        android:layout_below="@+id/pagemine_bound5"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="15dp"
@@ -223,14 +245,17 @@
 
     <View
         android:layout_width="fill_parent"
+        android:id="@+id/pagemine_bound6"
+        android:layout_below="@+id/rl_wordcloud"
         android:layout_height="1dp"
         android:alpha="0.5"
         android:background="#E4E4E4"/>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="200dp"
-        android:alpha="0"
-        android:background="#E4E4E4"/>
+<!--    <View-->
+<!--        android:layout_width="fill_parent"-->
+<!--        android:layout_below="@+id/pagemine_bound6"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:alpha="0"-->
+<!--        android:background="#E4E4E4"/>-->
     <LinearLayout
         android:id="@+id/bottom"
         android:layout_width="match_parent"
@@ -313,4 +338,4 @@
         </RelativeLayout>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

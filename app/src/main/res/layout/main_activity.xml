@@ -75,7 +75,7 @@
         android:layout_height="60dp"
         android:layout_gravity="center_vertical"
         android:layout_below="@+id/layout_contact_list"
-        android:background="#f7f7f7"
+        android:background="@drawable/bottom_bar_shape"
         android:baselineAligned="false"
         android:orientation="horizontal">
 

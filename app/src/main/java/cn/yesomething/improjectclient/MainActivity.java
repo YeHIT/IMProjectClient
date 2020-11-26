@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toolbar;
@@ -30,6 +31,7 @@ import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.addfriend.ContactNewFriendActivity;
 import cn.yesomething.improjectclient.manager.FriendsManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
+import cn.yesomething.improjectclient.utils.Softkeybroad;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
     private static final String TAG = "MainActivity";
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     TextView _txtFriendComing;
     @BindView(R.id.toolbar)
     Toolbar _toolbar;
+    @BindView(R.id.bottom)
+    LinearLayout bottom_bar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +73,32 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         _btnContactPage.setOnClickListener(v -> SelectContactPage());
         _btnMinePage.setOnClickListener(v -> SelectMinePage());
         _btnAddFriend.setOnClickListener(v->AddFriend());
+        setSoftKeyBoardListener();
         //设置界面切换
         initViewPager();
+    }
+
+    /**
+     * 添加软键盘监听
+     */
+    private void setSoftKeyBoardListener() {
+        Softkeybroad mSoftkeybroad= new Softkeybroad(this);
+        //软键盘状态监听
+        mSoftkeybroad.setListener(new Softkeybroad.OnSoftKeyBoardChangeListener() {
+            @Override
+            public void keyBoardShow(int height) {
+                Log.e(TAG, "keyBoardShow: 软键盘show" );
+                bottom_bar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void keyBoardHide(int height) {
+                //软键盘已经隐藏,做逻辑
+                Log.e(TAG, "keyBoardShow: 软键盘hide" );
+                bottom_bar.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
     //viewpager选中对话列表界面

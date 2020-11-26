@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,8 +25,15 @@ public class ContactNewFriendActivity extends AppCompatActivity implements View.
     private List<Friend> friendList = new ArrayList<>();
 
     @Override
+    public void onResume() {
+        initFriend();
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//防止出现两个toolbar
         setContentView(R.layout.new_friend_activity);
         //添加好友按钮
         findViewById(R.id.contact_new_add_friend).setOnClickListener(this);
@@ -47,11 +55,13 @@ public class ContactNewFriendActivity extends AppCompatActivity implements View.
 
             @Override
             public void onSuccess(V2TIMFriendApplicationResult v2TIMFriendApplicationResult) {
+                friendList = new ArrayList<>();
                 int applicationNum = v2TIMFriendApplicationResult.getUnreadCount();
-                Log.e(TAG, "onSuccess: 获取好友申请列表成功" );
+                Log.e(TAG, "onSuccess: 获取好友申请列表成功" + applicationNum);
                 //展示好友申请列表
                 List<V2TIMFriendApplication> applicationList = v2TIMFriendApplicationResult.getFriendApplicationList();
-                for (V2TIMFriendApplication application : applicationList){
+                for (int i = 0; i < applicationNum; i++) {
+                    V2TIMFriendApplication application = applicationList.get(i);
                     addNewFriendMsg(application.getUserID(),application.getAddWording());
                 }
             }
