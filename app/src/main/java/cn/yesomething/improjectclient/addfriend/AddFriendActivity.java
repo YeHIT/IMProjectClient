@@ -3,11 +3,14 @@ package cn.yesomething.improjectclient.addfriend;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.manager.FriendsManager;
 
@@ -16,6 +19,8 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
 
     private TextView addUserId;
     private TextView addUserDes;
+    @BindView(R.id.contact_new_back)
+    Button _btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
         //findViewById(R.id.add_description).setOnClickListener(this);
         findViewById(R.id.add_friend_back).setOnClickListener(this);
         findViewById(R.id.add_friend_send).setOnClickListener(this);
+
     }
 
     @Override

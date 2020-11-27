@@ -126,6 +126,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      */
     private void WordCloud() {
         Intent intent = new Intent(mineActivity, WordCloudActivity.class);
+        intent.putExtra("username",tv_login_name.getText().toString());
+        intent.putExtra("usernickname",tv_Show_id.getText().toString());
+        intent.putExtra("url",userIconURL);
         startActivity(intent);
         mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
@@ -135,10 +138,10 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      */
     private void AccountAction() {
         Intent intent = new Intent(mineActivity, AccountActionActivity.class);
-
-        intent.putExtra("username",tv_Show_id.getText().toString());
+        intent.putExtra("username",tv_login_name.getText().toString());
+        intent.putExtra("usernickname",tv_Show_id.getText().toString());
         intent.putExtra("url",userIconURL);
-        Log.e(TAG, "SelectContactPage:username: "+tv_Show_id.getText().toString());
+        Log.e(TAG, "SelectContactPage:username: "+tv_login_name.getText().toString());
         startActivity(intent);
         mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
@@ -258,7 +261,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                Toast.makeText(mContext,items[which],Toast.LENGTH_SHORT).show();
 
                 //todo 此处上传items[which]，其中items[] = {"男","女"}
                 testUserUpdate(null,which,null);

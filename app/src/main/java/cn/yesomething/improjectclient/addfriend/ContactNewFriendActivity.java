@@ -99,7 +99,8 @@ public class ContactNewFriendActivity extends AppCompatActivity implements View.
                 break;
             }
             case R.id.contact_new_back:{
-
+                this.finish();
+                break;
             }
             default:{
                 break;

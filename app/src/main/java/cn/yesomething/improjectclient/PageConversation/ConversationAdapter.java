@@ -51,9 +51,6 @@ public class ConversationAdapter  extends RecyclerView.Adapter<RecyclerView.View
                     }
                 });
         Log.e(TAG, "handleConversation: 根据时间顺序排序完成");
-        Toast.makeText(mContext, TAG+" add " + mConversationList.get(1).getmName(), Toast.LENGTH_SHORT).show();
-
-
     }
 
 

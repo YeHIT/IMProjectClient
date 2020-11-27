@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/iv_user_pic_show"
             android:layout_marginLeft="25dp"
-            android:background="@drawable/user_pic_b2"
+            android:background="@drawable/loading"
             android:layout_width="70dp"
             android:layout_height="70dp" />
         <LinearLayout
@@ -42,6 +42,7 @@
                 <TextView
                     android:textColor="@color/colorAccent"
                     android:textSize="14sp"
+                    android:id="@+id/show_nickname"
                     android:text="用户名：denwade"
                     android:textColorHint="@color/white"
                     android:layout_width="wrap_content"

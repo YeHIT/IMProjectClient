@@ -43,7 +43,15 @@ public class WordCloudActivity extends AppCompatActivity {
     @BindView(R.id.tag2)
     LinearLayout _tagitem2;
 
+    @BindView(R.id.login_name)
+    TextView _tvname;
+
+    @BindView(R.id.iv_user_pic_show)
+    ImageView _ivpic;
+
     String wordCloudPictureURL;
+
+    String username,userurl;
     ArrayList<String> userTags;//标签组
 
     private static final String TAG = "WordCloudActivity";
@@ -56,11 +64,26 @@ public class WordCloudActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         _btnBack.setOnClickListener(v -> this.finish());
-
+        username = getIntent().getStringExtra("username");
+        userurl = getIntent().getStringExtra("url");
         //动态加载词云
+        initview();
         getwordcloud();
 
 
+    }
+
+    private void initview() {
+        if("default.jpg".equals(userurl)){//默认头像
+            _ivpic.setImageDrawable(getResources().getDrawable((R.drawable.user_pic)));
+        }
+        else{
+            Picasso.with(this)
+                    .load(userurl)
+                    .resize(70,70)
+                    .into(_ivpic);
+        }
+        _tvname.setText(username);
     }
 
     private void init(String url) {//加载词云以及标签

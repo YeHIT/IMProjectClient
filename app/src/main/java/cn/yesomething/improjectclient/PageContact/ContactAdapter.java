@@ -1,13 +1,24 @@
 package cn.yesomething.improjectclient.PageContact;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,9 +28,11 @@ import java.util.Locale;
 import java.util.Map;
 
 import cn.yesomething.improjectclient.R;
+import cn.yesomething.improjectclient.manager.MyServerManager;
 import cn.yesomething.improjectclient.utils.Utils;
 
 public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "ContactAdapter";
     private LayoutInflater mLayoutInflater;
     private Context mContext;
     private ArrayList<String> mContactNames; // 联系人名称字符串数组
@@ -87,8 +100,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof CharacterHolder) {
             ((CharacterHolder) holder).mTextView.setText(resultList.get(position).getmName());
+            Log.e(TAG, "onBindViewHolder: CharacterHolder"+resultList.get(position).getmName());
         } else if (holder instanceof ContactHolder) {
-            ((ContactHolder) holder).mTextView.setText(resultList.get(position).getmName());
+            String name = resultList.get(position).getmName();
+            ((ContactHolder) holder).mTextView.setText(name);
+            testUserSelect(holder,name);//加载头像
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {//实现clicklistener接口回调
@@ -123,9 +139,11 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class ContactHolder extends RecyclerView.ViewHolder {
         TextView mTextView;
+        ImageView mImageView;
         ContactHolder(View view) {
             super(view);
             mTextView = (TextView) view.findViewById(R.id.contact_name);
+            mImageView= (ImageView)view.findViewById(R.id.contact_pic);
         }
     }
 
@@ -138,6 +156,58 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
         }
         return -1; // -1不会滑动
+    }
+
+    //用户资料查询
+    public void testUserSelect(RecyclerView.ViewHolder holder,String userName){
+        //一开始时记得声明handler
+        Handler userSelectHandler = null;
+        //todo 输入要查询用户的用户名
+//        String userName = "xx";
+        //用于获取最终的数据并展示
+        userSelectHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                String response = (msg != null) ? (String) msg.obj : null;
+                //网络正常
+                if(response != null){
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String responseCode = jsonObject.getString("responseCode");
+                        //正常获取到数据
+                        if(responseCode.equals("200")){
+                            jsonObject = jsonObject.getJSONObject("user");
+                            //todo 利用数据展示
+                            String userName = jsonObject.getString("userName");
+                            //用户头像为网络地址url
+                            String userPicture = jsonObject.getString("userPicture");
+                            //加载url为图片
+                            if("default.jpg".equals(userPicture)){//默认头像
+                                ((ContactHolder) holder).mImageView.setImageDrawable(mContext.getResources().getDrawable((R.drawable.user_pic)));
+                                Log.e(TAG, "handleMessage: 加载头像： 好友id："+userName+ " 的头像未设置，加载默认头像");
+                            }
+                            else{
+                                Picasso.with(mContext)
+                                        .load(userPicture)
+                                        .resize(70,70)
+                                        .into(((ContactHolder) holder).mImageView);
+                            }
+                        }
+                        else {
+                            //todo 错误信息处理
+                            String errorMessage = jsonObject.getString("errorMessage");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                //todo 网络异常判断
+                else {
+                }
+                return false;
+            }
+        });
+        MyServerManager.userSelect(userSelectHandler,userName);
     }
 
     /**

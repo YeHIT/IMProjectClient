@@ -13,7 +13,10 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
 import cn.yesomething.improjectclient.MainActivity;
+import cn.yesomething.improjectclient.PageContact.ContactAdapter;
 import cn.yesomething.improjectclient.R;
 
 import butterknife.BindView;
@@ -29,6 +32,13 @@ public class AccountActionActivity extends AppCompatActivity {
     TextView _btnExit;
     @BindView(R.id.tv_backward)
     TextView _btnBack;
+    @BindView(R.id.login_name)
+    TextView _tvname;
+    @BindView(R.id.show_nickname)
+    TextView _tvnickname;
+    @BindView(R.id.iv_user_pic_show)
+    ImageView _ivpic;
+    String username,usernickname,url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +53,25 @@ public class AccountActionActivity extends AppCompatActivity {
 
         //Intent intent =getIntent();
         /*取出Intent中附加的数据*/
-        String username = getIntent().getStringExtra("username");
-        String url = getIntent().getStringExtra("url");
-        Log.e(TAG, "onCreate:username: "+username+ "  url:"+url );
+        username = getIntent().getStringExtra("username");
+        usernickname = getIntent().getStringExtra("usernickname");
+        url = getIntent().getStringExtra("url");
+        Log.e(TAG, "onCreate:username: "+username+ " nickname:"+usernickname+"  url:"+url );
+        initview();
+    }
+
+    private void initview() {
+        if("default.jpg".equals(url)){//默认头像
+            _ivpic.setImageDrawable(getResources().getDrawable((R.drawable.user_pic)));
+        }
+        else{
+            Picasso.with(this)
+                    .load(url)
+                    .resize(70,70)
+                    .into(_ivpic);
+        }
+        _tvnickname.setText(usernickname);
+        _tvname.setText(username);
     }
 
     private void exit() {

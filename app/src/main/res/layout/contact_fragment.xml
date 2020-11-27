@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/contact_top">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -18,7 +19,7 @@
         <cn.yesomething.improjectclient.PageContact.LetterListView
             android:id="@+id/letter_view_main"
             android:layout_gravity="center"
-            android:layout_width="30dp"
+            android:layout_width="20dp"
             android:layout_height="500dp"
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
