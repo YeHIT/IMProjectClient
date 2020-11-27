@@ -112,4 +112,17 @@ public class UserUnitTest {
                 jsonObject.toString());
         System.out.println(responseJson);
     }
+
+    @Test
+    public void userWordCloudGenerate(){
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userName","denwade");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String responseJson = MyConnectionToServer.sendPost(UrlManager.myServer+UrlManager.userWordCloudGenerateUrl,
+                jsonObject.toString());
+        System.out.println(responseJson);
+    }
 }

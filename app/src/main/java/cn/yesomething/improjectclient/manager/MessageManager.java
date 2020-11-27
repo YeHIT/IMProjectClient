@@ -1,6 +1,9 @@
 package cn.yesomething.improjectclient.manager;
 
+import android.util.Log;
+
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
+import com.tencent.imsdk.v2.V2TIMCallback;
 import com.tencent.imsdk.v2.V2TIMConversationListener;
 import com.tencent.imsdk.v2.V2TIMConversationResult;
 import com.tencent.imsdk.v2.V2TIMManager;
@@ -97,6 +100,23 @@ public class MessageManager {
      */
     public static void getConversationList(long nextSeq, int count, V2TIMValueCallback<V2TIMConversationResult> callback){
 //        V2TIMManager.getConversationManager().getConversationList(nextSeq,count,callback);
+    }
+
+    /**
+     * 设置消息已读
+     * @param userName	需要设置已读的好友名
+     */
+    public static void markMessageAsRead(String userName){
+        V2TIMManager.getMessageManager().markC2CMessageAsRead(userName,new V2TIMCallback() {
+            @Override
+            public void onError(int code, String desc) {
+                // 设置消息已读失败
+            }
+            @Override
+            public void onSuccess() {
+                // 设置消息已读成功
+            }
+        });
     }
 }
 

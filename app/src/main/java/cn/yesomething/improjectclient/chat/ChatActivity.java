@@ -1,5 +1,7 @@
 package cn.yesomething.improjectclient.chat;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMMessage;
+import com.tencent.imsdk.v2.V2TIMMessageReceipt;
 import com.tencent.imsdk.v2.V2TIMTextElem;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -62,9 +65,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         if (getSupportActionBar() != null){getSupportActionBar().hide(); }//隐藏原生actionbar
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
-
         ButterKnife.bind(this);
         _btnBack.setOnClickListener(v -> this.finish());
+        Log.e(TAG, "onCreate: " + msgList.size() );
         //配置聊天监听器
         initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
@@ -157,9 +160,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
             // 返回按钮
             case R.id.bt_back:{
-                //showMsg("你好!", Msg.TYPE_RECEIVED);
                 Intent intent = new Intent(ChatActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
                 break;
             }
             default: {
@@ -200,6 +203,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
                             }
                         }
+                        //消息初始化完成时发送已读回执
+                        markMessageAsRead();
                     }
                     else {
                         String errorMessage = jsonObject.getString("errorMessage");
@@ -268,6 +273,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.emojicons).setVisibility(View.GONE);
             hasClick = !hasClick;
         }else {
+//            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
+//            startActivity(intent);
+//            finish();
             super.onBackPressed();
         }
     }
@@ -285,6 +293,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void initChatListener(){
         MessageManager.addAdvancedMsgListener(new V2TIMAdvancedMsgListener() {
+            //收到新消息
             @Override
             public void onRecvNewMessage(V2TIMMessage msg) {
                 Handler listenNewMessageHandler ;
@@ -318,6 +327,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                         showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
                                     }
                                 }
+                                //收到消息发送已读回执
+                                markMessageAsRead();
                             }
                             else {
                                 String errorMessage = jsonObject.getString("errorMessage");
@@ -332,7 +343,42 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 MyServerManager.selectMessageList(listenNewMessageHandler,IMManager.getLoginUser(),friendName,messageDate,messageDate);
                 super.onRecvNewMessage(msg);
             }
+
+            //收到消息已读通知
+            @Override
+            public void onRecvC2CReadReceipt(List<V2TIMMessageReceipt> receiptList) {
+                // 由于接收方一次性可能会收到多个已读回执，所以这里采用了数组的回调形式
+                for (V2TIMMessageReceipt v2TIMMessageReceipt : receiptList) {
+                    // 消息接收者 receiver
+                    String userID = v2TIMMessageReceipt.getUserID();
+                    if(userID.equals(friendName)){
+
+                        ChangeMsgReadType(Msg.TYPE_RECEIVED);
+                        Context context = ChatActivity.this;
+                        if (context != null) {
+                            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                            List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
+                            for (ActivityManager.RunningAppProcessInfo processInfo: processes) {
+                                Log.e(TAG, "onRecvC2CReadReceipt: " + context.getPackageName() );
+                                if (processInfo.processName.equals(context.getPackageName())) {
+                                    if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                                        markMessageAsRead();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         });
+    }
+
+    /**
+     * 设置已读回执并将对方的信息设为已读
+     */
+    private void markMessageAsRead(){
+        MessageManager.markMessageAsRead(friendName);
+        ChangeMsgReadType(Msg.TYPE_SENT);
     }
 
     //改变消息状态
@@ -355,5 +401,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         }
+        adapter.notifyItemRangeChanged(0,msgList.size());
     }
 }

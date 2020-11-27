@@ -302,7 +302,7 @@ public class MyServerManager {
                 jsonObject.put("friendName",friendName);
             }
             else{
-                jsonObject.put("friendName",friendNickName);
+                jsonObject.put("friendNickName",friendNickName);
             }
             if( friendType != null){
                 jsonObject.put("friendType",friendType);
