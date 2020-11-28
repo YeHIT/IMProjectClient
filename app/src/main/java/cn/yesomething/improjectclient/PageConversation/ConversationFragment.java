@@ -2,6 +2,7 @@ package cn.yesomething.improjectclient.PageConversation;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.telephony.CellIdentity;
 import android.util.Log;
@@ -85,10 +86,14 @@ public class ConversationFragment extends Fragment {
         //点击会话item时的回调函数
         adapter.setOnItemClickListener(new ConversationAdapter.OnItemClickListener() {
             @Override
-            public void onClick(String friendName) {
-                Toast.makeText(mContext, "click " + friendName, Toast.LENGTH_SHORT).show();
+            public void onClick(String friendname, Bitmap left_bitmap_icon, Bitmap right_bitmap_icon) {
+                Toast.makeText(mContext, "click " + friendname, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
-                intent.putExtra("friendName",friendName);
+                intent.putExtra("friendName",friendname);
+                intent.putExtra("lefticon",left_bitmap_icon);
+                if(left_bitmap_icon == null) Log.e(TAG, "onClick:left_bitmap_icon null ");
+                else  Log.e(TAG, "onClick:left_bitmap_icon !not! null ");
+                intent.putExtra("righticon",right_bitmap_icon);
                 intent.setClass(getActivity(), ChatActivity.class);
                 startActivity(intent);
             }

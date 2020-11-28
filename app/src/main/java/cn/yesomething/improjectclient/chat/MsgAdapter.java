@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Base64;
@@ -30,7 +31,10 @@ import cn.yesomething.improjectclient.R;
 
 
 public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
+    private static final String TAG = "MsgAdapter";
     private List<Msg> mMsgList;
+    private Bitmap friendIcon;
+    private Bitmap myIcon;
     public Context mContext;
     static class ViewHolder extends RecyclerView.ViewHolder{
 
@@ -62,17 +66,21 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
 
             leftEmotion = (ImageView) view.findViewById(R.id.received_emotion);
             rightEmotion = (ImageView) view.findViewById(R.id.send_emotion);
-            //leftMsgImg = (ImageView) view.findViewById(R.id.left_img);
-            //rightMsgImg = (ImageView) view.findViewById(R.id.right_img);
+            leftMsgImg = (ImageView) view.findViewById(R.id.left_img);
+            rightMsgImg = (ImageView) view.findViewById(R.id.right_img);
 
 
         }
 
     }
 
-    public MsgAdapter(List<Msg> msgList){
+    public MsgAdapter(Context context, List<Msg> msgList, Bitmap leftIcon,Bitmap RightIcon){
+        mContext = context;
         mMsgList=msgList;
-
+        friendIcon = leftIcon;
+        myIcon = RightIcon;
+        if(friendIcon == null) Log.e(TAG, "onClick:friendIcon null ");
+        else  Log.e(TAG, "onClick:friendIcon !not! null ");
     }
 
     @NonNull
@@ -87,6 +95,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Msg msg = mMsgList.get(position);
         double emotion = msg.getMsgEmotion();
+        holder.leftMsgImg.setImageDrawable(mContext.getResources().getDrawable((R.drawable.pic1)));
+        holder.rightMsgImg.setImageBitmap(myIcon);
         if (msg.getType() == Msg.TYPE_RECEIVED) {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
@@ -131,6 +141,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull List<Object> payloads) {
+        holder.leftMsgImg.setImageBitmap(friendIcon);
+        holder.rightMsgImg.setImageBitmap(myIcon);
         if (payloads.size() < 1) {
             //payloads参数为0，直接执行之前的不带payloads的onBindViewHolder()
             onBindViewHolder(holder,position);

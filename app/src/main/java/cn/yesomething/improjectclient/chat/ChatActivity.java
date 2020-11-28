@@ -4,6 +4,9 @@ import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
 import com.tencent.imsdk.v2.V2TIMAdvancedMsgListener;
 import com.tencent.imsdk.v2.V2TIMMessage;
 import com.tencent.imsdk.v2.V2TIMMessageReceipt;
@@ -29,6 +34,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +48,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.MainActivity;
+import cn.yesomething.improjectclient.PageConversation.ConversationAdapter;
 import cn.yesomething.improjectclient.R;
 import cn.yesomething.improjectclient.manager.IMManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
@@ -56,16 +68,35 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private boolean hasClick;
     private MsgAdapter adapter;
     private String friendName;
+    private Bitmap friendIcon;
+    private Bitmap myIcon;
+
+
     @BindView(R.id.bt_back)
     ImageView _btnBack;
+
+    @BindView(R.id.bt_test)
+    ImageView _btntest;
+
+    @BindView(R.id.tv_chat_id)
+    TextView _tv_chat_id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getSupportActionBar() != null){getSupportActionBar().hide(); }//隐藏原生actionbar
         setContentView(R.layout.chat_main);
         friendName = getIntent().getStringExtra("friendName");
+        friendIcon = getIntent().getParcelableExtra("lefticon");
+        myIcon = getIntent().getParcelableExtra("righticon");
+        if(friendIcon == null) Log.e(TAG, "onClick:friendIcon null ");
+        else  Log.e(TAG, "onClick:friendIcon !not! null ");
+
+
+
         ButterKnife.bind(this);
+        _btntest.setImageBitmap(friendIcon);
         _btnBack.setOnClickListener(v -> this.finish());
+        _tv_chat_id.setText(friendName);
         //配置聊天监听器
         initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
@@ -84,7 +115,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         msgRecyclerView = (RecyclerView) findViewById(R.id.msg_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         msgRecyclerView.setLayoutManager(layoutManager);
-        adapter = new MsgAdapter(msgList);
+        adapter = new MsgAdapter(this,msgList,friendIcon,myIcon);
         msgRecyclerView.setAdapter(adapter);
 
     }
@@ -398,4 +429,5 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
         adapter.notifyItemRangeChanged(0,msgList.size());
     }
+
 }

@@ -88,16 +88,6 @@ public class WordCloudActivity extends AppCompatActivity {
 
     private void init(String url) {//加载词云以及标签
 
-
-
-        //-------------------------
-        //todo 使用时将下面这行取消注释
-        //String url =wordCloudPictureURL;
-        //没有后端，先常值代替
-        //todo 使用时删除下面这行
-        //String url = "https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1392116398,3574857050&fm=26&gp=0.jpg";
-
-
         Picasso.with(this)
                 .load(url)
                 .resize(400,400)
@@ -105,8 +95,6 @@ public class WordCloudActivity extends AppCompatActivity {
         Toast.makeText(this,"加载词云图片完毕",Toast.LENGTH_SHORT).show();
         Log.e(TAG, "url: " +wordCloudPictureURL);
 
-
-        //---
     }
 
     private void getwordcloud(){

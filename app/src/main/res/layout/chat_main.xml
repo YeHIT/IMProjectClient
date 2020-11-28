@@ -5,32 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#d8e0e8">
-<!--    <RelativeLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
-<!--        <Button-->
-<!--            android:id="@+id/bt_back"-->
-<!--            android:layout_width="80sp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="#0000"-->
-<!--            android:text="返回"-->
-<!--            android:textSize="20dp"/>-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="联系人"-->
-<!--            android:textSize="20dp"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginTop="8dp"/>-->
-<!--        <Button-->
-<!--            android:id="@+id/bt_test"-->
-<!--            android:layout_width="80sp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="#0000"-->
-<!--            android:text="测试"-->
-<!--            android:textSize="20dp"-->
-<!--            android:layout_alignParentRight="true"/>-->
-<!--    </RelativeLayout>-->
 
         <RelativeLayout
             android:id="@+id/chat_top"
@@ -45,6 +19,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/back" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_chat_id"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:textSize="18dp"
+                android:textColor="@color/white"
+                android:text="friendID">
+
+            </TextView>
 
             <RelativeLayout
                 android:layout_width="match_parent"

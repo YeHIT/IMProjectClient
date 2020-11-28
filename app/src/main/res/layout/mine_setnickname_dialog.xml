@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:layout_margin="20dip"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dip"
+        android:background="@drawable/radius_drawable_bg"
+        android:orientation="horizontal"
+        android:padding="10dip" >
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/nickname" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText
+            android:id="@+id/edit_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dip"
+            android:inputType="text"
+            android:hint="昵称"
+            android:padding="5dip"
+            android:textSize="12sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:id="@+id/btn_save_nickname"
+        android:text="保存修改"
+        android:textSize="16dp"
+        android:paddingHorizontal="10dp"
+        android:layout_marginHorizontal="14dp"
+        android:layout_marginBottom="14dp"
+        android:textColor="@color/white"
+        android:background="@drawable/accept_button_shape"
+        >
+
+    </Button>
+
+</LinearLayout>

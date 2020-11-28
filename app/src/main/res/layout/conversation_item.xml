@@ -13,7 +13,7 @@
         android:layout_height="64dp"
         android:baselineAlignBottom="true"
         android:background="@drawable/user_pic"
-        android:paddingHorizontal="8dp" />
+         />
 
     <!-- 定义一个竖直方向的LinearLayout,把联系人呢称与最新消息文本框设置出来 -->
     <LinearLayout

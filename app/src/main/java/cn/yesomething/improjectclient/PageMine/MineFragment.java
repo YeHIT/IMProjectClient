@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -86,7 +87,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     @BindView(R.id.tv_show_id)
     TextView tv_Show_id;
     @BindView(R.id.tv_info_nickName)
-    EditText tv_Info_nickName;
+    TextView tv_Info_nickName;
 
     public MineFragment() {
         // Required empty public constructor
@@ -207,27 +208,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         rl_nickName.setOnClickListener(this);
         rl_sex.setOnClickListener(this);
         iv_head_icon.setOnClickListener(this);
-        tv_Info_nickName.setOnClickListener(v->showcursor());
-        tv_Info_nickName.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {   // 按下完成按钮，这里和上面imeOptions对应
-                    Log.e(TAG,"onEditorAction: "+"Editing EditorInfo.IME_ACTION_DONE");
-                    Log.e(TAG, "onEditorAction: "+tv_Info_nickName.getText().toString());
-                    String nickname = tv_Info_nickName.getText().toString();
-                    //todo 上传修改后的昵称 nickname
-                    testUserUpdate(nickname,null,null);
-                    //-------
-                    tv_Info_nickName.setCursorVisible(false);
-                    return false;   //返回true，保留软键盘。false，隐藏软键盘
-                }
-                return true;
-            }
-        });
-    }
+        tv_Info_nickName.setOnClickListener(v->setNickName());
 
-    private void showcursor() {
-        tv_Info_nickName.setCursorVisible(true);
     }
 
     //控件的点击事件
@@ -246,6 +228,38 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    /**
+     * 修改昵称弹窗
+     */
+    private  void setNickName(){
+        // 创建对话框构建器
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        // 获取布局
+        View view2 = View.inflate(mContext, R.layout.mine_setnickname_dialog, null);
+        final EditText username = (EditText) view2.findViewById(R.id.edit_nickname);
+        final Button button = (Button) view2.findViewById(R.id.btn_save_nickname);
+        // 设置参数
+        builder.setTitle("修改昵称")
+                .setView(view2);
+        username.setHint("原昵称："+tv_Info_nickName.getText().toString());
+        // 创建对话框
+        final AlertDialog alertDialog = builder.create();
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                String nickname = username.getText().toString().trim();
+                Log.e(TAG, "onClick: "+nickname );
+                testUserUpdate(nickname,null,null);
+                tv_Info_nickName.setText(nickname);
+                alertDialog.dismiss();// 对话框消失
+            }
+
+        });
+        alertDialog.show();
+    }
+
     //修改性别的弹出框
     private void sexDialog(String sex) {
         int sexFlag = 0;
@@ -257,6 +271,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         final String items[] = {"男","女"};
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setTitle("性别"); //设置标题
+
         builder.setSingleChoiceItems(items, sexFlag, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
