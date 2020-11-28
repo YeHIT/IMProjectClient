@@ -29,14 +29,17 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:background="@drawable/message_text_receive"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                >
 
                 <TextView
                     android:id="@+id/left_msg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="10dp"
+                    android:maxWidth="200dp"
+                    android:adjustViewBounds="true" />
 
                 <ImageView
                     android:id="@+id/left_img"
@@ -127,7 +130,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="10dp"
+                    android:maxWidth="200dp"
+                    android:adjustViewBounds="true" />
 
                 <ImageView
                     android:id="@+id/right_img"
