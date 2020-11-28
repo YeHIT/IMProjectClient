@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private ViewPager viewPager;
     private mainFragmentPagerAdapter fragmentPagerAdapter;
     private List<Fragment> fragmentList; //保存界面的view
-
     //几个代表页面的常量
     public static final int CONVERSATION_PAGE = 0;
     public static final int CONTACT_PAGE = 1;
@@ -184,37 +183,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
      * 初始化各项监听器
      */
     private void initListener(){
-        initConversationListener();
         initFriendsListener();
     }
 
-    /**
-     * 初始化会话监听器
-     */
-    private void initConversationListener(){
-        MessageManager.setConversationListener(new V2TIMConversationListener() {
-            @Override
-            public void onNewConversation(List<V2TIMConversation> conversationList) {
-                Log.e(TAG, new Date()+"onNewConversation: 收到新会话" );
-            }
 
-            @Override
-            public void onConversationChanged(List<V2TIMConversation> conversationList) {
-                Log.e(TAG, new Date()+"onConversationChanged: 会话改变了");
-            }
-        });
-        MessageManager.getConversationList(0, 50,
-                new V2TIMValueCallback<V2TIMConversationResult>() {
-                    @Override
-                    public void onError(int code, String desc) {
-                        // 拉取会话列表失败
-                    }
-                    @Override
-                    public void onSuccess(V2TIMConversationResult v2TIMConversationResult) {
-                        Log.e(TAG, "onSuccess: 拉取会话列表成功！" );
-                    }
-                });
-    }
 
     /**
      * 初始化好友监听器

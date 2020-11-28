@@ -89,7 +89,7 @@ public class MessageManager {
 
     //设置会话监听器
     public static void setConversationListener(V2TIMConversationListener listener){
-  //      V2TIMManager.getConversationManager().setConversationListener(listener);
+        V2TIMManager.getConversationManager().setConversationListener(listener);
     }
 
     /**
@@ -99,7 +99,7 @@ public class MessageManager {
      * @param callback 回调函数
      */
     public static void getConversationList(long nextSeq, int count, V2TIMValueCallback<V2TIMConversationResult> callback){
-//        V2TIMManager.getConversationManager().getConversationList(nextSeq,count,callback);
+        V2TIMManager.getConversationManager().getConversationList(nextSeq,count,callback);
     }
 
     /**
