@@ -97,10 +97,10 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
                 holder.left_read_or_not.setText("已读");
             }
             holder.leftMsgTime.setText(msg.getMsgtime());
-            if(emotion>0.3){
+            if(emotion>0.7){
                 holder.leftEmotion.setImageResource(R.drawable.greenlight);
             }
-            else if(emotion<=0.3 && emotion >=-0.3){
+            else if(emotion<=0.7 && emotion >=-0.7){
                 holder.leftEmotion.setImageResource(R.drawable.yellowlight);
             }
             else{
@@ -117,10 +117,10 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
                 holder.right_read_or_not.setText("已读");
             }
             holder.rightMsgTime.setText(msg.getMsgtime());
-            if(emotion>0.3){
+            if(emotion>0.7){
                 holder.rightEmotion.setImageResource(R.drawable.greenlight);
             }
-            else if(emotion<=0.3 && emotion >=-0.3){
+            else if(emotion<=0.7 && emotion >=-0.7){
                 holder.rightEmotion.setImageResource(R.drawable.yellowlight);
             }
             else{

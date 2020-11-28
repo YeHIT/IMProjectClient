@@ -112,7 +112,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 String content = mEditEmojicon.getText().toString();
                 //加密
                 String mContent = StringEscapeUtils.escapeJava(content);
-                if (!"".equals(content)) {//当输入content不为空的时候
+                //当输入content不为空且长度不超过上限时
+                if (!"".equals(content) && mContent.length() < 830) {
+                    //禁用按钮
+                    findViewById(R.id.send_chat).setEnabled(false);
+                    mEditEmojicon.setText("");
+                    Log.e(TAG, "onClick: " + mContent.length() );
                     sendMessageHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
                         @Override
                         public boolean handleMessage(@NonNull Message msg) {
@@ -139,18 +144,24 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            }finally {
+                                //禁用按钮
+                                findViewById(R.id.send_chat).setEnabled(true);
                             }
                             return false;
                         }
                     });
-                    //消息列表已读未读变化
-//                    MsgListTypeChange(Msg.TYPE_SENT);
                     String userId = IMManager.getLoginUser();
                     String toId = friendName;
                     Date messageDate = new Date();
                     MyServerManager.sendMessage(sendMessageHandler,userId,toId,messageDate,mContent);
-                } else {//否则toast提示输入为空
-                    Toast.makeText(this, "Empty!", Toast.LENGTH_SHORT).show();
+                }
+                //输入为空时toast提示输入为空
+                else if("".equals(content)){
+                    Toast.makeText(this, "输入的消息不能为空!", Toast.LENGTH_SHORT).show();
+                }
+                else if(mContent.length() > 830){
+                    Toast.makeText(this, "输入的消息过长!", Toast.LENGTH_SHORT).show();
                 }
                 break;
             }
