@@ -104,11 +104,8 @@ public class WordCloudActivity extends AppCompatActivity {
                 .into(_ivWordCloud);
         Toast.makeText(this,"加载词云图片完毕",Toast.LENGTH_SHORT).show();
         Log.e(TAG, "url: " +wordCloudPictureURL);
-        _ivWordCloud.setBackground(this.getDrawable(R.drawable.wordcloud2));//在这个地方加载图片
 
 
-        //加载标签
-        initTagList(userTags);
         //---
     }
 
@@ -147,6 +144,9 @@ public class WordCloudActivity extends AppCompatActivity {
                             Log.e(TAG, "handleMessage: " + userTags );
 
                             init(wordCloudPictureURL);//更新界面
+
+                            //加载标签
+                            initTagList(userTags);
                         }
                         else {
                             //todo 错误信息处理
@@ -168,10 +168,8 @@ public class WordCloudActivity extends AppCompatActivity {
     private void initTagList(ArrayList<String> MuserTags){
         String[] viewlist={"v0","v1","v2"};
         //todo size 先设置为常值3,使用时注释下行
-        int size = 3;
-        // size合法取值0-3，最多设置3个标签
-        //todo 动态获取标签列表,使用时取消下行注释
-        //size = MuserTags.size()
+        int size = MuserTags.size();
+
 
         for(int i=0;i<size;i++){
             View v = (i==0)?(View)findViewById(R.id.tag0):
@@ -181,7 +179,7 @@ public class WordCloudActivity extends AppCompatActivity {
             TextView tv_tag0 = (TextView)v.findViewById(R.id.tv_info_forward);
 
             //todo  设置测试文字标签"测试v[i]",使用时注释下行
-            tv_tag0.setText("测试"+viewlist[i]);//测试
+            tv_tag0.setText(MuserTags.get(i));//测试
             //todo 动态获取标签列表,使用时取消下行注释
             //tv_tag0.setText(MuserTags.indexOf(i));//设置标签
         }

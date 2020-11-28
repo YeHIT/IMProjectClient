@@ -31,6 +31,7 @@ import butterknife.ButterKnife;
 import cn.yesomething.improjectclient.addfriend.ContactNewFriendActivity;
 import cn.yesomething.improjectclient.manager.FriendsManager;
 import cn.yesomething.improjectclient.manager.MessageManager;
+import cn.yesomething.improjectclient.utils.Redbot;
 import cn.yesomething.improjectclient.utils.Softkeybroad;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
@@ -62,7 +63,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//防止出现两个toolbar
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//
+
+        //情况A(有margin时)
+        new Redbot(this)
+                .setBadgeType(Redbot.Type.TYPE_POINT)
+                .setBadgeOverlap(false)
+                .bindToTargetView(_btnAddFriend);
         setContentView(R.layout.main_activity);
         //初始化监听器
         initListener();
@@ -73,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         _btnMinePage.setOnClickListener(v -> SelectMinePage());
         _btnAddFriend.setOnClickListener(v->AddFriend());
         setSoftKeyBoardListener();
+
+
         //设置界面切换
         initViewPager();
     }

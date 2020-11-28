@@ -125,8 +125,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                     jsonObject = jsonObject.getJSONObject("message");
                                     Double messageEmotionalScore = jsonObject.getDouble("messageEmotionalScore");
                                     String messageTime = jsonObject.getString("messageTime");
-                                    MessageManager.sendTextMessage(messageTime + mContent,friendName);
-                                    showMsg(mContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
+                                    String messageContent = jsonObject.getString("processedContent");
+                                    if(messageContent == null || "null".equals(messageContent)){
+                                        messageContent = jsonObject.getString("messageContent");
+                                    }
+                                    MessageManager.sendTextMessage(messageTime + messageContent,friendName);
+                                    showMsg(messageContent,Msg.TYPE_SENT,messageEmotionalScore,messageTime);
                                     adapter.notifyItemRangeChanged(0,msgList.size(),"send");
                                 }
                                 else {
@@ -190,7 +194,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         for(; i < maxLength ; i++){
                             JSONObject tempObj = jsonArray.getJSONObject(i);
                             String fromId = tempObj.getString("fromId");
-                            String messageContent = tempObj.getString("messageContent");
+                            String messageContent = tempObj.getString("processedContent");
+                            if(messageContent == null || "null".equals(messageContent)){
+                                messageContent = tempObj.getString("messageContent");
+                            }
                             String messageTime = tempObj.getString("messageTime");
                             Double messageEmotionalScore = tempObj.getDouble("messageEmotionalScore");
                             //消息是朋友发来的则自己为接收者
@@ -298,7 +305,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 for(int i = 0; i < maxLength ; i++){
                                     JSONObject tempObj = jsonArray.getJSONObject(i);
                                     String fromId = tempObj.getString("fromId");
-                                    String messageContent = tempObj.getString("messageContent");
+                                    String messageContent = tempObj.getString("processedContent");
+                                    if(messageContent == null || "null".equals(messageContent)){
+                                        messageContent = jsonObject.getString("messageContent");
+                                    }
                                     String messageTime = tempObj.getString("messageTime");
                                     Double messageEmotionalScore = tempObj.getDouble("messageEmotionalScore");
                                     //消息是朋友发来的则自己为接收者

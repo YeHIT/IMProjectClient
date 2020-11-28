@@ -71,10 +71,10 @@
         android:layout_height="10dp" />
     <ImageView
         android:id="@+id/iv_wordcloud"
-        android:layout_width="400dp"
+        android:layout_width="match_parent"
         android:layout_height="400dp"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/wordcloud2">
+        android:layout_marginTop="80dp"
+        android:background="#55ffffff">
     </ImageView>
 </LinearLayout>
