@@ -29,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,7 +66,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         friendName = getIntent().getStringExtra("friendName");
         ButterKnife.bind(this);
         _btnBack.setOnClickListener(v -> this.finish());
-        Log.e(TAG, "onCreate: " + msgList.size() );
         //配置聊天监听器
         initChatListener();
         //初始化界面，比如显示之前五条的聊天记录，目前还没聊天记录，所以为空
@@ -219,19 +217,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         MyServerManager.selectMessageList(getMessageListHandler,friendName);
     }
 
-    //adapter刷新item，修改recyclerview里面的变化的item
-    //消息列表更新
-    public void MsgListTypeChange(int Type){
-        if(Type == Msg.TYPE_SENT){
-            //将左侧接受到的消息设为已读
-            adapter.notifyItemRangeChanged(0,msgList.size(),"send");
-        }
-        else{
-            //右侧发送消息已被对方读了
-            adapter.notifyItemRangeChanged(0,msgList.size(),"recieve");
-        }
-    }
-
     /***
      * 发送文字消息
      * @param content  消息的String
@@ -273,9 +258,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.emojicons).setVisibility(View.GONE);
             hasClick = !hasClick;
         }else {
-//            Intent intent = new Intent(ChatActivity.this, MainActivity.class);
-//            startActivity(intent);
-//            finish();
             super.onBackPressed();
         }
     }
@@ -352,20 +334,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     // 消息接收者 receiver
                     String userID = v2TIMMessageReceipt.getUserID();
                     if(userID.equals(friendName)){
-
                         ChangeMsgReadType(Msg.TYPE_RECEIVED);
                         Context context = ChatActivity.this;
-                        if (context != null) {
-                            ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                            List<ActivityManager.RunningAppProcessInfo> processes = activityManager.getRunningAppProcesses();
-                            for (ActivityManager.RunningAppProcessInfo processInfo: processes) {
-                                Log.e(TAG, "onRecvC2CReadReceipt: " + context.getPackageName() );
-                                if (processInfo.processName.equals(context.getPackageName())) {
-                                    if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-                                        markMessageAsRead();
-                                    }
-                                }
-                            }
+                        ActivityManager mAm = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+                        String activityName = mAm.getRunningTasks(1).get(0).topActivity.getClassName();
+                        if("cn.yesomething.improjectclient.chat.ChatActivity".equals(activityName)){
+                            markMessageAsRead();
                         }
                     }
                 }
