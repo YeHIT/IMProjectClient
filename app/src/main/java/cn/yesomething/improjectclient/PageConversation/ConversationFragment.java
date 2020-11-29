@@ -80,19 +80,20 @@ public class ConversationFragment extends Fragment {
         layoutManager = new LinearLayoutManager(mContext);
         adapter = new ConversationAdapter(mContext, mConversationList);
         conversationView.setLayoutManager(layoutManager);
-        conversationView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
+
+        if (conversationView.getItemDecorationCount() == 0) {
+            conversationView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
+        }
+
         //设置adapter
         conversationView.setAdapter(adapter);
         //点击会话item时的回调函数
         adapter.setOnItemClickListener(new ConversationAdapter.OnItemClickListener() {
             @Override
             public void onClick(String friendname, Bitmap left_bitmap_icon, Bitmap right_bitmap_icon) {
-                Toast.makeText(mContext, "click " + friendname, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
                 intent.putExtra("friendName",friendname);
                 intent.putExtra("lefticon",left_bitmap_icon);
-                if(left_bitmap_icon == null) Log.e(TAG, "onClick:left_bitmap_icon null ");
-                else  Log.e(TAG, "onClick:left_bitmap_icon !not! null ");
                 intent.putExtra("righticon",right_bitmap_icon);
                 intent.setClass(getActivity(), ChatActivity.class);
                 startActivity(intent);
@@ -166,6 +167,7 @@ public class ConversationFragment extends Fragment {
                                 String umContent = StringEscapeUtils.unescapeJava(textContent);
                                 umContent = StringEscapeUtils.unescapeJava(umContent);
                                 Conversation conversation= new Conversation(userName,messageDate,umContent);
+                                Log.e(TAG, "onSuccess: 拉取时间"+ messageDate);
                                 mConversationList.add(conversation);
                             }
                         }

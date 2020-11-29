@@ -97,7 +97,12 @@ public class ContactFragment extends Fragment {
         layoutManager = new LinearLayoutManager(mContext);
         adapter = new ContactAdapter(mContext, contactNames);
         contactList.setLayoutManager(layoutManager);
-        contactList.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
+
+        if (contactList.getItemDecorationCount() == 0) {
+            contactList.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL_LIST));
+        }
+
+
         contactList.setAdapter(adapter);
         //定义点击导航栏箭头、字母或#时的回调
         LetterList.setCharacterListener(new LetterListView.CharacterClickListener() {
@@ -115,10 +120,11 @@ public class ContactFragment extends Fragment {
             @Override
             public void onClick(String friendName) {
                 Intent intent=new Intent();
-                intent.setClass(getActivity(), ChatActivity.class);
+                intent.setClass(getActivity(), FriendPageActivity.class);
                 intent.putExtra("friendName",friendName);
                 startActivity(intent);
             }
+
         });
     }
 

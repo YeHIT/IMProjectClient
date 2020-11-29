@@ -1,6 +1,7 @@
 package cn.yesomething.improjectclient;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ import cn.yesomething.improjectclient.PageConversation.ConversationFragment;
 import cn.yesomething.improjectclient.PageMine.MineFragment;
 
 public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
+    private static final String TAG = "mainPagerAdapter";
+
     private ContactFragment contactFragment=null;//联系人界面
     private ConversationFragment conversationFragment=null;//会话列表界面
     private MineFragment mineFragment = null;       //资料界面
@@ -24,6 +27,7 @@ public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
     private static final int CONVERSATION_PAGE = 0;
     private static final int CONTACT_PAGE = 1;
     private static final int MINE_PAGE = 2;
+    private int mChildCount = 0;
 
     public mainFragmentPagerAdapter(Context context, FragmentManager fm, List<Fragment> fragList) {
         super(fm,FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -58,12 +62,16 @@ public class mainFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup vg, int position) {
+        Log.e(TAG, "instantiateItem: "+Integer.toString(position) );
+
         return super.instantiateItem(vg, position);
     }
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
+        Log.e(TAG, "destroyItem: "+Integer.toString(position)+object );
         super.destroyItem(container, position, object);
     }
+
 
 
 }

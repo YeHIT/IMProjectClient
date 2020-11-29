@@ -50,6 +50,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         private ImageView rightMsgImg;
         private ImageView leftEmotion;
         private ImageView rightEmotion;
+        private ImageView leftIcon;
+        private ImageView rightIcon;
 
 
         public ViewHolder(View view){
@@ -69,6 +71,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
             leftMsgImg = (ImageView) view.findViewById(R.id.left_img);
             rightMsgImg = (ImageView) view.findViewById(R.id.right_img);
 
+            leftIcon = (ImageView) view.findViewById(R.id.conversation_friend_pic);
+            rightIcon = (ImageView) view.findViewById(R.id.conversation_my_pic);
 
         }
 
@@ -79,6 +83,8 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
         mMsgList=msgList;
         friendIcon = leftIcon;
         myIcon = RightIcon;
+        Log.e(TAG, "MsgAdapter:friendIcon "+friendIcon);
+        Log.e(TAG, "MsgAdapter:myIcon "+myIcon );
         if(friendIcon == null) Log.e(TAG, "onClick:friendIcon null ");
         else  Log.e(TAG, "onClick:friendIcon !not! null ");
     }
@@ -95,8 +101,18 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Msg msg = mMsgList.get(position);
         double emotion = msg.getMsgEmotion();
-        holder.leftMsgImg.setImageDrawable(mContext.getResources().getDrawable((R.drawable.pic1)));
-        holder.rightMsgImg.setImageBitmap(myIcon);
+        //holder.leftMsgImg.setImageDrawable(mContext.getResources().getDrawable((R.drawable.pic1)));
+        //holder.rightMsgImg.setImageBitmap(myIcon);
+        if(friendIcon==null)
+            holder.leftIcon.setImageDrawable(mContext.getDrawable(R.drawable.user_pic));
+        else
+            holder.leftIcon.setImageBitmap(friendIcon);
+
+        if(myIcon==null)
+            holder.rightIcon.setImageDrawable(mContext.getDrawable(R.drawable.user_pic));
+        else
+            holder.rightIcon.setImageBitmap(myIcon);
+
         if (msg.getType() == Msg.TYPE_RECEIVED) {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);

@@ -88,13 +88,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         friendName = getIntent().getStringExtra("friendName");
         friendIcon = getIntent().getParcelableExtra("lefticon");
         myIcon = getIntent().getParcelableExtra("righticon");
-        if(friendIcon == null) Log.e(TAG, "onClick:friendIcon null ");
+        if(friendIcon == null) Log.e(TAG, "onClick:friendIcon null "+friendIcon);
         else  Log.e(TAG, "onClick:friendIcon !not! null ");
 
 
 
         ButterKnife.bind(this);
-        _btntest.setImageBitmap(friendIcon);
+       // _btntest.setImageBitmap(friendIcon);
         _btnBack.setOnClickListener(v -> this.finish());
         _tv_chat_id.setText(friendName);
         //配置聊天监听器

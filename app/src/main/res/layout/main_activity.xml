@@ -15,7 +15,7 @@
         android:layout_height="60dip"
         android:gravity="center_vertical"
         android:background="@drawable/title_bar_shape"
-        android:padding="10dip" >>
+        android:padding="10dip" >
 
         <TextView
             android:id="@+id/top_text"
@@ -41,12 +41,14 @@
                 android:textSize="30dp"
                 android:visibility="invisible"
                 />
+
             <ImageButton
                 android:id="@+id/search_icon"
                 android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginRight="40dp"
+                android:layout_height="21dp"
                 android:layout_marginTop="8dp"
+                android:visibility="invisible"
+                android:layout_marginRight="40dp"
                 android:background="@drawable/search3"
                 android:gravity="center_vertical" />
 

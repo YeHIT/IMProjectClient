@@ -9,6 +9,10 @@
     <color name="colorCloud">#006EFF</color>
     <color name="white">#FFFFFF</color>
     <color name="iron">#CCCCCC</color>
+    <color name="ironmid">#8C8C8C</color>
+
+    <color name="irondeep">#555555</color>
+
     <color name="titleText">#338BFF</color>
     <color name="chatBackgroundColor">#EDEDED</color>
     <color name="chatbottom_background">#F7F7F7</color>

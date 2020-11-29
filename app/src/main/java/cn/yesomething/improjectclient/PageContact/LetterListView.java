@@ -45,7 +45,7 @@ public class LetterListView extends LinearLayout {
         letter.setLayoutParams(layoutParams);
         letter.setGravity(Gravity.CENTER);
         letter.setClickable(true);
-        letter.setTextColor(this.getResources().getColor(R.color.iron));
+        letter.setTextColor(this.getResources().getColor(R.color.ironmid));
         letter.setText(character);
 
         letter.setOnClickListener(new OnClickListener() {

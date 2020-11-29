@@ -83,7 +83,8 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     TextView _btnWordcloud;
     @BindView(R.id.login_name)
     TextView tv_login_name;
-
+    @BindView(R.id.pagemine_show)
+    LinearLayout layout_pagemine;
     @BindView(R.id.tv_show_id)
     TextView tv_Show_id;
     @BindView(R.id.tv_info_nickName)
@@ -131,7 +132,7 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         intent.putExtra("usernickname",tv_Show_id.getText().toString());
         intent.putExtra("url",userIconURL);
         startActivity(intent);
-        mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+//        mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     /**
@@ -144,7 +145,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
         intent.putExtra("url",userIconURL);
         Log.e(TAG, "SelectContactPage:username: "+tv_login_name.getText().toString());
         startActivity(intent);
-        mineActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     /**
@@ -153,8 +153,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private void SelectContactPage() {
         Intent intent = new Intent(mineActivity, MainActivity.class);
         startActivity(intent);
-        mineActivity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-
     }
 
     /**
@@ -163,7 +161,6 @@ public class MineFragment extends Fragment implements View.OnClickListener {
     private void SelectConversationPage() {
         Intent intent = new Intent(mineActivity, MainActivity.class);
         startActivity(intent);
-        mineActivity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         mineActivity.finish();
     }
 
@@ -198,9 +195,9 @@ public class MineFragment extends Fragment implements View.OnClickListener {
      */
     private void setListener() {
         //绑定按钮监听
-        _btnContactPagemine.setOnClickListener(v -> SelectContactPage());
-        _btnConversationPagemine.setOnClickListener(v -> SelectConversationPage());
-        _btnAccoutnAction.setOnClickListener(v -> AccountAction());
+        //_btnContactPagemine.setOnClickListener(v -> SelectContactPage());
+        //_btnConversationPagemine.setOnClickListener(v -> SelectConversationPage());
+        layout_pagemine.setOnClickListener(v -> AccountAction());
         _btnWordcloud.setOnClickListener(v -> WordCloud());
         _btnBack.setOnClickListener(v -> mineActivity.finish());
         //绑定标签监听

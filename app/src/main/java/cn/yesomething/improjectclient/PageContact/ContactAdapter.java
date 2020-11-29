@@ -105,17 +105,18 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             String name = resultList.get(position).getmName();
             ((ContactHolder) holder).mTextView.setText(name);
             testUserSelect(holder,name);//加载头像
+            holder.itemView.setOnClickListener(new View.OnClickListener() {//实现clicklistener接口回调
+                @Override
+                public void onClick(View v) {
+                    if (onItemClickListener != null) {
+//                    onItemClickListener.onClick(position);
+                        onItemClickListener.onClick(resultList.get(position).getmName());
+                    }
+                }
+            });
         }
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {//实现clicklistener接口回调
-            @Override
-            public void onClick(View v) {
-                if (onItemClickListener != null) {
-//                    onItemClickListener.onClick(position);
-                    onItemClickListener.onClick(resultList.get(position).getmName());
-                }
-            }
-        });
+
     }
 
     @Override
@@ -184,7 +185,7 @@ public class ContactAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                             //加载url为图片
                             if("default.jpg".equals(userPicture)){//默认头像
                                 ((ContactHolder) holder).mImageView.setImageDrawable(mContext.getResources().getDrawable((R.drawable.user_pic)));
-                                Log.e(TAG, "handleMessage: 加载头像： 好友id："+userName+ " 的头像未设置，加载默认头像");
+                                //Log.e(TAG, "handleMessage: 加载头像： 好友id："+userName+ " 的头像未设置，加载默认头像");
                             }
                             else{
                                 Picasso.with(mContext)
