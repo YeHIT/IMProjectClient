@@ -101,7 +101,7 @@ public class WordCloudActivity extends AppCompatActivity {
         //一开始时记得声明handler
         Handler userWordCloudGenerateHandler = null;
         //用户名
-        String userName = IMManager.getLoginUser();
+        String userName = username;
         //用于获取最终的数据并展示
         userWordCloudGenerateHandler = new Handler(Looper.myLooper(),new Handler.Callback(){
             @Override

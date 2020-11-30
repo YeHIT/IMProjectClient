@@ -85,7 +85,7 @@ public class FriendPageActivity extends AppCompatActivity {
     private void initlistener() {
         rl_gotochat.setOnClickListener(v->gotochat());
         tv_back.setOnClickListener(v->this.finish());
-        //rl_gotowordcloud.setOnClickListener(v->gotowordcloud());
+        rl_gotowordcloud.setOnClickListener(v->gotowordcloud());
     }
 
     private void gotochat() {
@@ -99,9 +99,9 @@ public class FriendPageActivity extends AppCompatActivity {
     private void gotowordcloud() {
         Intent intent = new Intent(this, WordCloudActivity.class);
         intent.putExtra("username",tv_login_name.getText().toString());
-        intent.putExtra("usernickname",tv_Show_id.getText().toString());
+        //intent.putExtra("usernickname",tv_Show_id.getText().toString());
         intent.putExtra("url",userIconURL);
-        //startActivity(intent);
+        startActivity(intent);
     }
 
 
@@ -154,13 +154,14 @@ public class FriendPageActivity extends AppCompatActivity {
 
                             //用户头像为网络地址url
                             String userPicture = jsonObject.getString("userPicture");
-                            userIconURL = userPicture;//保存url，以便后续传给子活动
+
 
                             if("default.jpg".equals(userPicture)){//默认头像
                                 Drawable drawable_default_icon = mContext.getResources().getDrawable((R.drawable.user_pic));
                                 if(spUserName.equals(userName)){//本人
                                     Log.e(TAG, "handleMessage: 加载本人头像："+userName+ " 头像未设置，加载默认头像");
                                 }else{//conversation对象
+                                    userIconURL = userPicture;//保存url，以便后续传给子活动
                                     tv_nickname.setText(userNickname);
                                     tv_login_name.setText(userName);
                                     tv_Show_id.setText("昵称："+userNickname);
@@ -174,6 +175,7 @@ public class FriendPageActivity extends AppCompatActivity {
                                 if(spUserName.equals(userName)){//本人
                                     //啥也不做
                                 }else{//conversation对象
+                                    userIconURL = userPicture;//保存url，以便后续传给子活动
                                     tv_nickname.setText(userNickname);
                                     tv_login_name.setText(userName);
                                     tv_Show_id.setText("昵称："+userNickname);
