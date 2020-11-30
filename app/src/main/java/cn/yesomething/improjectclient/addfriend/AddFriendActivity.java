@@ -142,6 +142,7 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         String responseCode = jsonObject.getString("responseCode");
+                        System.out.println(responseCode);
                         //todo 说明存在好友关系
                         if(responseCode.equals("200")){
                             Toast.makeText(AddFriendActivity.this ,friendName+"已经为你的好友",Toast.LENGTH_SHORT).show();
@@ -165,6 +166,6 @@ public class AddFriendActivity extends AppCompatActivity implements View.OnClick
                 return false;
             }
         });
-        MyServerManager.userSelect(selectFriendHandler,friendName);
+        MyServerManager.friendSelect(selectFriendHandler,friendName);
     }
 }

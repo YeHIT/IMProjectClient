@@ -318,4 +318,24 @@ public class MyServerManager {
                 jsonObject.toString()).start();
 
     }
+
+    /**
+     * 好友关系查询
+     * @param selectFriendHandler 用于登录完成后处理返回结果的handler
+     * @param friendName 好友名
+     */
+    public static void friendSelect(Handler selectFriendHandler, String friendName){
+        //拼接json
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userId",IMManager.getLoginUser());
+            jsonObject.put("friendId",friendName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        MyConnectionToServer.getConnectionThread(selectFriendHandler,
+                UrlManager.myServer+UrlManager.friendsSelectUrl,
+                jsonObject.toString())
+                .start();
+    }
 }
